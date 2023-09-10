@@ -8,6 +8,7 @@ $enable-rtl: true;
 // Import styles with default layout.
 @import "@coreui/coreui/scss/coreui";
 
+@import "layout";
 
 // If you want to add something do it here
 @import "custom";
