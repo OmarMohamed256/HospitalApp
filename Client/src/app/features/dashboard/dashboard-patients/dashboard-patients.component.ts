@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import { IconSetService } from '@coreui/icons-angular';
+import { iconSubset } from 'src/app/icons/icon-subset';
 
 @Component({
   selector: 'app-dashboard-patients',
@@ -7,8 +8,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./dashboard-patients.component.scss']
 })
 export class DashboardPatientsComponent implements OnInit{
-  constructor(private toastrService: ToastrService)
+  constructor(private iconSetService: IconSetService)
   {
+    iconSetService.icons = { ...iconSubset };
   }
   ngOnInit(): void {
   }

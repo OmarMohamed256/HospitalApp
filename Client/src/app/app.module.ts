@@ -29,10 +29,11 @@ import {
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { DefaultHeaderComponent } from './features/dashboard/dashboard-layout/default-header/default-header.component';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './features/account/login/login.component';
 import { ToastrModule } from 'ngx-toastr';
+import { TextInputComponent } from './core/forms/text-input/text-input.component';
 
 const APP_CONTAINERS = [
   DefaultHeaderComponent,
@@ -40,7 +41,7 @@ const APP_CONTAINERS = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent],
+  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent, TextInputComponent],
 
   imports: [
     BrowserModule,
@@ -55,9 +56,9 @@ const APP_CONTAINERS = [
     IconModule,
     NavModule,
     ButtonModule,
-    FormModule,
     UtilitiesModule,
     ButtonGroupModule,
+    FormModule,
     ReactiveFormsModule,
     SidebarModule,
     SharedModule,
@@ -72,6 +73,7 @@ const APP_CONTAINERS = [
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
     }),
+
   ],
   providers: [
     IconSetService

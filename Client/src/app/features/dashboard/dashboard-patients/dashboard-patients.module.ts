@@ -1,13 +1,18 @@
 import { NgModule } from '@angular/core';
 import { DashboardPatientsRoutingModule } from './dashboard-patients-routing.module';
 import { DashboardPatientsComponent } from './dashboard-patients.component';
-import { TableModule } from '@coreui/angular';
+import { ButtonModule, CollapseModule, ContainerComponent, DropdownModule, NavModule, NavbarModule, NavbarTextComponent, NavbarTogglerDirective, TableModule } from '@coreui/angular';
+import { IconModule } from '@coreui/icons-angular';
 
 
 @NgModule({
   imports: [
     DashboardPatientsRoutingModule,
-    TableModule
+    TableModule,
+    ButtonModule,
+    NavbarModule,
+    ContainerComponent,
+    IconModule
   ],
   declarations: [DashboardPatientsComponent]
 })

@@ -1,0 +1,18 @@
+<c-input-group class="mb-3">
+    <span *ngIf="icon.trim().length > 0" cInputGroupText>
+        <svg cIcon name="{{icon}}"></svg>
+    </span>
+    <input cFormControl [class.is-invalid]="ngControl.touched && ngControl.invalid" placeholder={{label}}
+        [formControl]="$any(ngControl.control)" type={{type}} />
+        
+    <div *ngIf="ngControl.control?.errors?.['required']" class="invalid-feedback">Please enter a {{label}}</div>
+    <div *ngIf="ngControl.control?.errors?.['minlength']" class="invalid-feedback">
+        {{label}} must be at least {{ngControl.errors?.['minlength']['requiredLength']}}
+    </div>
+    <div *ngIf="ngControl.control?.errors?.['maxlength']" class="invalid-feedback">
+        {{label}} must be at most {{ngControl.errors?.['maxlength']['requiredLength']}}
+    </div>
+    <div *ngIf="ngControl.control?.errors?.['isMatching']" class="invalid-feedback">
+        Password do not match
+    </div>
+</c-input-group>

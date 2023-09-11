@@ -7,7 +7,8 @@ import {
   cilEnvelopeOpen,
   cilTask,
   cilLockLocked,
-  cilUser
+  cilUser,
+  cilPlus
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -19,7 +20,8 @@ export const iconSubset = {
   cilEnvelopeOpen,
   cilTask,
   cilLockLocked,
-  cilUser
+  cilUser,
+  cilPlus
 };
 
 export enum IconSubset {
@@ -31,5 +33,6 @@ export enum IconSubset {
   cilEnvelopeOpen = 'cilEnvelopeOpen',
   cilTask = 'cilTask',
   cilLockLocked = 'cilLockLocked',
-  cilUser = 'cilUser'
+  cilUser = 'cilUser',
+  cilPlus = 'cilPlus'
 }

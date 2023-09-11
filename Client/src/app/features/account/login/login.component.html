@@ -5,29 +5,23 @@
         <c-card-group>
           <c-card class="p-4">
             <c-card-body>
-              <form cForm>
+              <form [formGroup]="loginForm" (ngSubmit)="loginForm.valid && login()" autocomplete="off" cForm>
                 <h1>Login</h1>
                 <p class="text-medium-emphasis">Sign In to your account</p>
-                <c-input-group class="mb-3">
-                  <span cInputGroupText>
-                    <svg cIcon name="cilUser"></svg>
-                  </span>
-                  <input autoComplete="username" cFormControl placeholder="Username" />
-                </c-input-group>
-                <c-input-group class="mb-4">
-                  <span cInputGroupText>
-                    <svg cIcon name="cilLockLocked"></svg>
-                  </span>
-                  <input
-                    autoComplete="current-password"
-                    cFormControl
-                    placeholder="Password"
-                    type="password"
-                  />
-                </c-input-group>
+                
+                <app-text-input [formControl]='$any(loginForm.controls["username"])' icon="cilUser" label='Username'></app-text-input>
+                <app-text-input [formControl]='$any(loginForm.controls["password"])' icon="cilLockLocked" label='Password' type="password"></app-text-input>
+
+                <div class="row" *ngIf="validationErrors.length > 0">
+                  <ul class="text-danger">
+                    <li *ngFor="let error of validationErrors">
+                      {{error}}
+                    </li>
+                  </ul>
+                </div>
                 <c-row>
                   <c-col xs="6">
-                    <button cButton class="px-4" color="primary">
+                    <button [disabled] ="!loginForm.valid" cButton class="px-4" color="primary" type="submit">
                       Login
                     </button>
                   </c-col>
