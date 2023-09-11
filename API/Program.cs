@@ -1,4 +1,6 @@
 using System.Text;
+using API.Services.Implementations;
+using API.Services.Interfaces;
 using Hospital.Data;
 using HospitalApp.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using webapi.Data;
 using webapi.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,6 +82,11 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<Seed>();
 
 var app = builder.Build();
 
