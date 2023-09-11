@@ -1,4 +1,5 @@
 using System.Text;
+using API.Middleware;
 using API.Services.Implementations;
 using API.Services.Interfaces;
 using Hospital.Data;
@@ -110,7 +111,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-// app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 
