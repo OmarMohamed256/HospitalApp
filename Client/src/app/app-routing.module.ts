@@ -1,10 +1,45 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-const routes: Routes = [];
+import { DashboardLayoutComponent } from './features/dashboard/dashboard-layout/dashboard-layout.component';
+import { LoginComponent } from './features/account/login/login.component';
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full'
+  },
+  {
+    path: '',
+    component: DashboardLayoutComponent,
+    data: {
+      title: 'Dashboard'
+    },
+    children: [
+      {
+        path: 'patients',
+        loadChildren: () =>
+          import('./features/dashboard/dashboard-patients/dashboard-patients.module').then((m) => m.DashboardPatientModule)
+      },
+    ]
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    data: {
+      title: 'Login Page'
+    }
+  },
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      scrollPositionRestoration: 'top',
+      anchorScrolling: 'enabled',
+      initialNavigation: 'enabledBlocking'
+      // relativeLinkResolution: 'legacy'
+    })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
