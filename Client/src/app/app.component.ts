@@ -1,5 +1,6 @@
 import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { AccountService } from './core/services/account.service';
+import { SpinnerService } from './core/services/spinner.service';
 
 @Component({
   selector: 'app-root',

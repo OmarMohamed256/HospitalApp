@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   }
   login() {
     this.accountService.login(this.loginForm.value).subscribe(response => {
-      console.log(response)
+      console.log(response);
     })
   }
 

@@ -22,6 +22,7 @@ import {
   ProgressModule,
   SharedModule,
   SidebarModule,
+  SpinnerModule,
   TabsModule,
   ToastModule,
   UtilitiesModule
@@ -30,10 +31,12 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { DefaultHeaderComponent } from './features/dashboard/dashboard-layout/default-header/default-header.component';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './features/account/login/login.component';
 import { ToastrModule } from 'ngx-toastr';
 import { TextInputComponent } from './core/forms/text-input/text-input.component';
+import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
+import { SpinnerComponent } from './shared/spinner/spinner.component';
 
 const APP_CONTAINERS = [
   DefaultHeaderComponent,
@@ -41,7 +44,7 @@ const APP_CONTAINERS = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent, TextInputComponent],
+  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent, TextInputComponent, SpinnerComponent],
 
   imports: [
     BrowserModule,
@@ -73,10 +76,12 @@ const APP_CONTAINERS = [
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
     }),
+    SpinnerModule
 
   ],
   providers: [
-    IconSetService
+    IconSetService,
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
