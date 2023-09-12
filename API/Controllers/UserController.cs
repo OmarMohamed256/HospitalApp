@@ -1,3 +1,5 @@
+using API.Extenstions;
+using API.Helpers;
 using API.Models.DTOS;
 using API.Services.Interfaces;
 using HospitalApp.Constants;
@@ -16,17 +18,18 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize(Policy = Polices.RequireReceptionistRole)]
-        public async Task<ActionResult<IEnumerable<UserInfoDto>>> GetUsers()
+        public async Task<ActionResult<PagedList<UserInfoDto>>> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await _userService.GetAllUsersAsync();
+            var users = await _userService.GetAllUsersAsync(userParams);
+            Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             return Ok(users);
         }
 
         [HttpGet("{roleName}")]
         [Authorize(Policy = Polices.RequireReceptionistRole)]
-        public async Task<ActionResult<IEnumerable<UserInfoDto>>> GetUsersWithRole(string roleName)
+        public async Task<ActionResult<IEnumerable<UserInfoDto>>> GetUsersWithRole([FromQuery]UserParams userParams, string roleName)
         {
-            var users = await _userService.GetUsersByRoleAsync(roleName);
+            var users = await _userService.GetUsersByRoleAsync(userParams, roleName);
             return Ok(users);
         }
 

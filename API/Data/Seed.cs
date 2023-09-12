@@ -34,7 +34,8 @@ namespace webapi.Data
                 UserName = "admin",
                 Email = "admin@gmail.com",
                 FullName = "admin",
-                Gender = "male"
+                Gender = "male",
+                Age = 30
             };
 
             await userManager.CreateAsync(admin, "Pa$$w0rd");
@@ -46,9 +47,8 @@ namespace webapi.Data
                 UserName = "doctor",
                 Email = "doctor@gmail.com",
                 FullName = "doctor",
-                Gender = "male"
-
-
+                Gender = "male",
+                Age = 50
             };
             await userManager.CreateAsync(Doctor, "Pa$$w0rd");
             await userManager.AddToRolesAsync(Doctor, new[] { Roles.Doctor });
@@ -59,10 +59,23 @@ namespace webapi.Data
                 UserName = "patient",
                 Email = "patient@gmail.com",
                 FullName = "patient",
-                Gender = "male"
+                Gender = "male",
+                Age = 40
 
             };
             await userManager.CreateAsync(Patient, "Pa$$w0rd");
+            await userManager.AddToRolesAsync(Patient, new[] { Roles.Patient });
+            await context.SaveChangesAsync();
+
+            var Patient1 = new AppUser
+            {
+                UserName = "patient1",
+                Email = "patient1@gmail.com",
+                FullName = "patient1",
+                Gender = "female",
+                Age = 20
+            };
+            await userManager.CreateAsync(Patient1, "Pa$$w0rd");
             await userManager.AddToRolesAsync(Patient, new[] { Roles.Patient });
             await context.SaveChangesAsync();
 
@@ -71,7 +84,8 @@ namespace webapi.Data
                 UserName = "receptionist",
                 Email = "receptionist@gmail.com",
                 FullName = "receptionist",
-                Gender = "male"
+                Gender = "male",
+                Age = 40
 
             };
             await userManager.CreateAsync(Receptionist, "Pa$$w0rd");

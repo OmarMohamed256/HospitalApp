@@ -1,3 +1,4 @@
+using API.Helpers;
 using API.Models.DTOS;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
@@ -16,11 +17,11 @@ namespace API.Services.Implementations
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<UserInfoDto>> GetAllUsersAsync()
+        public async Task<PagedList<UserInfoDto>> GetAllUsersAsync(UserParams userParams)
         {
-            IEnumerable<AppUser> users = await _userRepository.GetAllUsersAsync();
+            PagedList<AppUser> users = await _userRepository.GetAllUsersAsync(userParams);
 
-            IEnumerable<UserInfoDto> userInfoDtos = users.Select(user => new UserInfoDto
+            var userInfoDtos = users.Select(user => new UserInfoDto
             {
                 Username = user.UserName,
                 Email = user.Email,
@@ -30,12 +31,12 @@ namespace API.Services.Implementations
                 Age = user.Age
             });
 
-            return userInfoDtos;
+            return new PagedList<UserInfoDto>(userInfoDtos, users.TotalCount, users.CurrentPage, users.PageSize);
         }
 
-        public async Task<IEnumerable<UserInfoDto>> GetUsersByRoleAsync(string roleName)
+        public async Task<IEnumerable<UserInfoDto>> GetUsersByRoleAsync(UserParams userParams, string roleName)
         {
-            IEnumerable<AppUser> users = await _userRepository.GetAllUsersWithRoleAsync(roleName);
+            IEnumerable<AppUser> users = await _userRepository.GetAllUsersWithRoleAsync(userParams, roleName);
 
             IEnumerable<UserInfoDto> userInfoDtos = users.Select(user => new UserInfoDto
             {
