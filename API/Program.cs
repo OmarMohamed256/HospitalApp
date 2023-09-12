@@ -1,5 +1,7 @@
 using System.Text;
 using API.Middleware;
+using API.Repositories.Implementations;
+using API.Repositories.Interfaces;
 using API.Services.Implementations;
 using API.Services.Interfaces;
 using Hospital.Data;
@@ -86,6 +88,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<Seed>();
 

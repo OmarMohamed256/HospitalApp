@@ -9,10 +9,9 @@
   </div>
 </c-navbar>
 
-<table cTable>
+<table cTable *ngIf="patients.length > 0">
   <thead>
     <tr>
-      <th scope="col">Code</th>
       <th scope="col">Name</th>
       <th scope="col">Gender</th>
       <th scope="col">Email</th>
@@ -22,13 +21,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th>1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
+    <tr *ngFor="let patient of patients">
+      <td>{{patient.fullName}}</td>
+      <td>{{patient.gender}}</td>
+      <td>{{patient.email}}</td>
+      <td>{{patient.phoneNumber}}</td>
+      <td>{{patient.age}}</td>
       <td class="pt-1"><button cButton color="primary" class="btn-m">Edit</button></td>
     </tr>
   </tbody>

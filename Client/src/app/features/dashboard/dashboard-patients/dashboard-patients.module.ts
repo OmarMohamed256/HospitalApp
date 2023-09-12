@@ -3,6 +3,7 @@ import { DashboardPatientsRoutingModule } from './dashboard-patients-routing.mod
 import { DashboardPatientsComponent } from './dashboard-patients.component';
 import { ButtonModule, CollapseModule, ContainerComponent, DropdownModule, NavModule, NavbarModule, NavbarTextComponent, NavbarTogglerDirective, TableModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { IconModule } from '@coreui/icons-angular';
     ButtonModule,
     NavbarModule,
     ContainerComponent,
-    IconModule
+    IconModule,
+    CommonModule
   ],
   declarations: [DashboardPatientsComponent]
 })

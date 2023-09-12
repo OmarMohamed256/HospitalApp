@@ -1,6 +1,7 @@
-import { INavData } from '@coreui/angular';
+import { ROLES } from 'src/app/constants/roles';
+import { IRoleNavData } from 'src/app/models/role-nav-data';
 
-export const navItems: INavData[] = [
+export const navItems: IRoleNavData[] = [
   {
     name: 'Dashboard',
     url: '/',
@@ -8,7 +9,7 @@ export const navItems: INavData[] = [
     badge: {
       color: 'info',
       text: 'NEW'
-    }
+    },
   },
   {
     name: 'Components',
@@ -17,7 +18,9 @@ export const navItems: INavData[] = [
   {
     name: 'Patient',
     url: '/patients',
-    iconComponent: { name: 'cil-bed' }
+    iconComponent: { name: 'cil-bed' },
+    roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
+
   },
   
 ];

@@ -37,6 +37,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { TextInputComponent } from './core/forms/text-input/text-input.component';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
+import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 
 const APP_CONTAINERS = [
   DefaultHeaderComponent,
@@ -81,7 +82,8 @@ const APP_CONTAINERS = [
   ],
   providers: [
     IconSetService,
-    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
