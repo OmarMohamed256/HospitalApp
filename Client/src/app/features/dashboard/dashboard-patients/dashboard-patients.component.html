@@ -1,6 +1,7 @@
 <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
   <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
-    <button cButton color="light"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg> Add new patient</span></button>
+    <button cButton color="light"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
+        Add new patient</span></button>
 
     <form cForm class="d-flex" role="search">
       <input cFormControl type="search" placeholder="Search" aria-label="Search" class="me-2">
@@ -9,7 +10,7 @@
   </div>
 </c-navbar>
 
-<table cTable *ngIf="patients.length > 0">
+<table cTable *ngIf="patients && patients.length > 0">
   <thead>
     <tr>
       <th scope="col">Name</th>
@@ -31,3 +32,8 @@
     </tr>
   </tbody>
 </table>
+
+<div class="d-flex justify-content-center" *ngIf="pagination" >
+  <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage" [(ngModel)]="pagination.currentPage"
+   (pageChanged)="pageChanged($event)" ></app-pagination>
+</div>

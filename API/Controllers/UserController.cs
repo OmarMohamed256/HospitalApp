@@ -18,7 +18,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Authorize(Policy = Polices.RequireReceptionistRole)]
-        public async Task<ActionResult<PagedList<UserInfoDto>>> GetUsers([FromQuery]UserParams userParams)
+        public async Task<ActionResult<PagedList<UserInfoDto>>> GetUsers([FromQuery] UserParams userParams)
         {
             var users = await _userService.GetAllUsersAsync(userParams);
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
@@ -27,9 +27,10 @@ namespace API.Controllers
 
         [HttpGet("{roleName}")]
         [Authorize(Policy = Polices.RequireReceptionistRole)]
-        public async Task<ActionResult<IEnumerable<UserInfoDto>>> GetUsersWithRole([FromQuery]UserParams userParams, string roleName)
+        public async Task<ActionResult<IEnumerable<UserInfoDto>>> GetUsersWithRole([FromQuery] UserParams userParams, string roleName)
         {
             var users = await _userService.GetUsersByRoleAsync(userParams, roleName);
+            Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             return Ok(users);
         }
 

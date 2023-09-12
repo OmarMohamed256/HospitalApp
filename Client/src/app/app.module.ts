@@ -19,18 +19,18 @@ import {
   HeaderModule,
   ListGroupModule,
   NavModule,
+  PaginationModule,
   ProgressModule,
   SharedModule,
   SidebarModule,
   SpinnerModule,
   TabsModule,
-  ToastModule,
   UtilitiesModule
 } from '@coreui/angular';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { DefaultHeaderComponent } from './features/dashboard/dashboard-layout/default-header/default-header.component';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './features/account/login/login.component';
 import { ToastrModule } from 'ngx-toastr';
@@ -38,7 +38,6 @@ import { TextInputComponent } from './core/forms/text-input/text-input.component
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
-
 const APP_CONTAINERS = [
   DefaultHeaderComponent,
   DashboardLayoutComponent
@@ -77,7 +76,7 @@ const APP_CONTAINERS = [
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
     }),
-    SpinnerModule
+    SpinnerModule,
 
   ],
   providers: [

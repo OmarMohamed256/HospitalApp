@@ -1,0 +1,20 @@
+<c-pagination aria-label="Page navigation">
+    <li cPageItem [disabled]="currentPage === 1">
+        <a cPageLink (click)="goToFirstPage()">&laquo;</a>
+      </li>
+    <li cPageItem [disabled]="currentPage === 1">
+      <button cPageLink (click)="onPrevNextChange(false)">&lsaquo;</button>
+    </li>
+
+    
+    <li cPageItem *ngFor="let page of [].constructor(totalPages) as pages; let i = index" [active]="currentPage === i+1">
+        <button cPageLink  (click)="onPageChange(i+1)">{{i+1}}</button>
+      </li>
+
+    <li cPageItem [disabled]="currentPage === totalPages">
+        <button cPageLink (click)="onPrevNextChange(true)">&rsaquo;</button>
+    </li>
+    <li cPageItem [disabled]="currentPage === totalPages">
+        <a cPageLink (click)="goToLastPage()">&raquo;</a>
+      </li>
+  </c-pagination>

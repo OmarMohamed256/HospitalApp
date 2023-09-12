@@ -34,11 +34,11 @@ namespace API.Services.Implementations
             return new PagedList<UserInfoDto>(userInfoDtos, users.TotalCount, users.CurrentPage, users.PageSize);
         }
 
-        public async Task<IEnumerable<UserInfoDto>> GetUsersByRoleAsync(UserParams userParams, string roleName)
+        public async Task<PagedList<UserInfoDto>> GetUsersByRoleAsync(UserParams userParams, string roleName)
         {
-            IEnumerable<AppUser> users = await _userRepository.GetAllUsersWithRoleAsync(userParams, roleName);
+            PagedList<AppUser> users = await _userRepository.GetAllUsersWithRoleAsync(userParams, roleName);
 
-            IEnumerable<UserInfoDto> userInfoDtos = users.Select(user => new UserInfoDto
+            var userInfoDtos = users.Select(user => new UserInfoDto
             {
                 Username = user.UserName,
                 Email = user.Email,
@@ -48,7 +48,7 @@ namespace API.Services.Implementations
                 Age = user.Age
             });
 
-            return userInfoDtos;
+            return new PagedList<UserInfoDto>(userInfoDtos, users.TotalCount, users.CurrentPage, users.PageSize);
         }
     }
 }
