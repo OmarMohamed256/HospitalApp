@@ -4,7 +4,7 @@ import { UserData } from 'src/app/models/userData';
 import { UserParams } from 'src/app/models/userParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
-import { map } from 'rxjs';
+import { map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,10 @@ export class UserService {
   userParams: UserParams = {
     pageNumber: 1,
     pageSize: 5,
-    orderBy: 'created'
+    orderBy: 'date',
+    order: 'asc'
   };
+  memberCache = new Map();
 
   constructor(private http: HttpClient) { }
 
@@ -24,11 +26,17 @@ export class UserService {
   }
   
   getusersByRole(userParams: UserParams, roleName: string) {
+    var response = this.memberCache.get(Object.values(userParams).join("-"));
+    if (response) {
+      return of(response);
+    }
     let params = getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
     params = params.append('orderBy', userParams.orderBy);
+    params = params.append('order', userParams.order);
 
     return getPaginatedResult<UserData[]>(this.baseUrl + 'user/' + roleName , params, this.http)
       .pipe(map(response => {
+        this.memberCache.set(Object.values(userParams).join("-"), response);
         return response;
       }))
   }

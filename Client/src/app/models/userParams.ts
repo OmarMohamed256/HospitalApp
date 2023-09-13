@@ -1,5 +1,6 @@
 export class UserParams {
   pageNumber = 1;
   pageSize = 5;
-  orderBy = 'created';
+  orderBy = 'date';
+  order = 'asc';
 }

@@ -7,4 +7,5 @@ export interface UserData {
     phoneNumber: string;
     gender: string;
     age: string;
+    dateCreated: string;
 }

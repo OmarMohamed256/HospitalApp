@@ -15,8 +15,9 @@ export class DashboardPatientsComponent implements OnInit{
   patients: UserData[] | null = [];
   userParams: UserParams = {
     pageNumber: 1,
-    pageSize: 1,
-    orderBy: 'created'
+    pageSize: 15,
+    orderBy: 'date',
+    order: 'asc'
   };
   pagination: Pagination | null = null;
 
@@ -37,5 +38,10 @@ export class DashboardPatientsComponent implements OnInit{
   pageChanged(event: number) {
     this.userParams.pageNumber = event;
     this.getPatients();
+  }
+
+  toggleOrder() {
+    this.userParams.order = (this.userParams.order === 'asc') ? 'desc' : 'asc';
+    this.getPatients(); 
   }
 }

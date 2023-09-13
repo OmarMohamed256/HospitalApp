@@ -8,6 +8,6 @@ namespace API.Models.DTOS
         public string PhoneNumber { get; set; }
         public string Gender { get; set; }
         public int? Age { get; set; }
-
+        public DateTime DateCreated { get; set; }
     }
 }

@@ -18,6 +18,10 @@
       <th scope="col">Email</th>
       <th scope="col">Mobile</th>
       <th scope="col">Age</th>
+      <th scope="col" class="arrow-filter" [ngStyle]="{'cursor': 'pointer'}" (click)="toggleOrder()">
+        Date Created
+        <svg cIcon [name]="userParams.order === 'desc' ? 'cil-arrow-bottom' : 'cil-arrow-top'"></svg>
+      </th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -28,12 +32,13 @@
       <td>{{patient.email}}</td>
       <td>{{patient.phoneNumber}}</td>
       <td>{{patient.age}}</td>
+      <td>{{patient.dateCreated | date:'short'}}</td>
       <td class="pt-1"><button cButton color="primary" class="btn-m">Edit</button></td>
     </tr>
   </tbody>
 </table>
 
-<div class="d-flex justify-content-center" *ngIf="pagination" >
-  <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage" [(ngModel)]="pagination.currentPage"
-   (pageChanged)="pageChanged($event)" ></app-pagination>
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
 </div>

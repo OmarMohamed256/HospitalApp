@@ -76,7 +76,7 @@ namespace webapi.Data
                 Age = 20
             };
             await userManager.CreateAsync(Patient1, "Pa$$w0rd");
-            await userManager.AddToRolesAsync(Patient, new[] { Roles.Patient });
+            await userManager.AddToRolesAsync(Patient1, new[] { Roles.Patient });
             await context.SaveChangesAsync();
 
             var Receptionist = new AppUser

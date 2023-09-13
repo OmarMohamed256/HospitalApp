@@ -35,6 +35,7 @@ namespace API.Middleware
                 response.StatusCode = ex switch
                 {
                     UnauthorizedAccessException e => (int)HttpStatusCode.Unauthorized,
+                    BadRequestException e => (int)HttpStatusCode.BadRequest,
                     _ => (int)HttpStatusCode.InternalServerError
                 };
                 
@@ -42,7 +43,7 @@ namespace API.Middleware
 
                 var errorResponse = _env.IsDevelopment()
                     ? new ApiException(response.StatusCode, ex.Message, ex.StackTrace?.ToString())
-                    : new ApiException(response.StatusCode, ex is UnauthorizedAccessException ? "Wrong Credentials" : "Internal Server Error");
+                    : new ApiException(response.StatusCode, ex.Message ,"Internal Server Error");
 
                 var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
                 var json = JsonSerializer.Serialize(errorResponse, options);
