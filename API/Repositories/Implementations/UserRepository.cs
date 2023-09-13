@@ -31,7 +31,7 @@ namespace API.Repositories.Implementations
         {
             var query = await GetUsersInRoleAsync(roleName);
 
-            if (!string.IsNullOrEmpty(userParams.SearchTerm)) query = query.Where(u => u.FullName.Contains(userParams.SearchTerm));
+            if (!string.IsNullOrEmpty(userParams.SearchTerm)) query = query.Where(u => u.FullName.Contains(userParams.SearchTerm) || u.Email.Contains(userParams.SearchTerm));
             if (!string.IsNullOrEmpty(userParams.Gender)) query = query.Where(u => u.Gender == userParams.Gender);
 
 

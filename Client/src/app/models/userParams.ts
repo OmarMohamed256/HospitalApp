@@ -3,4 +3,6 @@ export class UserParams {
   pageSize = 5;
   orderBy = 'date';
   order = 'asc';
+  gender = '';
+  searchTerm = '';
 }

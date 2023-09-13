@@ -16,30 +16,5 @@ namespace API.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        [Authorize(Policy = Polices.RequireReceptionistRole)]
-        public async Task<ActionResult<PagedList<UserInfoDto>>> GetUsers([FromQuery] UserParams userParams)
-        {
-            var users = await _userService.GetAllUsersAsync(userParams);
-            Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
-            return Ok(users);
-        }
-
-        [HttpGet("{roleName}")]
-        [Authorize(Policy = Polices.RequireReceptionistRole)]
-        public async Task<ActionResult<IEnumerable<UserInfoDto>>> GetUsersWithRole([FromQuery] UserParams userParams, string roleName)
-        {
-            var users = await _userService.GetUsersByRoleAsync(userParams, roleName);
-            Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
-            return Ok(users);
-        }
-
-        [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> CreatePatientAsync(RegisterDto registerDto)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            return await _userService.CreatePatientAsync(registerDto);
-        }
-
     }
 }

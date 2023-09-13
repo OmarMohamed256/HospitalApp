@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IconSetService } from '@coreui/icons-angular';
-import { UserService } from 'src/app/core/services/user.service';
+import { AdminService } from 'src/app/core/services/admin.service';
 import { iconSubset } from 'src/app/icons/icon-subset';
 import { Pagination } from 'src/app/models/pagination';
 import { UserData } from 'src/app/models/userData';
@@ -17,11 +17,14 @@ export class DashboardPatientsComponent implements OnInit{
     pageNumber: 1,
     pageSize: 15,
     orderBy: 'date',
-    order: 'asc'
+    order: 'asc',
+    gender: '',
+    searchTerm: ''
   };
   pagination: Pagination | null = null;
+  genderList = [{ value: 'male', display: 'Male' }, { value: 'female', display: 'Female' }];
 
-  constructor(private iconSetService: IconSetService, private userService: UserService)
+  constructor(private iconSetService: IconSetService, private adminService: AdminService)
   {
     iconSetService.icons = { ...iconSubset };
   }
@@ -29,7 +32,7 @@ export class DashboardPatientsComponent implements OnInit{
     this.getPatients();
   }
   getPatients() {
-    this.userService.getusersByRole(this.userParams, 'patient').subscribe(response => {
+    this.adminService.getusersByRole(this.userParams, 'patient').subscribe(response => {
       this.patients = response.result;
       this.pagination = response.pagination
     })
@@ -44,4 +47,10 @@ export class DashboardPatientsComponent implements OnInit{
     this.userParams.order = (this.userParams.order === 'asc') ? 'desc' : 'asc';
     this.getPatients(); 
   }
+
+  resetFilters() {
+    this.userParams = this.adminService.resetUserParams();
+    this.getPatients();
+  }
+
 }

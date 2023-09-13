@@ -18,5 +18,12 @@ namespace API.Controllers
             return userDto;
         }
 
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDto>> CreatePatientAsync(RegisterDto registerDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            return await _authService.CreatePatientAsync(registerDto);
+        }
+
     }
 }

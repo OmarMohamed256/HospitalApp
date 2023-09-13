@@ -3,10 +3,19 @@
     <button cButton color="light"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
         Add new patient</span></button>
 
-    <form cForm class="d-flex" role="search">
-      <input cFormControl type="search" placeholder="Search" aria-label="Search" class="me-2">
-      <button cButton color="light" variant="outline">Search</button>
+        <select name="gender" class="w-25" aria-label="gender" [(ngModel)]="userParams.gender" cSelect (change)="getPatients()">
+          <option value="" disabled>Gender</option>
+          <option *ngFor="let gender of genderList" [value]="gender.value">
+            {{gender.display}}
+          </option>
+        </select>
+        
+    <form cForm class="d-flex" role="search" (submit)="getPatients()">
+      <input cFormControl type="search" placeholder="Search" name="searchTerm" aria-label="Search" class="me-2" [(ngModel)]="userParams.searchTerm">
+      <button cButton color="light" variant="outline" type="submit">Search</button>
     </form>
+    <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+
   </div>
 </c-navbar>
 

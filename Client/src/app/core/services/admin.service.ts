@@ -9,13 +9,15 @@ import { map, of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class AdminService {
   baseUrl = environment.apiUrl;
   userParams: UserParams = {
     pageNumber: 1,
     pageSize: 5,
     orderBy: 'date',
-    order: 'asc'
+    order: 'asc',
+    gender: '',
+    searchTerm: ''
   };
   memberCache = new Map();
 
@@ -24,7 +26,12 @@ export class UserService {
   getUsers() {
     return this.http.get<UserData[]>(this.baseUrl + 'user');
   }
-  
+
+  resetUserParams() {
+    this.userParams = new UserParams();
+    return this.userParams;
+  }
+
   getusersByRole(userParams: UserParams, roleName: string) {
     var response = this.memberCache.get(Object.values(userParams).join("-"));
     if (response) {
@@ -33,14 +40,18 @@ export class UserService {
     let params = getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
     params = params.append('orderBy', userParams.orderBy);
     params = params.append('order', userParams.order);
+    if (userParams.searchTerm.trim() !== '') params = params.append('searchTerm', userParams.searchTerm.trim());
+    if (userParams.gender.trim() !== '') params = params.append('gender', userParams.gender.trim());
 
-    return getPaginatedResult<UserData[]>(this.baseUrl + 'user/' + roleName , params, this.http)
+
+
+    return getPaginatedResult<UserData[]>(this.baseUrl + 'admin/' + roleName, params, this.http)
       .pipe(map(response => {
         this.memberCache.set(Object.values(userParams).join("-"), response);
         return response;
       }))
   }
-  
+
   setUserParams(params: UserParams) {
     this.userParams = params;
   }

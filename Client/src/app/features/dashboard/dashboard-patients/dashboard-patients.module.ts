@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { DashboardPatientsRoutingModule } from './dashboard-patients-routing.module';
 import { DashboardPatientsComponent } from './dashboard-patients.component';
-import { ButtonModule, ContainerComponent, NavbarModule, PaginationModule, TableModule } from '@coreui/angular';
+import { ButtonModule, ContainerComponent, FormSelectDirective, InputGroupTextDirective, NavbarModule, PaginationModule, TableModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from 'src/app/shared/pagination/pagination.component';
@@ -18,8 +18,10 @@ import { FormsModule } from '@angular/forms';
     IconModule,
     CommonModule,
     PaginationModule,
-    FormsModule
-  ],
+    FormsModule,
+    FormSelectDirective,
+    InputGroupTextDirective
+    ],
   declarations: [DashboardPatientsComponent, PaginationComponent]
 })
 export class DashboardPatientModule {

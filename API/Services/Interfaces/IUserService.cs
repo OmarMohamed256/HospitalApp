@@ -7,7 +7,5 @@ namespace API.Services.Interfaces
     {
         Task<PagedList<UserInfoDto>> GetUsersByRoleAsync(UserParams userParams, string roleName);
         Task<PagedList<UserInfoDto>> GetAllUsersAsync(UserParams userParams);
-        Task<UserDto> CreatePatientAsync(RegisterDto registerDto);
-
     }
 }
