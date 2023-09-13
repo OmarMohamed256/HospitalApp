@@ -48,6 +48,7 @@ namespace API.Services.Implementations
                 Email = registerDto.Email,
                 FullName = registerDto.FullName,
                 Gender = registerDto.Gender,
+                PhoneNumber = registerDto.PhoneNumber
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);

@@ -9,6 +9,7 @@ namespace API.Models.DTOS
         [Required] public string Gender { get; set; }
         [Required] public int Age { get; set; }
         [Required] public string FullName { get; set; }
+        [Required] public string PhoneNumber { get; set; }
         [Required]
         [StringLength(8, MinimumLength = 4)]
         public string Password { get; set; }
