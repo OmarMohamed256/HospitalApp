@@ -35,7 +35,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let patient of patients">
+    <tr *ngFor="let patient of patients" routerLink="{{patient.id}}" class="user-table">
       <td>{{patient.fullName}}</td>
       <td>{{patient.gender}}</td>
       <td>{{patient.email}}</td>

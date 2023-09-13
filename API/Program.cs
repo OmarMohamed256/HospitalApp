@@ -1,4 +1,5 @@
 using System.Text;
+using API.Helpers;
 using API.Middleware;
 using API.Repositories.Implementations;
 using API.Repositories.Interfaces;
@@ -89,6 +90,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
 builder.Services.AddScoped<Seed>();
 

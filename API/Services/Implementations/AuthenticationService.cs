@@ -1,6 +1,7 @@
 using API.Errors;
 using API.Models.DTOS;
 using API.Services.Interfaces;
+using AutoMapper;
 using HospitalApp.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +16,17 @@ namespace API.Services.Implementations
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public AuthenticationService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService)
+        public AuthenticationService(UserManager<AppUser> userManager,
+         SignInManager<AppUser> signInManager, ITokenService tokenService,
+         IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _mapper = mapper;
+
         }
 
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
@@ -41,15 +47,8 @@ namespace API.Services.Implementations
         public async Task<UserDto> CreatePatientAsync(RegisterDto registerDto)
         {
             if (await UserExists(registerDto.Username)) throw new BadRequestException("Username is already taken.");
-            var user = new AppUser
-            {
-                UserName = registerDto.Username.ToLower(),
-                Age = registerDto.Age,
-                Email = registerDto.Email,
-                FullName = registerDto.FullName,
-                Gender = registerDto.Gender,
-                PhoneNumber = registerDto.PhoneNumber
-            };
+            var user = _mapper.Map<AppUser>(registerDto);
+            user.UserName = registerDto.Username.ToLower();
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded)

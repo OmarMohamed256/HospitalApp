@@ -17,9 +17,7 @@ namespace API.Controllers
         {
             int userId = User.GetUserId();
             if(userId == null) return BadRequest("User id not supplied");
-            var user = await _userService.GetUserById(userId);
-            if(user == null) return NotFound("User to update is not found");
-            if(await _userService.UpdateUser(userUpdateDto, user)) return NoContent();
+            if(await _userService.UpdateUser(userUpdateDto, userId)) return NoContent();
             return BadRequest("Failed to update user");
         }
     }

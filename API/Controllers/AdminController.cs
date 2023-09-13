@@ -18,6 +18,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("all")]
         public async Task<ActionResult<PagedList<UserInfoDto>>> GetUsers([FromQuery] UserParams userParams)
         {
             var users = await _userService.GetAllUsersAsync(userParams);
@@ -25,12 +26,22 @@ namespace API.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{roleName}")]
+        [HttpGet]
+        [Route("byRole/{roleName}")] // Define a specific route for this action
         public async Task<ActionResult<IEnumerable<UserInfoDto>>> GetUsersWithRole([FromQuery] UserParams userParams, string roleName)
         {
             var users = await _userService.GetUsersByRoleAsync(userParams, roleName);
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             return Ok(users);
+        }
+        [HttpGet]
+        [Route("{Id}", Name = "GetUser")] // Define a specific route for this action
+        [Authorize(Policy = Polices.RequireDoctorRole)]
+        public async Task<ActionResult<UserInfoDto>> GetUserById(string Id)
+        {
+            var user = await _userService.GetUserById(Id);
+            if (user == null) return NotFound("User with this id is not found");
+            return Ok(user);
         }
     }
 }

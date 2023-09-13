@@ -23,10 +23,6 @@ export class AdminService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers() {
-    return this.http.get<UserData[]>(this.baseUrl + 'user');
-  }
-
   resetUserParams() {
     this.userParams = new UserParams();
     return this.userParams;
@@ -45,11 +41,22 @@ export class AdminService {
 
 
 
-    return getPaginatedResult<UserData[]>(this.baseUrl + 'admin/' + roleName, params, this.http)
+    return getPaginatedResult<UserData[]>(this.baseUrl + 'admin/byRole/' + roleName, params, this.http)
       .pipe(map(response => {
         this.memberCache.set(Object.values(userParams).join("-"), response);
         return response;
       }))
+  }
+
+  getUser(id: string) {
+    // const user = [... this.memberCache.values()]
+    //   .reduce((arr, elem) => arr.concat(elem.result), [])
+    //   .find((userData: UserData) => userData.id == id);
+
+    // if (user) {
+    //   return of(user);
+    // }
+    return this.http.get<UserData>(this.baseUrl + 'admin/' + id);
   }
 
   setUserParams(params: UserParams) {

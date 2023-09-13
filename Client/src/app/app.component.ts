@@ -1,6 +1,5 @@
 import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { AccountService } from './core/services/account.service';
-import { SpinnerService } from './core/services/spinner.service';
 
 @Component({
   selector: 'app-root',
@@ -18,10 +17,9 @@ export class AppComponent {
   
   setCurrentUser() {
     const user = localStorage.getItem('user');
- 
-
     if (user) {
       this.accountService.setCurrentUser(JSON.parse(user));
     }
+    
   }
 }
