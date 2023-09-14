@@ -22,51 +22,65 @@
 </c-nav>
 <c-tab-content #tabContent="cTabContent" [activeTabPaneIdx]="1">
   <c-tab-pane class="p-3">
-    <form>
+    <form [formGroup]="updateUserForm" cForm (ngSubmit)="updateUserForm.valid && updateUser()" autocomplete="off">
       <div class="row">
         <div class="col">
           <div class="mb-3">
-            <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="email" disabled>
+            <label cLabel>Username</label>
+            <app-text-input icon="cilUser"
+              [formControl]='$any(updateUserForm.controls["username"])' [label]='"username"'></app-text-input>
+              
           </div>
         </div>
         <div class="col">
           <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" disabled id="username">
+            <label cLabel>Email</label>
+            <app-text-input icon="cilEnvelopeClosed"
+              [formControl]='$any(updateUserForm.controls["email"])'  [label]='"email"'></app-text-input>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <div class="mb-3">
-            <label for="Phone" class="form-label">Phone number</label>
-            <input type="text" class="form-control" id="Phone">
+            <label cLabel>Fullname</label>
+            <app-text-input icon="cilUser" 
+              [formControl]='$any(updateUserForm.controls["fullname"])'  [label]='"Fullname"'></app-text-input>
           </div>
         </div>
         <div class="col">
           <div class="mb-3">
-            <label for="age" class="form-label">Age</label>
-            <input type="text" class="form-control" id="age">
+            <label cLabel>Age</label>
+            <app-text-input icon="cilPeople" 
+              [formControl]='$any(updateUserForm.controls["age"])'  [label]='"Age"'></app-text-input>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <div class="mb-3">
-            <label for="full-name" class="form-label">Fullname</label>
-            <input type="text" class="form-control" id="full-name">
+            <label cLabel>Phone Number</label>
+            <app-text-input icon="cilPhone" 
+              [formControl]='$any(updateUserForm.controls["phoneNumber"])' [label]='"Phone Number"'></app-text-input>
           </div>
         </div>
         <div class="col">
           <div class="mb-3">
-            <label for="gender" class="form-label">Gender</label>
-            <select class="form-select" id="gender">
-              <option value="2">Male</option>
-              <option value="3">Female</option>
+            <label cLabel>Gender</label>
+            <select name="gender"  aria-label="gender" cSelect [formControl]="$any(updateUserForm.controls['gender'])">
+              <option *ngFor="let gender of genderList" [value]="gender.value">
+                {{gender.display}}
+              </option>
             </select>
           </div>
         </div>
+      </div>
+      <div class="row" *ngIf="validationErrors.length > 0">
+        <ul class="text-danger">
+          <li *ngFor="let error of validationErrors">
+            {{error}}
+          </li>
+        </ul>
       </div>
       <button type="submit" class="btn btn-primary">Update</button>
     </form>

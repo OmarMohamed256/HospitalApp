@@ -1,9 +1,9 @@
-<c-input-group class="mb-3">
+<c-input-group>
     <span *ngIf="icon.trim().length > 0" cInputGroupText>
         <svg cIcon name="{{icon}}"></svg>
     </span>
-    <input cFormControl [class.is-invalid]="ngControl.touched && ngControl.invalid" placeholder={{label}}
-        [formControl]="$any(ngControl.control)" type={{type}} />
+    <input cFormControl [class.is-invalid]="ngControl.touched && ngControl.invalid" placeholder="{{label}}"
+        [formControl]="$any(ngControl.control)" type="{{type}}" [readOnly]="readOnly ? true : null"/>
         
     <div *ngIf="ngControl.control?.errors?.['required']" class="invalid-feedback">Please enter a {{label}}</div>
     <div *ngIf="ngControl.control?.errors?.['minlength']" class="invalid-feedback">

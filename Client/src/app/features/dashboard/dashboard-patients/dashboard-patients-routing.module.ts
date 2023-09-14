@@ -18,7 +18,7 @@ const routes: Routes = [
     component: PatientInfoComponent,
     resolve: { user: UserDetailedResolver },
     data: {
-      title: `Patient`
+      title: `Patient Info`
     }
   }
 ];

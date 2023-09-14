@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { IconSetService } from '@coreui/icons-angular';
-import { AdminService } from 'src/app/core/services/admin.service';
+import { GenderList } from 'src/app/constants/genders';
+import { UserService } from 'src/app/core/services/user.service';
 import { iconSubset } from 'src/app/icons/icon-subset';
 import { Pagination } from 'src/app/models/pagination';
 import { UserData } from 'src/app/models/userData';
 import { UserParams } from 'src/app/models/userParams';
-
 @Component({
   selector: 'app-dashboard-patients',
   templateUrl: './dashboard-patients.component.html',
@@ -22,9 +22,9 @@ export class DashboardPatientsComponent implements OnInit{
     searchTerm: ''
   };
   pagination: Pagination | null = null;
-  genderList = [{ value: 'male', display: 'Male' }, { value: 'female', display: 'Female' }];
+  genderList = GenderList;
 
-  constructor(private iconSetService: IconSetService, private adminService: AdminService)
+  constructor(private iconSetService: IconSetService, private userService: UserService)
   {
     iconSetService.icons = { ...iconSubset };
   }
@@ -32,7 +32,7 @@ export class DashboardPatientsComponent implements OnInit{
     this.getPatients();
   }
   getPatients() {
-    this.adminService.getusersByRole(this.userParams, 'patient').subscribe(response => {
+    this.userService.getusersByRole(this.userParams, 'patient').subscribe(response => {
       this.patients = response.result;
       this.pagination = response.pagination
     })
@@ -49,7 +49,7 @@ export class DashboardPatientsComponent implements OnInit{
   }
 
   resetFilters() {
-    this.userParams = this.adminService.resetUserParams();
+    this.userParams = this.userService.resetUserParams();
     this.getPatients();
   }
 

@@ -32,7 +32,6 @@ export class LoginComponent implements OnInit {
   }
   login() {
     this.accountService.login(this.loginForm.value).subscribe(roles => {
-      console.log(roles)
       if (roles.includes(ROLES.ADMIN) || roles.includes(ROLES.DOCTOR) || roles.includes(ROLES.RECEPTIONIST)) {
         this.router.navigate(['']); // Redirect to admin page
       } else {

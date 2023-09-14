@@ -50,10 +50,10 @@ namespace API.Services.Implementations
             return new PagedList<UserInfoDto>(userInfoDtos, users.TotalCount, users.CurrentPage, users.PageSize);
         }
 
-        public async Task<bool> UpdateUser(UserUpdateDto userUpdateDto, int userId)
+        public async Task<bool> UpdateUser(UserUpdateDto userUpdateDto)
         {
 
-            var user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new ApiException(404, "User Not Found");
+            var user = await _userManager.FindByIdAsync(userUpdateDto.Id.ToString()) ?? throw new ApiException(404, "User Not Found");
 
             user.FullName = userUpdateDto.FullName ?? user.FullName;
             user.Age = userUpdateDto.Age ?? user.Age;

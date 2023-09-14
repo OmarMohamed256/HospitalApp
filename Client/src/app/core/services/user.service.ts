@@ -9,7 +9,7 @@ import { map, of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AdminService {
+export class UserService {
   baseUrl = environment.apiUrl;
   userParams: UserParams = {
     pageNumber: 1,
@@ -41,7 +41,7 @@ export class AdminService {
 
 
 
-    return getPaginatedResult<UserData[]>(this.baseUrl + 'admin/byRole/' + roleName, params, this.http)
+    return getPaginatedResult<UserData[]>(this.baseUrl + 'user/byRole/' + roleName, params, this.http)
       .pipe(map(response => {
         this.memberCache.set(Object.values(userParams).join("-"), response);
         return response;
@@ -49,17 +49,21 @@ export class AdminService {
   }
 
   getUser(id: string) {
-    // const user = [... this.memberCache.values()]
-    //   .reduce((arr, elem) => arr.concat(elem.result), [])
-    //   .find((userData: UserData) => userData.id == id);
+    const user = [... this.memberCache.values()]
+      .reduce((arr, elem) => arr.concat(elem.result), [])
+      .find((userData: UserData) => userData.id == id);
 
-    // if (user) {
-    //   return of(user);
-    // }
-    return this.http.get<UserData>(this.baseUrl + 'admin/' + id);
+    if (user) {
+      return of(user);
+    }
+    return this.http.get<UserData>(this.baseUrl + 'user/' + id);
   }
 
   setUserParams(params: UserParams) {
     this.userParams = params;
+  }
+
+  updateUser(userData: UserData) {
+    return this.http.put(this.baseUrl + 'user/', userData);
   }
 }
