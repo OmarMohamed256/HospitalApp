@@ -18,16 +18,18 @@ import {
   SidebarModule,
   TabsModule,
   SpinnerModule,
-  SharedModule
+  SharedModule,
+  PaginationModule
 } from '@coreui/angular';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IconModule } from '@coreui/icons-angular';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { PaginationComponent } from './pagination/pagination.component';
 
 @NgModule({
-  declarations: [TextInputComponent],
+  declarations: [TextInputComponent, PaginationComponent],
   exports: [TextInputComponent,
     AvatarModule,
     BreadcrumbModule,
@@ -50,7 +52,9 @@ import { CommonModule } from '@angular/common';
     HttpClientModule,
     SpinnerModule,
     SharedModule,
-    CommonModule
+    CommonModule,
+    PaginationModule,
+    PaginationComponent
   ],
   imports: [
     AvatarModule,
@@ -74,7 +78,8 @@ import { CommonModule } from '@angular/common';
     HttpClientModule,
     SpinnerModule,
     SharedModule,
-    CommonModule
+    CommonModule,
+    PaginationModule
   ]
 })
 export class CommonSharedModule { }

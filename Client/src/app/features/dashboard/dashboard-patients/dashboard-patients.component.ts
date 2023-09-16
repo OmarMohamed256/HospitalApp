@@ -32,7 +32,7 @@ export class DashboardPatientsComponent implements OnInit{
     this.getPatients();
   }
   getPatients() {
-    this.userService.getusersByRole(this.userParams, 'patient').subscribe(response => {
+    this.userService.getUsersByRole(this.userParams, 'patient').subscribe(response => {
       this.patients = response.result;
       this.pagination = response.pagination
     })

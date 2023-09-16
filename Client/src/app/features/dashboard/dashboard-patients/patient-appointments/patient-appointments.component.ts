@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AppointmentService } from 'src/app/core/services/appointment.service';
 import { Appointment } from 'src/app/models/appointment';
 import { AppointmentParams } from 'src/app/models/appointmentParams';
+import { Pagination } from 'src/app/models/pagination';
 import { UserData } from 'src/app/models/userData';
 
 @Component({
@@ -20,7 +21,8 @@ export class PatientAppointmentsComponent implements OnInit {
     type: '',
     specialityId: null
   };
-  
+  pagination: Pagination | null = null;
+
   constructor(private appointmentService: AppointmentService) {
   }
   ngOnInit(): void {
@@ -40,6 +42,11 @@ export class PatientAppointmentsComponent implements OnInit {
   getAppointments() {
     this.appointmentService.getAppointmentsByUserId(this.appointmentParams, this.user?.id!).subscribe(response => {
       this.appointments = response.result;
+      this.pagination = response.pagination;
     })
+  }
+  pageChanged(event: number) {
+    this.appointmentParams.pageNumber = event;
+    this.getAppointments();
   }
 }
