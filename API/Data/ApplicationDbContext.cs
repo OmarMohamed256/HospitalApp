@@ -16,10 +16,16 @@ namespace Hospital.Data
         }
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<InvoiceServiceJoin> InvoiceServiceJoin { get; set; }
+        public DbSet<CustomItem> CustomItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            ConfigureDecimalProperties(modelBuilder);
+
             modelBuilder.Entity<AppUser>()
                 .HasMany(ur => ur.UserRoles)
                 .WithOne(u => u.User)
@@ -55,6 +61,31 @@ namespace Hospital.Data
                 .WithMany(d => d.BookedWithAppointments)
                 .HasForeignKey(a => a.DoctorId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<InvoiceServiceJoin>()
+                .HasOne(j => j.Service)
+                .WithMany(s => s.InvoiceServiceJoins)
+                .HasForeignKey(j => j.ServiceId);
+
+            modelBuilder.Entity<InvoiceServiceJoin>()
+                .HasOne(j => j.Invoice)
+                .WithMany(i => i.InvoiceServiceJoins)
+                .HasForeignKey(j => j.InvoiceId);
+
+            modelBuilder.Entity<CustomItem>()
+                .HasOne(ci => ci.Invoice)      // Each CustomItem has one Invoice
+                .WithMany(i => i.CustomItems)  // Each Invoice has many CustomItems
+                .HasForeignKey(ci => ci.InvoiceId); // Foreign key property
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(i => i.Appointment)
+                .WithOne(a => a.Invoice)
+                .HasForeignKey<Appointment>(a => a.InvoiceId);
+
+            modelBuilder.Entity<Service>()
+                .HasOne(s => s.ServiceSpeciality)
+                .WithMany(s => s.Services)
+                .HasForeignKey(a => a.ServiceSpecialityId);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -74,6 +105,19 @@ namespace Hospital.Data
             }
 
             return await base.SaveChangesAsync(cancellationToken);
+        }
+        private void ConfigureDecimalProperties(ModelBuilder modelBuilder)
+        {
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(decimal))
+                    {
+                        property.SetColumnType("decimal(18, 3)"); // Set precision to 18 and scale to 3
+                    }
+                }
+            }
         }
     }
 }

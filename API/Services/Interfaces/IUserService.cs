@@ -1,7 +1,5 @@
 using API.Helpers;
 using API.Models.DTOS;
-using Microsoft.AspNetCore.Mvc;
-using webapi.Entities;
 
 namespace API.Services.Interfaces
 {

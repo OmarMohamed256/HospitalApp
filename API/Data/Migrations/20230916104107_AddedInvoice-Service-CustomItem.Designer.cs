@@ -4,6 +4,7 @@ using Hospital.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230916104107_AddedInvoice-Service-CustomItem")]
+    partial class AddedInvoiceServiceCustomItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,15 +152,10 @@ namespace HospitalApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ServiceSpecialityId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18, 3)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ServiceSpecialityId");
 
                     b.ToTable("Services");
                 });
@@ -490,17 +488,6 @@ namespace HospitalApp.Data.Migrations
                     b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("API.Models.Entities.Service", b =>
-                {
-                    b.HasOne("HospitalApp.Models.Entities.Speciality", "ServiceSpeciality")
-                        .WithMany("Services")
-                        .HasForeignKey("ServiceSpecialityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ServiceSpeciality");
-                });
-
             modelBuilder.Entity("HospitalApp.Models.Entities.Appointment", b =>
                 {
                     b.HasOne("HospitalApp.Models.Entities.Speciality", "AppointmentSpeciality")
@@ -618,8 +605,6 @@ namespace HospitalApp.Data.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Doctors");
-
-                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("webapi.Entities.AppRole", b =>

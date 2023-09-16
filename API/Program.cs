@@ -88,12 +88,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAppoinmentRepository, AppoinmentRepository>();
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAppoinmentService, AppoinmentService>();
+builder.Services.AddScoped<IServiceService, ServiceService>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 

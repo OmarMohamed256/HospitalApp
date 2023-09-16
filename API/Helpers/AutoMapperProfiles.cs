@@ -1,4 +1,5 @@
 using API.Models.DTOS;
+using API.Models.Entities;
 using AutoMapper;
 using HospitalApp.Models.Entities;
 using webapi.Entities;
@@ -12,6 +13,7 @@ namespace API.Helpers
             CreateMap<AppUser, UserInfoDto>().ReverseMap();
             CreateMap<Speciality, SpecialityDto>().ReverseMap();
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
+            CreateMap<Service, ServiceDto>().ReverseMap();
 
             CreateMap<RegisterDto, AppUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Username))
