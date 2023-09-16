@@ -16,6 +16,7 @@ export class PatientInfoComponent implements OnInit {
   genderList = GenderList;
   updateUserForm!: FormGroup;
   validationErrors: string[] = [];
+  activePane = 0;
 
   constructor(private route: ActivatedRoute, private fb: FormBuilder, private userService: UserService, private toastr: ToastrService) {
 
@@ -64,5 +65,8 @@ export class PatientInfoComponent implements OnInit {
         this.validationErrors = error;
       }
     });
+  }
+  onTabChange($event: number) {
+    this.activePane = $event;
   }
 }

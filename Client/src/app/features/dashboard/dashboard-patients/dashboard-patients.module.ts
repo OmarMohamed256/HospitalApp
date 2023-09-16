@@ -7,6 +7,7 @@ import { PaginationComponent } from 'src/app/shared/pagination/pagination.compon
 import { FormsModule } from '@angular/forms';
 import { PatientInfoComponent } from './patient-info/patient-info.component';
 import { CommonSharedModule } from 'src/app/shared/common-shared.module';
+import { PatientAppointmentsComponent } from './patient-appointments/patient-appointments.component';
 
 
 @NgModule({
@@ -23,7 +24,7 @@ import { CommonSharedModule } from 'src/app/shared/common-shared.module';
     CommonSharedModule,
     SharedModule
     ],
-  declarations: [DashboardPatientsComponent, PaginationComponent, PatientInfoComponent]
+  declarations: [DashboardPatientsComponent, PaginationComponent, PatientInfoComponent, PatientAppointmentsComponent]
 })
 export class DashboardPatientModule {
 }

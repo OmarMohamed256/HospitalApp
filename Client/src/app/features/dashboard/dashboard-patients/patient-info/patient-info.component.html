@@ -1,26 +1,26 @@
 <c-nav variant="tabs">
   <c-nav-item>
-    <a [active]="true" [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0" cNavLink>
+    <a [active]="true" [cTabContent]="tabContent" [tabPaneIdx]="0" cNavLink>
       Patient Information
     </a>
   </c-nav-item>
   <c-nav-item>
-    <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1" cNavLink>
+    <a [cTabContent]="tabContent"  [tabPaneIdx]="1" cNavLink>
       Appointments
     </a>
   </c-nav-item>
   <c-nav-item>
-    <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="2" cNavLink>
+    <a [cTabContent]="tabContent" [tabPaneIdx]="2" cNavLink>
       Invoices
     </a>
   </c-nav-item>
   <c-nav-item>
-    <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="3" cNavLink>
+    <a [cTabContent]="tabContent" [tabPaneIdx]="3" cNavLink>
       Packages
     </a>
   </c-nav-item>
 </c-nav>
-<c-tab-content #tabContent="cTabContent" [activeTabPaneIdx]="1">
+<c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
   <c-tab-pane class="p-3">
     <form [formGroup]="updateUserForm" cForm (ngSubmit)="updateUserForm.valid && updateUser()" autocomplete="off">
       <div class="row">
@@ -86,9 +86,8 @@
     </form>
   </c-tab-pane>
   <c-tab-pane class="p-3">
-
+    <app-patient-appointments [user]="user" *ngIf="activePane === 1"></app-patient-appointments>
   </c-tab-pane>
-  <!-- example: *ngIf activeTabPaneIdx === 0 disables third cNavLink -->
   <c-tab-pane class="p-3">
 
   </c-tab-pane>

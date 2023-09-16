@@ -2,6 +2,7 @@
 
 using Hospital.Data;
 using HospitalApp.Constants;
+using HospitalApp.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webapi.Entities;
@@ -12,6 +13,18 @@ namespace webapi.Data
     {
         public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, ApplicationDbContext context)
         {
+            // var appointment = new Appointment{
+            //     AppointmentSpecialityId = 1,
+            //     DateOfVisit = DateTime.Now.AddDays(3),
+            //     DoctorId = 2,
+            //     PatientId = 3,
+            //     Type = "revisit",
+            //     Status = "cancelled",
+            //     CreationNote = "Not Urgent"
+            // };
+            // context.Appointments.Add(appointment);
+            // await context.SaveChangesAsync();
+
             if (await userManager.Users.AnyAsync()) return;
 
             // Seed Roles

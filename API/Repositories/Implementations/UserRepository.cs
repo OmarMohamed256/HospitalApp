@@ -1,7 +1,6 @@
 using API.Helpers;
 using API.Repositories.Interfaces;
 using Hospital.Data;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webapi.Entities;
 
@@ -19,9 +18,12 @@ namespace API.Repositories.Implementations
         public async Task<PagedList<AppUser>> GetAllUsersAsync(UserParams userParams)
         {
             var query = _context.Users.AsQueryable();
-            query = userParams.OrderBy switch
+            query = (userParams.OrderBy, userParams.Order) switch
             {
-                "updated" => query.OrderByDescending(u => u.DateUpdated),
+                ("updated", "asc") => query.OrderBy(u => u.DateUpdated),
+                ("updated", "desc") => query.OrderByDescending(u => u.DateUpdated),
+                ("date", "asc") => query.OrderBy(u => u.DateCreated),
+                ("date", "desc") => query.OrderByDescending(u => u.DateCreated),
                 _ => query.OrderByDescending(u => u.DateCreated),
             };
             return await PagedList<AppUser>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);

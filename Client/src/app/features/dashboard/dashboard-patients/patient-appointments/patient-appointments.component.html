@@ -1,0 +1,33 @@
+<table cTable *ngIf="appointments">
+    <thead>
+      <tr>
+        <th scope="col">Doctor Name</th>
+        <th scope="col">Patient Name</th>
+        <th scope="col">Speciality</th>
+        <th scope="col">Status</th>
+        <th scope="col">Type</th>
+        <th scope="col" class="arrow-filter" [ngStyle]="{'cursor': 'pointer'}" (click)="toggleOrder('dateCreated')">
+            Date Created
+            <svg cIcon [name]="appointmentParams.orderBy === 'dateCreated' && appointmentParams.order === 'desc' ? 'cil-arrow-bottom' : 'cil-arrow-top'"></svg>
+          </th>
+          
+          <th scope="col" class="arrow-filter" [ngStyle]="{'cursor': 'pointer'}" (click)="toggleOrder('dateOfVisit')">
+            Date Of Visit
+            <svg cIcon [name]="appointmentParams.orderBy === 'dateOfVisit' && appointmentParams.order === 'desc' ? 'cil-arrow-bottom' : 'cil-arrow-top'"></svg>
+          </th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let appointment of appointments" class="user-table">
+        <td>{{appointment.doctor?.fullName}}</td>
+        <td>{{user?.fullName}}</td>
+        <td>{{appointment.speciality?.name}}</td>
+        <td>{{appointment.status}}</td>
+        <td>{{appointment.type}}</td>
+        <td>{{appointment.dateCreated | date:'short'}}</td>
+        <td>{{appointment.dateOfVisit | date:'short'}}</td>
+        <td class="pt-1"><button cButton color="primary" class="btn-m">Edit</button></td>
+      </tr>
+    </tbody>
+  </table>

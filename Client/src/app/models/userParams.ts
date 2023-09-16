@@ -1,6 +1,6 @@
-export class UserParams {
-  pageNumber = 1;
-  pageSize = 5;
+import { PaginationParams } from "./paginationParams";
+
+export class UserParams extends PaginationParams {
   orderBy = 'date';
   order = 'asc';
   gender = '';
