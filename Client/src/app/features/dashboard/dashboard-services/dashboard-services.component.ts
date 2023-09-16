@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IconSetService } from '@coreui/icons-angular';
 import { ServiceService } from 'src/app/core/services/service.service';
+import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { iconSubset } from 'src/app/icons/icon-subset';
 import { Pagination } from 'src/app/models/pagination';
 import { Service } from 'src/app/models/service';
@@ -20,21 +21,31 @@ export class DashboardServicesComponent implements OnInit{
     specialityId: null
   };
   pagination: Pagination | null = null;
+  specialityList: { value: string, display: string }[] = [];
 
-  constructor(private iconSetService: IconSetService, private serviceService: ServiceService)
+  constructor(private iconSetService: IconSetService,
+    private serviceService: ServiceService, private specialityService: SpecialityService)
   {
     iconSetService.icons = { ...iconSubset };
   }
 
   ngOnInit(): void {
     this.getServices();
+    this.getSpecialities();
   }
 
   getServices() {
     this.serviceService.getServices(this.serviceParams).subscribe(response => {
       this.services = response.result;
       this.pagination = response.pagination
-      console.log(response)
+    })
+  }
+
+  getSpecialities() {
+    this.specialityService.getSpecialities().subscribe(response => {
+      this.specialityList = response.map(item => {
+        return { value: item.id.toString(), display: item.name };
+    });
     })
   }
 

@@ -3,6 +3,14 @@
       <button cButton color="light"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
           Add new service</span></button>
           
+          <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality" [(ngModel)]="serviceParams.specialityId" cSelect (change)="getServices()">
+            <option [value]="null" disabled>Speciality</option>
+            <option *ngFor="let speciality of specialityList" [value]="speciality.value">
+              {{ speciality.display }}
+            </option>
+          </select>
+          
+
       <form cForm class="d-flex" role="search" (submit)="getServices()">
         <input cFormControl type="search" placeholder="Search" name="searchTerm" aria-label="Search" class="me-2" [(ngModel)]="serviceParams.searchTerm">
         <button cButton color="light" variant="outline" type="submit">Search</button>
