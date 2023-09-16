@@ -47,4 +47,8 @@ export class ServiceService {
   setServiceParams(params: ServiceParams) {
     this.serviceParams = params;
   }
+
+  createService(service: Service) {
+    return this.http.put(this.baseUrl + 'service/', service);
+  }
 }

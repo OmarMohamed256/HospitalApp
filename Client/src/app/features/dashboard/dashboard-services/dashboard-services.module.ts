@@ -5,6 +5,7 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonSharedModule } from "src/app/shared/common-shared.module";
+import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { CommonSharedModule } from "src/app/shared/common-shared.module";
     CommonSharedModule,
     SharedModule,
     ],
-  declarations: [DashboardServicesComponent]
+  declarations: [DashboardServicesComponent, AddServiceModalComponent]
 })
 export class DashboardServiceModule {
 }

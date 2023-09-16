@@ -8,6 +8,6 @@ namespace API.Services.Interfaces
     {
         Task<ActionResult<ServiceDto>> CreateServiceAsync(ServiceDto serviceDto);
         Task<PagedList<ServiceDto>> GetServicesAsync(ServiceParams serviceParams);
-
+        Task<bool> DeleteServiceAsync(int id);
     }
 }

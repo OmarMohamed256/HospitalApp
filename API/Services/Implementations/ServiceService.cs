@@ -37,6 +37,15 @@ namespace API.Services.Implementations
             throw new ApiException(500, "Failed to add service");
         }
 
+        public async Task<bool> DeleteServiceAsync(int id)
+        {
+            var service = await _serviceRepository.GetServiceById(id);
+            if(service == null) throw new ApiException(404, "Service Does not Exist");
+            _serviceRepository.DeleteService(service);
+            if (await _serviceRepository.SaveAllAsync()) return true;
+            return false;
+        }
+
         public async Task<PagedList<ServiceDto>> GetServicesAsync(ServiceParams serviceParams)
         {
             var services = await _serviceRepository.GetServicesAsync(serviceParams);
