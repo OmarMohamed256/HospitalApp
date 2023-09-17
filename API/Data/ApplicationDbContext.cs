@@ -18,9 +18,9 @@ namespace Hospital.Data
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<InvoiceServiceJoin> InvoiceServiceJoin { get; set; }
         public DbSet<CustomItem> CustomItems { get; set; }
-
+        public DbSet<DoctorService> DoctorServices { get; set; }
+        public DbSet<InvoiceDoctorService> InvoiceDoctorServices  { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -62,16 +62,6 @@ namespace Hospital.Data
                 .HasForeignKey(a => a.DoctorId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<InvoiceServiceJoin>()
-                .HasOne(j => j.Service)
-                .WithMany(s => s.InvoiceServiceJoins)
-                .HasForeignKey(j => j.ServiceId);
-
-            modelBuilder.Entity<InvoiceServiceJoin>()
-                .HasOne(j => j.Invoice)
-                .WithMany(i => i.InvoiceServiceJoins)
-                .HasForeignKey(j => j.InvoiceId);
-
             modelBuilder.Entity<CustomItem>()
                 .HasOne(ci => ci.Invoice)      // Each CustomItem has one Invoice
                 .WithMany(i => i.CustomItems)  // Each Invoice has many CustomItems
@@ -86,6 +76,30 @@ namespace Hospital.Data
                 .HasOne(s => s.ServiceSpeciality)
                 .WithMany(s => s.Services)
                 .HasForeignKey(a => a.ServiceSpecialityId);
+
+            modelBuilder.Entity<DoctorService>()
+                .HasOne(ds => ds.Doctor)
+                .WithMany(u => u.DoctorServices)
+                .HasForeignKey(ds => ds.DoctorId)
+                .IsRequired();
+
+            modelBuilder.Entity<DoctorService>()
+                .HasOne(ds => ds.Service)
+                .WithMany(s => s.DoctorServices)
+                .HasForeignKey(ds => ds.ServiceId)
+                .IsRequired();
+
+            modelBuilder.Entity<InvoiceDoctorService>()
+                .HasOne(ids => ids.Invoice)
+                .WithMany(i => i.InvoiceDoctorServices)
+                .HasForeignKey(ids => ids.InvoiceId)
+                .IsRequired();
+
+            modelBuilder.Entity<InvoiceDoctorService>()
+                .HasOne(ids => ids.DoctorService)
+                .WithMany(ds => ds.InvoiceDoctorServices)
+                .HasForeignKey(ids => ids.DoctorServiceId)
+                .IsRequired();
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

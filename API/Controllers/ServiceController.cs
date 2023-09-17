@@ -34,7 +34,7 @@ namespace API.Controllers
             return Ok(services);
         }
 
-        [HttpDelete]
+        [HttpDelete("{serviceId}")]
         [Authorize(Policy = Polices.RequireAdminRole)]
         public async Task<ActionResult> DeleteServiceAsync(int serviceId)
         {

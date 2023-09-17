@@ -28,5 +28,6 @@ namespace webapi.Entities
         public virtual ICollection<Appointment> BookedWithAppointments { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
+        public virtual ICollection<DoctorService>? DoctorServices { get; set; }
     }
 }

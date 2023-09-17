@@ -1,52 +1,54 @@
 <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
-    <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
-      <button cButton color="light"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
-          Add new service</span></button>
-          
-          <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality" [(ngModel)]="serviceParams.specialityId" cSelect (change)="getServices()">
-            <option [value]="null" disabled>Speciality</option>
-            <option *ngFor="let speciality of specialityList" [value]="speciality.value">
-              {{ speciality.display }}
-            </option>
-          </select>
-          
+  <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+    <button cButton color="light" (click)="openModal()"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
+        Add new service</span></button>
 
-      <form cForm class="d-flex" role="search" (submit)="getServices()">
-        <input cFormControl type="search" placeholder="Search" name="searchTerm" aria-label="Search" class="me-2" [(ngModel)]="serviceParams.searchTerm">
-        <button cButton color="light" variant="outline" type="submit">Search</button>
-      </form>
-      <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
-  
-    </div>
-  </c-navbar>
+    <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
+      [(ngModel)]="serviceParams.specialityId" cSelect (change)="getServices()">
+      <option [value]="null" disabled>Speciality</option>
+      <option *ngFor="let speciality of specialityList" [value]="speciality.value">
+        {{ speciality.display }}
+      </option>
+    </select>
+
+
+    <form cForm class="d-flex" role="search" (submit)="getServices()">
+      <input cFormControl type="search" placeholder="Search" name="searchTerm" aria-label="Search" class="me-2"
+        [(ngModel)]="serviceParams.searchTerm">
+      <button cButton color="light" variant="outline" type="submit">Search</button>
+    </form>
+    <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+
+  </div>
+</c-navbar>
 
 
 <table cTable *ngIf="services && services.length > 0">
-    <thead>
-      <tr>
-        <th scope="col">Service Name</th>
-        <th scope="col">Total Price</th>
-        <th scope="col">Doctor Percentage</th>
-        <th scope="col">Hospital Percentage</th>
-        <th scope="col">Disposables Percentage</th>
-        <th scope="col">Service</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let service of services" routerLink="{{service.id}}" class="user-table">
-        <td>{{service.name}}</td>
-        <td>{{service.totalPrice}}</td>
-        <td>{{service.doctorPercentage}}%</td>
-        <td>{{service.hospitalPercentage}}%</td>
-        <td>{{service.disposablesPercentage}}%</td>
-        <td>{{service.serviceSpecialityId}}</td>
-        <td class="pt-1"><button cButton color="danger" class="btn-m"><svg cIcon name="cil-trash"></svg></button></td>
-      </tr>
-    </tbody>
-  </table>
+  <thead>
+    <tr>
+      <th scope="col">Service Name</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Disposables Percentage</th>
+      <th scope="col">Service</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let service of services" routerLink="{{service.id}}" class="user-table">
+      <td>{{service.name}}</td>
+      <td>{{service.totalPrice}}</td>
+      <td>{{service.disposablesPercentage}}%</td>
+      <td>{{service.serviceSpecialityId}}</td>
+      <td class="pt-1"><button cButton color="danger" class="btn-m" (click)="deleteService(service.id, $event)"><svg cIcon
+            name="cil-trash"></svg></button></td>
+    </tr>
+  </tbody>
+</table>
 
-  <div class="d-flex justify-content-center" *ngIf="pagination">
-    <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
-      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
-  </div>
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+</div>
+<app-add-service-modal [(visible)]="modalVisibility">
+  <!-- Content of the modal goes here -->
+</app-add-service-modal>

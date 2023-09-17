@@ -22,6 +22,7 @@ export class DashboardServicesComponent implements OnInit{
   };
   pagination: Pagination | null = null;
   specialityList: { value: string, display: string }[] = [];
+  modalVisibility: boolean = false;
 
   constructor(private iconSetService: IconSetService,
     private serviceService: ServiceService, private specialityService: SpecialityService)
@@ -57,5 +58,21 @@ export class DashboardServicesComponent implements OnInit{
   resetFilters() {
     this.serviceParams = this.serviceService.resetServiceParams();
     this.getServices()
+  }
+
+  deleteService(serviceId: number, event: Event) {
+    event.stopPropagation();
+    this.serviceService.deleteService(serviceId).subscribe({
+      next: (response) => {
+        this.services = this.services?.filter(service => service.id !== serviceId)!;
+      },
+      error: (err) => {
+        console.error(err);
+        // Handle errors here
+      }
+    });
+  }
+  openModal() {
+    this.modalVisibility = !this.modalVisibility
   }
 }

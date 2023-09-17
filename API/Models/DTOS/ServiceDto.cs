@@ -6,8 +6,6 @@ namespace API.Models.DTOS
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal DoctorPercentage { get; set; }
-        public decimal HospitalPercentage { get; set; }
         public decimal DisposablesPercentage { get; set; }
         public decimal TotalPrice { get; set; }
         public int ServiceSpecialityId { get; set; }

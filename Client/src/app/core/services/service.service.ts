@@ -51,4 +51,8 @@ export class ServiceService {
   createService(service: Service) {
     return this.http.put(this.baseUrl + 'service/', service);
   }
+
+  deleteService(serviceId: number) {
+    return this.http.delete(this.baseUrl + 'service/' + serviceId);
+  }
 }

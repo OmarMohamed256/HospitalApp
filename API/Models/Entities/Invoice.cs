@@ -19,7 +19,7 @@ namespace API.Models.Entities
         public int AppointmentId { get; set; }
         public virtual Appointment Appointment { get; set; }
         public virtual ICollection<CustomItem>? CustomItems { get; set; }
-        public virtual ICollection<InvoiceServiceJoin> InvoiceServiceJoins { get; set; }
+        public virtual ICollection<InvoiceDoctorService>? InvoiceDoctorServices { get; set; }
 
     }
 }
