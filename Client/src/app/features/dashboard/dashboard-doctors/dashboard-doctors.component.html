@@ -38,7 +38,7 @@
     <tbody>
       <tr *ngFor="let doctor of doctors" routerLink="{{doctor.id}}" class="user-table">
         <td>{{doctor.fullName}}</td>
-        <td>{{doctor.gender}}</td>
+        <td>{{ getSpecialityNameById(doctor.doctorSpecialityId!) }}</td>
         <td>{{doctor.email}}</td>
         <td>{{doctor.phoneNumber}}</td>
         <td>{{doctor.age}}</td>

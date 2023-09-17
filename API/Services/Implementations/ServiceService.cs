@@ -25,22 +25,37 @@ namespace API.Services.Implementations
             // Create a new Service entity without setting the Id
             var service = _mapper.Map<Service>(serviceDto);
 
+            // Add the service to the database
             _serviceRepository.AddService(service);
 
+            // Save changes to the database
             if (await _serviceRepository.SaveAllAsync())
             {
-                // Retrieve the generated Id and assign it to the serviceDto
-                serviceDto.Id = service.Id;
-                return serviceDto;
-            }
+                // Create doctor services for the newly added service
+                _serviceRepository.CreateDoctorServicesForService(service);
 
-            throw new ApiException(500, "Failed to add service");
+                // Save changes again to add doctor services
+                if (await _serviceRepository.SaveAllAsync())
+                {
+                    serviceDto.Id = service.Id;
+                    return serviceDto;
+                }
+                else
+                {
+                    throw new ApiException(500, "Failed to create doctor services for the service");
+                }
+            }
+            else
+            {
+                throw new ApiException(500, "Failed to add service");
+            }
         }
+
 
         public async Task<bool> DeleteServiceAsync(int id)
         {
             var service = await _serviceRepository.GetServiceById(id);
-            if(service == null) throw new ApiException(404, "Service Does not Exist");
+            if (service == null) throw new ApiException(404, "Service Does not Exist");
             _serviceRepository.DeleteService(service);
             if (await _serviceRepository.SaveAllAsync()) return true;
             return false;

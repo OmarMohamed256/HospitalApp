@@ -80,6 +80,7 @@ export class DashboardServicesComponent implements OnInit{
   }
   onServiceCreated(newService: Service) {
     if (newService) {
+      console.log(newService)
       this.services?.push(newService); // Add the newly created service to the services array
     }
   }

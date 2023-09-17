@@ -55,4 +55,8 @@ export class DashboardDoctorsComponent implements OnInit {
       this.specialityList = response;
     })
   }
+  getSpecialityNameById(id: number): string {
+    const speciality = this.specialityList.find(item => item.id === id);
+    return speciality ? speciality.name : '';
+  }
 }

@@ -47,5 +47,25 @@ namespace API.Repositories.Implementations
         {
             return await _context.SaveChangesAsync() > 0;
         }
+        public void CreateDoctorServicesForService(Service service)
+        {
+            var doctorSpecialityId = service.ServiceSpecialityId;
+            var doctorsWithSpeciality = _context.Users
+                .Where(d => d.DoctorSpecialityId == doctorSpecialityId)
+                .ToList();
+
+            foreach (var doctor in doctorsWithSpeciality)
+            {
+                var doctorService = new DoctorService
+                {
+                    DoctorId = doctor.Id,
+                    ServiceId = service.Id,
+                    DoctorPercentage = 50,
+                    HospitalPercentage = 50
+                };
+
+                _context.DoctorServices.Add(doctorService);
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@
         <div class="mb-3">
           <label cLabel>Disposables Price</label>
           <app-text-input icon="cilEnvelopeClosed"
-            [formControl]='$any(createServiceForm.controls["disposablesPercentage"])'  [label]='"Disposables"'></app-text-input>
+            [formControl]='$any(createServiceForm.controls["disposablesPrice"])'  [label]='"Disposables"'></app-text-input>
         </div>
       </div>
     </div>
@@ -47,8 +47,8 @@
           <label cLabel>Speciality</label>
           <select name="speciality"  aria-label="speciality" cSelect [formControl]="$any(createServiceForm.controls['serviceSpecialityId'])">
             <option value="" disabled selected>Select speciality</option>
-            <option *ngFor="let service of specialityList" [value]="service.name">
-              {{service.id}}
+            <option *ngFor="let service of specialityList" [value]="service.id">
+              {{service.name}}
             </option>
           </select>
         </div>

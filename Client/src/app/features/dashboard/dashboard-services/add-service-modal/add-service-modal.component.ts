@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ServiceService } from 'src/app/core/services/service.service';
@@ -26,7 +26,7 @@ export class AddServiceModalComponent implements OnInit {
   };
 
   constructor(private fb: FormBuilder, private serviceService: ServiceService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService, private cdRef: ChangeDetectorRef) {
   }
   ngOnInit(): void {
     this.intializeForm();
@@ -50,8 +50,9 @@ export class AddServiceModalComponent implements OnInit {
     this.mapFormToService();
     this.serviceService.createService(this.service).subscribe({
       next: (response) => {
+        this.service = response as Service;
         this.serviceCreated.emit(this.service);
-        this.visible = false;
+        this.modelToggeled(false);
         this.toastr.success("Service created successfully")
       },
       error: (err) => {

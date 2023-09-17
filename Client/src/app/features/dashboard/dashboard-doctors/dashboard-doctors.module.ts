@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonSharedModule } from 'src/app/shared/common-shared.module';
 import { DashboardDoctorsComponent } from './dashboard-doctors.component';
 import { DashboardDoctorsRoutingModule } from './dashboard-doctors-routing.module';
+import { DoctorInfoComponent } from './doctor-info/doctor-info.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,7 @@ import { DashboardDoctorsRoutingModule } from './dashboard-doctors-routing.modul
     CommonSharedModule,
     SharedModule
     ],
-  declarations: [DashboardDoctorsComponent]
+  declarations: [DashboardDoctorsComponent, DoctorInfoComponent]
 })
 export class DashboardDoctorModule {
 }
