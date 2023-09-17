@@ -75,4 +75,13 @@ export class DashboardServicesComponent implements OnInit{
   openModal() {
     this.modalVisibility = !this.modalVisibility
   }
+  getSpecialityNameById(id: number): string {
+    const speciality = this.specialityList.find(item => item.value === id.toString());
+    return speciality ? speciality.display : '';
+  }
+  onServiceCreated(newService: Service) {
+    if (newService) {
+      this.services?.push(newService); // Add the newly created service to the services array
+    }
+  }
 }

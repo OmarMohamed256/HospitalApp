@@ -49,7 +49,7 @@ export class ServiceService {
   }
 
   createService(service: Service) {
-    return this.http.put(this.baseUrl + 'service/', service);
+    return this.http.post(this.baseUrl + 'service/', service);
   }
 
   deleteService(serviceId: number) {

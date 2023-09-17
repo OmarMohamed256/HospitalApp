@@ -38,7 +38,7 @@
       <td>{{service.name}}</td>
       <td>{{service.totalPrice}}</td>
       <td>{{service.disposablesPercentage}}%</td>
-      <td>{{service.serviceSpecialityId}}</td>
+      <td>{{ getSpecialityNameById(service.serviceSpecialityId) }}</td>
       <td class="pt-1"><button cButton color="danger" class="btn-m" (click)="deleteService(service.id, $event)"><svg cIcon
             name="cil-trash"></svg></button></td>
     </tr>
@@ -49,6 +49,6 @@
   <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
     [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
 </div>
-<app-add-service-modal [(visible)]="modalVisibility">
+<app-add-service-modal (serviceCreated)="onServiceCreated($event)" [(visible)]="modalVisibility" [specialityList]="specialityList">
   <!-- Content of the modal goes here -->
 </app-add-service-modal>
