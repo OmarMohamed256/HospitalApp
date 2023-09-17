@@ -11,6 +11,6 @@ namespace API.Models.Entities
         public decimal HospitalPercentage { get; set; }
         public virtual AppUser Doctor { get; set; }
         public virtual Service Service { get; set; }
-        public virtual ICollection<InvoiceDoctorService>? InvoiceDoctorServices { get; set; }
+        public virtual ICollection<InvoiceItem>? InvoiceItems { get; set; }
     }
 }

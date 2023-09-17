@@ -22,11 +22,15 @@ export const navItems: IRoleNavData[] = [
     roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
   },
   {
+    name: 'Doctors',
+    url: '/doctors',
+    iconComponent: { name: 'cil-user' },
+    roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
+  },
+  {
     name: 'Services',
     url: '/services',
     iconComponent: { name: 'cil-layers' },
     roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
-
-  },
-  
+  }
 ];

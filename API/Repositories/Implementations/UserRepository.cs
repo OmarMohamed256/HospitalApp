@@ -18,6 +18,11 @@ namespace API.Repositories.Implementations
         public async Task<PagedList<AppUser>> GetAllUsersAsync(UserParams userParams)
         {
             var query = _context.Users.AsQueryable();
+            if (!string.IsNullOrEmpty(userParams.SearchTerm)) query = query.Where(u => u.FullName.Contains(userParams.SearchTerm) || u.Email.Contains(userParams.SearchTerm));
+            if (!string.IsNullOrEmpty(userParams.Gender)) query = query.Where(u => u.Gender == userParams.Gender);
+            if (userParams.DoctorSpecialityId != null)
+                query = query.Where(u => u.DoctorSpecialityId == userParams.DoctorSpecialityId);
+
             query = (userParams.OrderBy, userParams.Order) switch
             {
                 ("updated", "asc") => query.OrderBy(u => u.DateUpdated),
@@ -35,7 +40,8 @@ namespace API.Repositories.Implementations
 
             if (!string.IsNullOrEmpty(userParams.SearchTerm)) query = query.Where(u => u.FullName.Contains(userParams.SearchTerm) || u.Email.Contains(userParams.SearchTerm));
             if (!string.IsNullOrEmpty(userParams.Gender)) query = query.Where(u => u.Gender == userParams.Gender);
-
+            if (userParams.DoctorSpecialityId != null)
+                query = query.Where(u => u.DoctorSpecialityId == userParams.DoctorSpecialityId);
 
             query = (userParams.OrderBy, userParams.Order) switch
             {

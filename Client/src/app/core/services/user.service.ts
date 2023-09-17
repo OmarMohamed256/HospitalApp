@@ -11,14 +11,10 @@ import { map, of } from 'rxjs';
 })
 export class UserService {
   baseUrl = environment.apiUrl;
-  userParams: UserParams = {
+  userParams: UserParams = new UserParams({
     pageNumber: 1,
-    pageSize: 5,
-    orderBy: 'date',
-    order: 'asc',
-    gender: '',
-    searchTerm: ''
-  };
+    pageSize: 15,
+  });
   memberCache = new Map();
 
   constructor(private http: HttpClient) { }
@@ -29,6 +25,7 @@ export class UserService {
   }
 
   getUsersByRole(userParams: UserParams, roleName: string) {
+    console.log(userParams)
     var response = this.memberCache.get(Object.values(userParams).join("-"));
     if (response) {
       return of(response);
@@ -38,6 +35,7 @@ export class UserService {
     params = params.append('order', userParams.order);
     if (userParams.searchTerm.trim() !== '') params = params.append('searchTerm', userParams.searchTerm.trim());
     if (userParams.gender.trim() !== '') params = params.append('gender', userParams.gender.trim());
+    if (userParams.doctorSpecialityId !== null) params = params.append('doctorSpecialityId', userParams.doctorSpecialityId);
 
 
 

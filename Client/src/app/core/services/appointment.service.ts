@@ -23,8 +23,6 @@ export class AppointmentService {
       this.currentUserId = userId;
     }
     var response = this.appointmentCache.get(Object.values(appointmentParams).join("-"));
-    console.log(userId)
-    console.log(this.currentUserId)
 
     if (response) {
       return of(response);

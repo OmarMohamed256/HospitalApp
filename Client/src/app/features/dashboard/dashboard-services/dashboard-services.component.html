@@ -6,8 +6,8 @@
     <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
       [(ngModel)]="serviceParams.specialityId" cSelect (change)="getServices()">
       <option [value]="null" disabled>Speciality</option>
-      <option *ngFor="let speciality of specialityList" [value]="speciality.value">
-        {{ speciality.display }}
+      <option *ngFor="let speciality of specialityList" [value]="speciality.id">
+        {{ speciality.name }}
       </option>
     </select>
 
@@ -28,7 +28,7 @@
     <tr>
       <th scope="col">Service Name</th>
       <th scope="col">Total Price</th>
-      <th scope="col">Disposables Percentage</th>
+      <th scope="col">Disposables Price</th>
       <th scope="col">Service</th>
       <th scope="col"></th>
     </tr>
@@ -37,7 +37,7 @@
     <tr *ngFor="let service of services" routerLink="{{service.id}}" class="user-table">
       <td>{{service.name}}</td>
       <td>{{service.totalPrice}}</td>
-      <td>{{service.disposablesPercentage}}%</td>
+      <td>{{service.disposablesPrice}}%</td>
       <td>{{ getSpecialityNameById(service.serviceSpecialityId) }}</td>
       <td class="pt-1"><button cButton color="danger" class="btn-m" (click)="deleteService(service.id, $event)"><svg cIcon
             name="cil-trash"></svg></button></td>

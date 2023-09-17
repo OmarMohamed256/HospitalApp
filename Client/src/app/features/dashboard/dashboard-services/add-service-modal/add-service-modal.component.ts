@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ServiceService } from 'src/app/core/services/service.service';
 import { Service } from 'src/app/models/service';
+import { Speciality } from 'src/app/models/speciality';
 
 @Component({
   selector: 'app-add-service-modal',
@@ -13,13 +14,13 @@ export class AddServiceModalComponent implements OnInit {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() serviceCreated = new EventEmitter<Service>();
-  @Input()   specialityList: { value: string, display: string }[] = [];
+  @Input()   specialityList: Speciality[] = [];
   createServiceForm!: FormGroup;
   validationErrors: string[] = [];
   service: Service = {
     id: 0, // Assuming you don't have an ID until it's created
     name: '',
-    disposablesPercentage: 0,
+    disposablesPrice: 0,
     totalPrice: 0,
     serviceSpecialityId: 0 // Assuming you don't have a speciality ID until it's selected
   };
@@ -39,7 +40,7 @@ export class AddServiceModalComponent implements OnInit {
   intializeForm() {
     this.createServiceForm = this.fb.group({
       name: ['', Validators.required],
-      disposablesPercentage: ['', Validators.required],
+      disposablesPrice: ['', Validators.required],
       totalPrice: ['', Validators.required],
       serviceSpecialityId: ['', Validators.required]
     })
@@ -62,7 +63,7 @@ export class AddServiceModalComponent implements OnInit {
 
   mapFormToService() {
     this.service.name = this.createServiceForm.value.name;
-    this.service.disposablesPercentage = this.createServiceForm.value.disposablesPercentage;
+    this.service.disposablesPrice = this.createServiceForm.value.disposablesPrice;
     this.service.totalPrice = this.createServiceForm.value.totalPrice;
     this.service.serviceSpecialityId = this.createServiceForm.value.serviceSpecialityId;
   }

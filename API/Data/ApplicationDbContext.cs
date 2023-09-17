@@ -20,7 +20,7 @@ namespace Hospital.Data
         public DbSet<Service> Services { get; set; }
         public DbSet<CustomItem> CustomItems { get; set; }
         public DbSet<DoctorService> DoctorServices { get; set; }
-        public DbSet<InvoiceDoctorService> InvoiceDoctorServices  { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems  { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -89,15 +89,15 @@ namespace Hospital.Data
                 .HasForeignKey(ds => ds.ServiceId)
                 .IsRequired();
 
-            modelBuilder.Entity<InvoiceDoctorService>()
+            modelBuilder.Entity<InvoiceItem>()
                 .HasOne(ids => ids.Invoice)
-                .WithMany(i => i.InvoiceDoctorServices)
+                .WithMany(i => i.InvoiceItems)
                 .HasForeignKey(ids => ids.InvoiceId)
                 .IsRequired();
 
-            modelBuilder.Entity<InvoiceDoctorService>()
+            modelBuilder.Entity<InvoiceItem>()
                 .HasOne(ids => ids.DoctorService)
-                .WithMany(ds => ds.InvoiceDoctorServices)
+                .WithMany(ds => ds.InvoiceItems)
                 .HasForeignKey(ids => ids.DoctorServiceId)
                 .IsRequired();
         }

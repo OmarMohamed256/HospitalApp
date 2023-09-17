@@ -11,21 +11,16 @@ import { UserParams } from 'src/app/models/userParams';
   templateUrl: './dashboard-patients.component.html',
   styleUrls: ['./dashboard-patients.component.scss']
 })
-export class DashboardPatientsComponent implements OnInit{
+export class DashboardPatientsComponent implements OnInit {
   patients: UserData[] | null = [];
-  userParams: UserParams = {
+  userParams: UserParams = new UserParams({
     pageNumber: 1,
-    pageSize: 15,
-    orderBy: 'date',
-    order: 'asc',
-    gender: '',
-    searchTerm: ''
-  };
+    pageSize: 2,
+  });
   pagination: Pagination | null = null;
   genderList = GenderList;
 
-  constructor(private iconSetService: IconSetService, private userService: UserService)
-  {
+  constructor(private iconSetService: IconSetService, private userService: UserService) {
     iconSetService.icons = { ...iconSubset };
   }
   ngOnInit(): void {
@@ -37,7 +32,7 @@ export class DashboardPatientsComponent implements OnInit{
       this.pagination = response.pagination
     })
   }
-  
+
   pageChanged(event: number) {
     this.userParams.pageNumber = event;
     this.getPatients();
@@ -45,7 +40,7 @@ export class DashboardPatientsComponent implements OnInit{
 
   toggleOrder() {
     this.userParams.order = (this.userParams.order === 'asc') ? 'desc' : 'asc';
-    this.getPatients(); 
+    this.getPatients();
   }
 
   resetFilters() {

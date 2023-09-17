@@ -6,6 +6,7 @@ import { iconSubset } from 'src/app/icons/icon-subset';
 import { Pagination } from 'src/app/models/pagination';
 import { Service } from 'src/app/models/service';
 import { ServiceParams } from 'src/app/models/serviceParams';
+import { Speciality } from 'src/app/models/speciality';
 
 @Component({
   selector: 'app-dashboard-services',
@@ -21,7 +22,7 @@ export class DashboardServicesComponent implements OnInit{
     specialityId: null
   };
   pagination: Pagination | null = null;
-  specialityList: { value: string, display: string }[] = [];
+  specialityList: Speciality[] = [];
   modalVisibility: boolean = false;
 
   constructor(private iconSetService: IconSetService,
@@ -44,9 +45,7 @@ export class DashboardServicesComponent implements OnInit{
 
   getSpecialities() {
     this.specialityService.getSpecialities().subscribe(response => {
-      this.specialityList = response.map(item => {
-        return { value: item.id.toString(), display: item.name };
-    });
+      this.specialityList = response;
     })
   }
 
@@ -76,8 +75,8 @@ export class DashboardServicesComponent implements OnInit{
     this.modalVisibility = !this.modalVisibility
   }
   getSpecialityNameById(id: number): string {
-    const speciality = this.specialityList.find(item => item.value === id.toString());
-    return speciality ? speciality.display : '';
+    const speciality = this.specialityList.find(item => item.id === id);
+    return speciality ? speciality.name : '';
   }
   onServiceCreated(newService: Service) {
     if (newService) {

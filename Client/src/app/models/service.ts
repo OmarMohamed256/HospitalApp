@@ -1,7 +1,7 @@
 export interface Service {
     id:                    number;
     name:                  string;
-    disposablesPercentage: number;
+    disposablesPrice: number;
     totalPrice:            number;
     serviceSpecialityId:   number;
 }

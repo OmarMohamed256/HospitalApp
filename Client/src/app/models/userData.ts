@@ -9,4 +9,5 @@ export interface UserData {
     gender: string;
     age: string;
     dateCreated: string;
+    doctorSpecialityId?: number;
 }
