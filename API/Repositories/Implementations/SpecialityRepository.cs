@@ -13,9 +13,20 @@ namespace API.Repositories.Implementations
         {
             _context = context;
         }
+
+        public void AddSpeciality(Speciality speciality)
+        {
+            _context.Specialities.Add(speciality);
+        }
+
         public async Task<IEnumerable<Speciality>> GetSpecialitiesAsync()
         {
             return await _context.Specialities.ToListAsync();
+        }
+
+        public async Task<bool> SaveAllAsync()
+        {
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }
