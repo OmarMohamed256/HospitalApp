@@ -1,3 +1,4 @@
+using System.Transactions;
 using API.Errors;
 using API.Helpers;
 using API.Models.DTOS;
@@ -25,29 +26,73 @@ namespace API.Services.Implementations
             // Create a new Service entity without setting the Id
             var service = _mapper.Map<Service>(serviceDto);
 
-            // Add the service to the database
-            _serviceRepository.AddService(service);
+            // Start a new transaction
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    // Add the service to the database
+                    _serviceRepository.AddService(service);
 
-            // Save changes to the database
+                    // Save changes to the database
+                    if (await _serviceRepository.SaveAllAsync())
+                    {
+                        // Create doctor services for the newly added service
+                        await _serviceRepository.CreateDoctorServicesForService(service);
+
+                        // Save changes to create doctor services
+                        if (await _serviceRepository.SaveAllAsync())
+                        {
+                            // Commit the transaction
+                            scope.Complete();
+
+                            serviceDto.Id = service.Id;
+                            return serviceDto;
+                        }
+                        else
+                        {
+                            // Rollback the transaction
+                            scope.Dispose();
+                            throw new ApiException(500, "Failed to create doctor services for the service");
+                        }
+                    }
+                    else
+                    {
+                        // Rollback the transaction
+                        scope.Dispose();
+                        throw new ApiException(500, "Failed to add service");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle and log the exception
+                    // Rollback the transaction
+                    scope.Dispose();
+                    throw; // Re-throw the exception to be handled by the calling code
+                }
+            }
+        }
+
+        public async Task<ActionResult<ServiceDto>> UpdateServiceAsync(ServiceDto serviceDto)
+        {
+            var service = _mapper.Map<Service>(serviceDto);
+
+            _serviceRepository.UpdateService(service);
+
+            // Call UpdateDoctorServicesForService after updating the service
+            await _serviceRepository.UpdateDoctorServicesForService(service);
+
             if (await _serviceRepository.SaveAllAsync())
             {
-                // Create doctor services for the newly added service
-                await _serviceRepository.CreateDoctorServicesForService(service);
-                if (await _serviceRepository.SaveAllAsync())
-                {
-                    serviceDto.Id = service.Id;
-                    return serviceDto;
-                }
-                else
-                {
-                    throw new ApiException(500, "Failed to create doctor services for the service");
-                }
+                serviceDto.Id = service.Id;
+                return serviceDto;
             }
             else
             {
-                throw new ApiException(500, "Failed to add service");
+                throw new ApiException(500, "Failed to update service");
             }
         }
+
 
 
 

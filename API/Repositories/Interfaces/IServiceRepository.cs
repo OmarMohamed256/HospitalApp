@@ -12,5 +12,7 @@ namespace API.Repositories.Interfaces
         Task<bool> SaveAllAsync();
         Task<PagedList<Service>> GetServicesAsync(ServiceParams serviceParams);
         Task CreateDoctorServicesForService(Service service);
+        Task UpdateDoctorServicesForService(Service service);
+
     }
 }

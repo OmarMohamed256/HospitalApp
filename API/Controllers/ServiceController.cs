@@ -30,7 +30,7 @@ namespace API.Controllers
         public async Task<ActionResult<ServiceDto>> UpdateServiceAsync(ServiceDto serviceDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return await _serviceService.CreateServiceAsync(serviceDto);
+            return await _serviceService.UpdateServiceAsync(serviceDto);
         }
 
         [HttpGet]
