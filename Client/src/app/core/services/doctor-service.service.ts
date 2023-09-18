@@ -14,4 +14,8 @@ export class DoctorServiceService {
   getDoctorServiceByDocorId(doctorId: string) {
     return this.http.get<DoctorService[]>(this.baseUrl + 'doctorService/services-by-doctor/' + doctorId);
   }
+  
+  updateDoctorServiceById(doctorService: Partial<DoctorService>) {
+    return this.http.put<Partial<DoctorService>>(this.baseUrl + 'doctorService', doctorService);
+  }
 }

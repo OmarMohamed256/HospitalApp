@@ -12,6 +12,9 @@
     <div *ngIf="ngControl.control?.errors?.['maxlength']" class="invalid-feedback">
         {{label}} must be at most {{ngControl.errors?.['maxlength']['requiredLength']}}
     </div>
+    <div *ngIf="ngControl.control?.errors?.['max']" class="invalid-feedback">
+        {{label}} must not exceed {{ngControl.errors?.['max']['max']}}
+    </div>
     <div *ngIf="ngControl.control?.errors?.['isMatching']" class="invalid-feedback">
         Password do not match
     </div>

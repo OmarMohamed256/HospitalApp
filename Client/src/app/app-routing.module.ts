@@ -30,6 +30,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/dashboard/dashboard-services/dashboard-services.module').then((m) => m.DashboardServiceModule)
       },
+      {
+        path: 'specialities',
+        loadChildren: () =>
+          import('./features/dashboard/dashboard-specialities/dashboard-specialities.module').then((m) => m.DashboardSpecialitiesModule)
+      },
     ]
   },
   {

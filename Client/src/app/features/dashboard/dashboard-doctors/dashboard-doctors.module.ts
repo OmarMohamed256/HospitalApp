@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ContainerComponent, FormSelectDirective, InputGroupTextDirective, NavbarModule, SharedModule, TableModule } from '@coreui/angular';
+import { ContainerComponent, FormSelectDirective, InputGroupTextDirective, ModalModule, NavbarModule, SharedModule, TableModule } from '@coreui/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommonSharedModule } from 'src/app/shared/common-shared.module';
@@ -19,7 +19,8 @@ import { DoctorServicesComponent } from './doctor-services/doctor-services.compo
     FormSelectDirective,
     InputGroupTextDirective,
     CommonSharedModule,
-    SharedModule
+    SharedModule,
+    ModalModule
     ],
   declarations: [DashboardDoctorsComponent, DoctorInfoComponent, DoctorServicesComponent]
 })

@@ -26,6 +26,10 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult<DoctorServiceUpdateDto>> UpdateDoctorServiceDto(DoctorServiceUpdateDto doctorServiceUpdateDto)
         {
+            if (doctorServiceUpdateDto.DoctorPercentage + doctorServiceUpdateDto.HospitalPercentage > 100)
+            {
+                return BadRequest("The sum of Doctor Percentage and Hospital Percentage cannot exceed 100.");
+            }
             return await _doctorServiceService.UpdateDoctorService(doctorServiceUpdateDto);
         }
 

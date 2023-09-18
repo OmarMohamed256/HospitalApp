@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let doctor_service of doctor_services" class="user-table">
+      <tr *ngFor="let doctor_service of doctor_services" (click)="openModal(doctor_service)" class="user-table">
         <td>{{doctor_service.service.name}}</td>
         <td>{{doctor_service.doctorPercentage}}%</td>
         <td>{{doctor_service.hospitalPercentage}}%</td>
@@ -16,3 +16,53 @@
       </tr>
     </tbody>
   </table>
+
+
+<c-modal id="liveDemoModal" size="lg" [visible]="visible" (visibleChange)="handleLiveDemoChange($event)">
+  <c-modal-header>
+    <h5 cModalTitle>Modal title</h5>
+    <button (click)="toggleLiveDemo()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <form [formGroup]="updateDoctorServiceForm" cForm (ngSubmit)="updateDoctorServiceForm.valid" autocomplete="off">
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label cLabel>Service Name</label>
+            <app-text-input icon="cilUser"
+              [formControl]='$any(updateDoctorServiceForm.controls["serviceName"])' [label]='"Service Name"'></app-text-input>
+              
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label cLabel>Doctor Percentage</label>
+            <app-text-input icon="cilEnvelopeClosed"
+              [formControl]='$any(updateDoctorServiceForm.controls["doctorPercentage"])'  [label]='"Doctor Percentage"'></app-text-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+          <div class="mb-3">
+            <label cLabel>Hospital Percentage</label>
+            <app-text-input icon="cilUser"
+              [formControl]='$any(updateDoctorServiceForm.controls["hospitalPercentage"])' [label]='"Hospital Percentage"'></app-text-input>
+              
+          </div>
+        </div>
+    </form>
+  </c-modal-body>
+  <c-modal-footer>
+    <div class="row" *ngIf="validationErrors.length > 0">
+        <ul class="text-danger">
+          <li *ngFor="let error of validationErrors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+    <button (click)="toggleLiveDemo()" cButton color="secondary">
+      Close
+    </button>
+    <button (click)="updateDoctorServiceById()" cButton color="primary">Update</button>
+  </c-modal-footer>
+</c-modal>

@@ -15,7 +15,7 @@ import { AddServiceModalComponent } from './add-service-modal/add-service-modal.
   templateUrl: './dashboard-services.component.html',
   styleUrls: ['./dashboard-services.component.scss']
 })
-export class DashboardServicesComponent implements OnInit{
+export class DashboardServicesComponent implements OnInit {
   services: Service[] | null = [];
   serviceParams: ServiceParams = {
     pageNumber: 1,
