@@ -23,7 +23,11 @@ namespace API.Controllers
             var services = await _doctorServiceService.GetDoctorServiceByDoctorId(doctorId);
             return Ok(services);
         }
-
+        [HttpPut]
+        public async Task<ActionResult<DoctorServiceUpdateDto>> UpdateDoctorServiceDto(DoctorServiceUpdateDto doctorServiceUpdateDto)
+        {
+            return await _doctorServiceService.UpdateDoctorService(doctorServiceUpdateDto);
+        }
 
     }
 }

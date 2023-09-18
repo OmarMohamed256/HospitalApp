@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
 using Hospital.Data;
@@ -78,5 +74,14 @@ namespace API.Repositories.Implementations
             }
         }
 
+        public async Task<bool> SaveAllAsync()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<DoctorService> GetDoctorServiceById(int Id)
+        {
+            return await _context.DoctorServices.AsNoTracking().FirstOrDefaultAsync(ds => ds.Id == Id);
+        }
     }
 }
