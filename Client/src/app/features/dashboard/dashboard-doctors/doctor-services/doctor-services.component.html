@@ -1,0 +1,18 @@
+<table cTable *ngIf="doctor_services && doctor_services.length > 0">
+    <thead>
+      <tr>
+        <th scope="col">Service Name</th>
+        <th scope="col">Doctor Percentage</th>
+        <th scope="col">Hospital Percentage</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let doctor_service of doctor_services" class="user-table">
+        <td>{{doctor_service.service.name}}</td>
+        <td>{{doctor_service.doctorPercentage}}%</td>
+        <td>{{doctor_service.hospitalPercentage}}%</td>
+        <td class="pt-1"><button cButton color="primary" class="btn-m">Edit</button></td>
+      </tr>
+    </tbody>
+  </table>

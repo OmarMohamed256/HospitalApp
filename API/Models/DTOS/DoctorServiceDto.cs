@@ -1,3 +1,5 @@
+using API.Models.Entities;
+
 namespace API.Models.DTOS
 {
     public class DoctorServiceDto
@@ -7,5 +9,6 @@ namespace API.Models.DTOS
         public int ServiceId { get; set; }
         public decimal DoctorPercentage { get; set; }
         public decimal HospitalPercentage { get; set; }
+        public ServiceDto? Service { get; set; }
     }
 }

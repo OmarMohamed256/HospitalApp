@@ -20,9 +20,11 @@
       </a>
     </c-nav-item>
   </c-nav>
-  <c-tab-content #tabContent="cTabContent">
+  <c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
     <c-tab-pane class="p-3"></c-tab-pane>
-    <c-tab-pane class="p-3"></c-tab-pane>
+    <c-tab-pane class="p-3" *ngIf="user">
+      <app-doctor-services [doctorId]="user.id" *ngIf="activePane === 1"></app-doctor-services>
+    </c-tab-pane>
     <c-tab-pane class="p-3"></c-tab-pane>
     <c-tab-pane class="p-3"></c-tab-pane>
   </c-tab-content>

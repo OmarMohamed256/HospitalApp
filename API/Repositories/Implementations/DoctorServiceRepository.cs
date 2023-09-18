@@ -21,6 +21,7 @@ namespace API.Repositories.Implementations
         {
             return await _context.DoctorServices
                 .Where(ds => ds.DoctorId == doctorId)
+                .Include(ds => ds.Service)
                 .ToListAsync();
         }
 

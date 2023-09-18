@@ -25,7 +25,6 @@ export class UserService {
   }
 
   getUsersByRole(userParams: UserParams, roleName: string) {
-    console.log(userParams)
     var response = this.memberCache.get(Object.values(userParams).join("-"));
     if (response) {
       return of(response);

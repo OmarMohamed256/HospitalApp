@@ -6,6 +6,7 @@ import { CommonSharedModule } from 'src/app/shared/common-shared.module';
 import { DashboardDoctorsComponent } from './dashboard-doctors.component';
 import { DashboardDoctorsRoutingModule } from './dashboard-doctors-routing.module';
 import { DoctorInfoComponent } from './doctor-info/doctor-info.component';
+import { DoctorServicesComponent } from './doctor-services/doctor-services.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { DoctorInfoComponent } from './doctor-info/doctor-info.component';
     CommonSharedModule,
     SharedModule
     ],
-  declarations: [DashboardDoctorsComponent, DoctorInfoComponent]
+  declarations: [DashboardDoctorsComponent, DoctorInfoComponent, DoctorServicesComponent]
 })
 export class DashboardDoctorModule {
 }
