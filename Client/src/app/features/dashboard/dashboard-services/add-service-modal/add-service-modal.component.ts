@@ -14,7 +14,7 @@ export class AddServiceModalComponent implements OnInit {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() serviceCreated = new EventEmitter<Service>();
-  @Input()   specialityList: Speciality[] = [];
+  @Input() specialityList: Speciality[] = [];
   createServiceForm!: FormGroup;
   validationErrors: string[] = [];
   service: Service = {
@@ -26,7 +26,7 @@ export class AddServiceModalComponent implements OnInit {
   };
 
   constructor(private fb: FormBuilder, private serviceService: ServiceService,
-    private toastr: ToastrService, private cdRef: ChangeDetectorRef) {
+    private toastr: ToastrService) {
   }
   ngOnInit(): void {
     this.intializeForm();
@@ -39,21 +39,30 @@ export class AddServiceModalComponent implements OnInit {
 
   intializeForm() {
     this.createServiceForm = this.fb.group({
-      name: ['', Validators.required],
-      disposablesPrice: ['', Validators.required],
-      totalPrice: ['', Validators.required],
-      serviceSpecialityId: ['', Validators.required]
-    })
+      name: [this.service.name, Validators.required],
+      disposablesPrice: [this.service.disposablesPrice, Validators.required],
+      totalPrice: [this.service.totalPrice, Validators.required],
+      serviceSpecialityId: [this.service.serviceSpecialityId, Validators.required]
+    });
+    this.createServiceForm.valueChanges.subscribe(formValue => {
+      this.service = { ...this.service, ...formValue };
+    });
+  }
+
+  createUpdateService() {
+    if (this.service.id == 0) {
+      this.createService();
+    }else {
+      this.updateService();
+    }
   }
 
   createService() {
-    this.mapFormToService();
     this.serviceService.createService(this.service).subscribe({
       next: (response) => {
-        const newService: Service = response as Service; // This should not overwrite the newService object
-        this.serviceCreated.emit(newService); // Emit the newService object
-        this.createServiceForm.reset();
-        this.modelToggeled(false);
+        this.service = response as Service; // This should not overwrite the newService object
+        this.serviceCreated.emit(this.service); // Emit the newService object
+        this.resetFormAndCloseModal();
         this.toastr.success("Service created successfully")
       },
       error: (err) => {
@@ -62,13 +71,32 @@ export class AddServiceModalComponent implements OnInit {
       }
     });
   }
-  
 
-  mapFormToService() {
-    this.service.name = this.createServiceForm.value.name;
-    this.service.disposablesPrice = this.createServiceForm.value.disposablesPrice;
-    this.service.totalPrice = this.createServiceForm.value.totalPrice;
-    this.service.serviceSpecialityId = this.createServiceForm.value.serviceSpecialityId;
-    this.service.id = 0;
+  updateService() {
+    this.serviceService.updateService(this.service).subscribe({
+      next: (response) => {
+        this.service = response as Service; // This should not overwrite the newService object
+        this.serviceCreated.emit(this.service); // Emit the newService object
+        this.resetFormAndCloseModal();
+        this.toastr.success("Service updated successfully")
+      },
+      error: (err) => {
+        console.error(err);
+        // Handle errors here
+      }
+    });
+  }
+  // Add this method
+  resetFormAndCloseModal() {
+    this.intializeForm();
+    this.service = { // Reset the service object
+      id: 0,
+      name: '',
+      disposablesPrice: 0,
+      totalPrice: 0,
+      serviceSpecialityId: 0
+    };
+    this.createServiceForm.reset();
+    this.modelToggeled(false); // Close the modal
   }
 }

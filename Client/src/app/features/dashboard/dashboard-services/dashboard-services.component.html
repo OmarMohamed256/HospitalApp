@@ -34,7 +34,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let service of services" routerLink="{{service.id}}" class="user-table">
+    <tr *ngFor="let service of services" (click)="setServiceToUpdate(service)" class="user-table">
       <td>{{service.name}}</td>
       <td>{{service.totalPrice}}</td>
       <td>{{service.disposablesPrice}}</td>

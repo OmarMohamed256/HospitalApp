@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IconSetService } from '@coreui/icons-angular';
 import { ToastrService } from 'ngx-toastr';
 import { ServiceService } from 'src/app/core/services/service.service';
@@ -8,6 +8,7 @@ import { Pagination } from 'src/app/models/pagination';
 import { Service } from 'src/app/models/service';
 import { ServiceParams } from 'src/app/models/serviceParams';
 import { Speciality } from 'src/app/models/speciality';
+import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
 
 @Component({
   selector: 'app-dashboard-services',
@@ -25,6 +26,7 @@ export class DashboardServicesComponent implements OnInit{
   pagination: Pagination | null = null;
   specialityList: Speciality[] = [];
   modalVisibility: boolean = false;
+  @ViewChild(AddServiceModalComponent) addServiceModal!: AddServiceModalComponent;
 
   constructor(private iconSetService: IconSetService,
     private serviceService: ServiceService, private specialityService: SpecialityService, private toastr: ToastrService)
@@ -73,16 +75,36 @@ export class DashboardServicesComponent implements OnInit{
       }
     });
   }
+
   openModal() {
     this.modalVisibility = !this.modalVisibility
   }
+
+  setServiceToUpdate(service: Service) {
+    this.addServiceModal.service = service;
+    this.addServiceModal.intializeForm();
+    this.openModal();
+  }
+
   getSpecialityNameById(id: number): string {
     const speciality = this.specialityList.find(item => item.id === id);
     return speciality ? speciality.name : '';
   }
+
   onServiceCreated(newService: Service) {
     if (newService) {
-      this.services = [...this.services!, newService];
+      const index = this.services!.findIndex(service => service.id === newService.id);
+  
+      if (index !== -1) {
+        // Service with the same ID already exists, replace it
+        this.services![index] = newService;
+      } else {
+        // Service with this ID doesn't exist, add it
+        this.services!.push(newService);
+      }
     }
   }
+  
+  
+
 }

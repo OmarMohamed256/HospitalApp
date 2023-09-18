@@ -63,4 +63,14 @@ export class ServiceService {
       })
     );
   }
+
+  updateService(service: Service) {
+    return this.http.put<Service>(this.baseUrl + 'service/', service).pipe(
+      map((newService: Service) => {
+        // Add the new service to the cache
+        this.serviceCache.clear();
+        return newService;  // Return the new service here
+      })
+    );
+  }
 }
