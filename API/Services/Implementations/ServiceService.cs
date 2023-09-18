@@ -15,11 +15,12 @@ namespace API.Services.Implementations
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
-
-        public ServiceService(IServiceRepository serviceRepository, IMapper mapper)
+        private readonly IDoctorServiceRepository _doctorServiceRepository;
+        public ServiceService(IServiceRepository serviceRepository, IMapper mapper, IDoctorServiceRepository doctorServiceRepository)
         {
             _serviceRepository = serviceRepository;
             _mapper = mapper;
+            _doctorServiceRepository = doctorServiceRepository;
         }
         public async Task<ActionResult<ServiceDto>> CreateServiceAsync(ServiceDto serviceDto)
         {
@@ -38,7 +39,7 @@ namespace API.Services.Implementations
                     if (await _serviceRepository.SaveAllAsync())
                     {
                         // Create doctor services for the newly added service
-                        await _serviceRepository.CreateDoctorServicesForService(service);
+                        await _doctorServiceRepository.CreateDoctorServicesForService(service);
 
                         // Save changes to create doctor services
                         if (await _serviceRepository.SaveAllAsync())
@@ -80,7 +81,7 @@ namespace API.Services.Implementations
             _serviceRepository.UpdateService(service);
 
             // Call UpdateDoctorServicesForService after updating the service
-            await _serviceRepository.UpdateDoctorServicesForService(service);
+            await _doctorServiceRepository.UpdateDoctorServicesForService(service);
 
             if (await _serviceRepository.SaveAllAsync())
             {
