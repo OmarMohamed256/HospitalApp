@@ -32,9 +32,7 @@ namespace API.Services.Implementations
             if (await _serviceRepository.SaveAllAsync())
             {
                 // Create doctor services for the newly added service
-                _serviceRepository.CreateDoctorServicesForService(service);
-
-                // Save changes again to add doctor services
+                await _serviceRepository.CreateDoctorServicesForService(service);
                 if (await _serviceRepository.SaveAllAsync())
                 {
                     serviceDto.Id = service.Id;
@@ -52,10 +50,10 @@ namespace API.Services.Implementations
         }
 
 
+
         public async Task<bool> DeleteServiceAsync(int id)
         {
-            var service = await _serviceRepository.GetServiceById(id);
-            if (service == null) throw new ApiException(404, "Service Does not Exist");
+            var service = await _serviceRepository.GetServiceById(id) ?? throw new ApiException(404, "Service Does not Exist");
             _serviceRepository.DeleteService(service);
             if (await _serviceRepository.SaveAllAsync()) return true;
             return false;

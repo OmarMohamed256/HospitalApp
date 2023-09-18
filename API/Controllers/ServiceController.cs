@@ -19,7 +19,15 @@ namespace API.Controllers
 
         [HttpPost]
         [Authorize(Policy = Polices.RequireAdminRole)]
-        public async Task<ActionResult<ServiceDto>> CreateUpdateServiceAsync(ServiceDto serviceDto)
+        public async Task<ActionResult<ServiceDto>> CreateServiceAsync(ServiceDto serviceDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            return await _serviceService.CreateServiceAsync(serviceDto);
+        }
+
+        [HttpPut]
+        [Authorize(Policy = Polices.RequireAdminRole)]
+        public async Task<ActionResult<ServiceDto>> UpdateServiceAsync(ServiceDto serviceDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return await _serviceService.CreateServiceAsync(serviceDto);
@@ -39,7 +47,7 @@ namespace API.Controllers
         public async Task<ActionResult> DeleteServiceAsync(int serviceId)
         {
             var result = await _serviceService.DeleteServiceAsync(serviceId);
-            if(result) return Ok();
+            if (result) return Ok();
             else return BadRequest("Failed deleting service");
         }
     }

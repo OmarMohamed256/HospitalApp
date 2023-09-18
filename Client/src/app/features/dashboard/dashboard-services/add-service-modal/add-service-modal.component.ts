@@ -50,8 +50,9 @@ export class AddServiceModalComponent implements OnInit {
     this.mapFormToService();
     this.serviceService.createService(this.service).subscribe({
       next: (response) => {
-        this.service = response as Service;
-        this.serviceCreated.emit(this.service);
+        const newService: Service = response as Service; // This should not overwrite the newService object
+        this.serviceCreated.emit(newService); // Emit the newService object
+        this.createServiceForm.reset();
         this.modelToggeled(false);
         this.toastr.success("Service created successfully")
       },
@@ -61,11 +62,13 @@ export class AddServiceModalComponent implements OnInit {
       }
     });
   }
+  
 
   mapFormToService() {
     this.service.name = this.createServiceForm.value.name;
     this.service.disposablesPrice = this.createServiceForm.value.disposablesPrice;
     this.service.totalPrice = this.createServiceForm.value.totalPrice;
     this.service.serviceSpecialityId = this.createServiceForm.value.serviceSpecialityId;
+    this.service.id = 0;
   }
 }

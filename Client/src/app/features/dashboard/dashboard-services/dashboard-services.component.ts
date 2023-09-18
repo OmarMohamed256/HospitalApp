@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IconSetService } from '@coreui/icons-angular';
+import { ToastrService } from 'ngx-toastr';
 import { ServiceService } from 'src/app/core/services/service.service';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { iconSubset } from 'src/app/icons/icon-subset';
@@ -26,7 +27,7 @@ export class DashboardServicesComponent implements OnInit{
   modalVisibility: boolean = false;
 
   constructor(private iconSetService: IconSetService,
-    private serviceService: ServiceService, private specialityService: SpecialityService)
+    private serviceService: ServiceService, private specialityService: SpecialityService, private toastr: ToastrService)
   {
     iconSetService.icons = { ...iconSubset };
   }
@@ -64,6 +65,7 @@ export class DashboardServicesComponent implements OnInit{
     this.serviceService.deleteService(serviceId).subscribe({
       next: (response) => {
         this.services = this.services?.filter(service => service.id !== serviceId)!;
+        this.toastr.success("Service deleted successfully")
       },
       error: (err) => {
         console.error(err);
@@ -80,8 +82,7 @@ export class DashboardServicesComponent implements OnInit{
   }
   onServiceCreated(newService: Service) {
     if (newService) {
-      console.log(newService)
-      this.services?.push(newService); // Add the newly created service to the services array
+      this.services = [...this.services!, newService];
     }
   }
 }

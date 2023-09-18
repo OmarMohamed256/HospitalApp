@@ -35,9 +35,6 @@ export class ServiceService {
 
     if (serviceParams.searchTerm.trim() !== '') params = params.append('searchTerm', serviceParams.searchTerm.trim());
     if (serviceParams.specialityId !== null) params = params.append('specialityId', serviceParams.specialityId);
-
-
-
     return getPaginatedResult<Service[]>(this.baseUrl + 'service/', params, this.http)
       .pipe(map(response => {
         this.serviceCache.set(Object.values(serviceParams).join("-"), response);
@@ -49,10 +46,21 @@ export class ServiceService {
   }
 
   createService(service: Service) {
-    return this.http.post(this.baseUrl + 'service/', service);
+    return this.http.post<Service>(this.baseUrl + 'service/', service).pipe(
+      map((newService: Service) => {
+        // Add the new service to the cache
+        this.serviceCache.clear();
+        return newService;  // Return the new service here
+      })
+    );
   }
 
   deleteService(serviceId: number) {
-    return this.http.delete(this.baseUrl + 'service/' + serviceId);
+    return this.http.delete(this.baseUrl + 'service/' + serviceId).pipe(
+      map(() => {
+        // Clear the cache
+        this.serviceCache.clear();
+      })
+    );
   }
 }

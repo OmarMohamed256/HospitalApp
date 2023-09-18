@@ -81,25 +81,29 @@ namespace Hospital.Data
                 .HasOne(ds => ds.Doctor)
                 .WithMany(u => u.DoctorServices)
                 .HasForeignKey(ds => ds.DoctorId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<DoctorService>()
                 .HasOne(ds => ds.Service)
                 .WithMany(s => s.DoctorServices)
                 .HasForeignKey(ds => ds.ServiceId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<InvoiceItem>()
                 .HasOne(ids => ids.Invoice)
                 .WithMany(i => i.InvoiceItems)
                 .HasForeignKey(ids => ids.InvoiceId)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
 
             modelBuilder.Entity<InvoiceItem>()
                 .HasOne(ids => ids.DoctorService)
                 .WithMany(ds => ds.InvoiceItems)
                 .HasForeignKey(ids => ids.DoctorServiceId)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

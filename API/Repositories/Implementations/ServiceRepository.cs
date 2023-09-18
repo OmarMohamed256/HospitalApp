@@ -15,10 +15,12 @@ namespace API.Repositories.Implementations
         }
         public void AddService(Service service)
         {
-            var existingService = _context.Services.AsNoTracking().FirstOrDefault(s => s.Id == service.Id);
+            _context.Services.Add(service);
+        }
 
-            if (existingService != null) _context.Services.Update(service);
-            else _context.Services.Add(service);
+        public void UpdateService(Service service)
+        {
+            _context.Services.Add(service);
         }
 
         public void DeleteService(Service service)
@@ -47,25 +49,23 @@ namespace API.Repositories.Implementations
         {
             return await _context.SaveChangesAsync() > 0;
         }
-        public void CreateDoctorServicesForService(Service service)
+        public async Task CreateDoctorServicesForService(Service service)
         {
             var doctorSpecialityId = service.ServiceSpecialityId;
-            var doctorsWithSpeciality = _context.Users
+
+            var doctorsWithSpeciality = await _context.Users
                 .Where(d => d.DoctorSpecialityId == doctorSpecialityId)
-                .ToList();
+                .ToListAsync();
 
-            foreach (var doctor in doctorsWithSpeciality)
+            var doctorServices = doctorsWithSpeciality.Select(doctor => new DoctorService
             {
-                var doctorService = new DoctorService
-                {
-                    DoctorId = doctor.Id,
-                    ServiceId = service.Id,
-                    DoctorPercentage = 50,
-                    HospitalPercentage = 50
-                };
+                DoctorId = doctor.Id,
+                ServiceId = service.Id,
+                DoctorPercentage = 50,
+                HospitalPercentage = 50
+            }).ToList();
 
-                _context.DoctorServices.Add(doctorService);
-            }
+            await _context.DoctorServices.AddRangeAsync(doctorServices);
         }
     }
 }
