@@ -1,3 +1,5 @@
+using webapi.Entities;
+
 namespace API.Models.DTOS
 {
     public class UserInfoDto
@@ -11,5 +13,6 @@ namespace API.Models.DTOS
         public int? Age { get; set; }
         public int? DoctorSpecialityId { get; set; }
         public DateTime DateCreated { get; set; }
+        public ICollection<UserRoleDto>? UserRoles { get; set; }
     }
 }

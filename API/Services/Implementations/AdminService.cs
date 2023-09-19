@@ -7,7 +7,6 @@ using API.Services.Interfaces;
 using AutoMapper;
 using HospitalApp.Constants;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using webapi.Entities;
 
 namespace API.Services.Implementations

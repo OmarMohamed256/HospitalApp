@@ -17,7 +17,28 @@ namespace API.Repositories.Implementations
 
         public async Task<PagedList<AppUser>> GetAllUsersAsync(UserParams userParams)
         {
-            var query = _context.Users.AsQueryable();
+            var query = _context.Users
+                    .Include(u => u.UserRoles)
+                    .Select(u => new AppUser
+                    {
+                        Id = u.Id,
+                        UserName = u.UserName,
+                        Email = u.Email,
+                        Age = u.Age,
+                        DateCreated = u.DateCreated,
+                        DateUpdated = u.DateUpdated,
+                        DoctorSpecialityId = u.DoctorSpecialityId,
+                        FullName = u.FullName,
+                        PhoneNumber = u.PhoneNumber,
+                        UserRoles = u.UserRoles.Select(ur => new AppUserRole
+                        {
+                            UserId = ur.UserId,
+                            RoleId = ur.RoleId,
+                            Role = ur.Role // Include if needed
+                        }).ToList()
+                    })
+                    .AsQueryable();
+
             if (!string.IsNullOrEmpty(userParams.SearchTerm)) query = query.Where(u => u.FullName.Contains(userParams.SearchTerm) || u.Email.Contains(userParams.SearchTerm));
             if (!string.IsNullOrEmpty(userParams.Gender)) query = query.Where(u => u.Gender == userParams.Gender);
             if (userParams.DoctorSpecialityId != null)

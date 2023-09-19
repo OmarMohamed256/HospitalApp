@@ -10,7 +10,12 @@ namespace API.Helpers
     {
         public AutoMapperProfiles()
         {
-            CreateMap<AppUser, UserInfoDto>().ReverseMap();
+            CreateMap<AppUser, UserInfoDto>()
+                .ForMember(dest => dest.UserRoles, opt => opt.MapFrom(src => src.UserRoles.Select(ur => new UserRoleDto
+                {
+                    RoleId = ur.Role.Id,
+                    RoleName = ur.Role.Name
+                }).ToList()));
             CreateMap<Speciality, SpecialityDto>().ReverseMap();
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
             CreateMap<Service, ServiceDto>().ReverseMap();
