@@ -21,6 +21,7 @@ export class DashboardDoctorsComponent implements OnInit {
   });
   pagination: Pagination | null = null;
   specialityList: Speciality[] = [];
+  modalVisibility: boolean = false;
 
   constructor(private userService: UserService, private specialityService: SpecialityService)
   {
@@ -59,5 +60,8 @@ export class DashboardDoctorsComponent implements OnInit {
   getSpecialityNameById(id: number): string {
     const speciality = this.specialityList.find(item => item.id === id);
     return speciality ? speciality.name : '';
+  }
+  openCreateUserModal() {
+    this.modalVisibility = !this.modalVisibility
   }
 }

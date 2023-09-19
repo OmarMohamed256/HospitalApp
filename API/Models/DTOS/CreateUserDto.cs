@@ -17,7 +17,7 @@ namespace API.Models.DTOS
         [StringLength(8, MinimumLength = 4)]
         public string Password { get; set; }
         public int? DoctorSpecialityId { get; set; }
-        public ICollection<DoctorWorkingHoursDto>? DoctorWorkingHoursDto { get; set; }
+        public ICollection<DoctorWorkingHoursDto>? DoctorWorkingHours { get; set; }
         [Required]
         public string Role { get; set; }
     }

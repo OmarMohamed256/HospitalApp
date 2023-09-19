@@ -20,7 +20,7 @@ import { DoctorServicesComponent } from './doctor-services/doctor-services.compo
     InputGroupTextDirective,
     CommonSharedModule,
     SharedModule,
-    ModalModule
+    ModalModule,
     ],
   declarations: [DashboardDoctorsComponent, DoctorInfoComponent, DoctorServicesComponent]
 })

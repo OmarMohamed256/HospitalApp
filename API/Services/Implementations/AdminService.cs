@@ -64,14 +64,14 @@ namespace API.Services.Implementations
 
                     if (createUserDto.Role == Roles.Doctor)
                     {
-                        if (createUserDto.DoctorWorkingHoursDto != null)
+                        if (createUserDto.DoctorWorkingHours != null)
                         {
-                            foreach (var workingHour in createUserDto.DoctorWorkingHoursDto)
+                            foreach (var workingHour in createUserDto.DoctorWorkingHours)
                             {
                                 workingHour.DoctorId = createUserDto.Id;
                             }
                         }
-                        var workingHours = _mapper.Map<IEnumerable<DoctorWorkingHours>>(createUserDto.DoctorWorkingHoursDto);
+                        var workingHours = _mapper.Map<IEnumerable<DoctorWorkingHours>>(createUserDto.DoctorWorkingHours);
                         await _adminRepository.AddDoctorWorkingHours(workingHours);
                         var adminResult = await _adminRepository.SaveAllAsync();
                         if(!adminResult) throw new ApiException(500, "Failed to add working hours");
