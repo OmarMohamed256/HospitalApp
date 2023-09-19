@@ -30,6 +30,7 @@ namespace API.Repositories.Implementations
                         DoctorSpecialityId = u.DoctorSpecialityId,
                         FullName = u.FullName,
                         PhoneNumber = u.PhoneNumber,
+                        Gender = u.Gender,
                         UserRoles = u.UserRoles.Select(ur => new AppUserRole
                         {
                             UserId = ur.UserId,
@@ -44,25 +45,11 @@ namespace API.Repositories.Implementations
             if (userParams.DoctorSpecialityId != null)
                 query = query.Where(u => u.DoctorSpecialityId == userParams.DoctorSpecialityId);
 
-            query = (userParams.OrderBy, userParams.Order) switch
+            if (!string.IsNullOrEmpty(userParams.RoleName))
             {
-                ("updated", "asc") => query.OrderBy(u => u.DateUpdated),
-                ("updated", "desc") => query.OrderByDescending(u => u.DateUpdated),
-                ("date", "asc") => query.OrderBy(u => u.DateCreated),
-                ("date", "desc") => query.OrderByDescending(u => u.DateCreated),
-                _ => query.OrderByDescending(u => u.DateCreated),
-            };
-            return await PagedList<AppUser>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
-        }
+                query = query.Where(u => u.UserRoles.Any(ur => ur.Role.Name == userParams.RoleName));
+            }
 
-        public async Task<PagedList<AppUser>> GetAllUsersWithRoleAsync(UserParams userParams, string roleName)
-        {
-            var query = await GetUsersInRoleAsync(roleName);
-
-            if (!string.IsNullOrEmpty(userParams.SearchTerm)) query = query.Where(u => u.FullName.Contains(userParams.SearchTerm) || u.Email.Contains(userParams.SearchTerm));
-            if (!string.IsNullOrEmpty(userParams.Gender)) query = query.Where(u => u.Gender == userParams.Gender);
-            if (userParams.DoctorSpecialityId != null)
-                query = query.Where(u => u.DoctorSpecialityId == userParams.DoctorSpecialityId);
 
             query = (userParams.OrderBy, userParams.Order) switch
             {
@@ -75,17 +62,5 @@ namespace API.Repositories.Implementations
             return await PagedList<AppUser>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<IQueryable<AppUser>> GetUsersInRoleAsync(string roleName)
-        {
-            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName) ??
-                throw new ArgumentException($"Role {roleName} does not exist");
-
-            var usersInRole = _context.UserRoles
-                .Where(ur => ur.RoleId == role.Id)
-                .Select(ur => ur.User)
-                .AsQueryable();
-
-            return usersInRole;
-        }
     }
 }

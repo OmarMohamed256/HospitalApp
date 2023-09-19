@@ -16,7 +16,7 @@ export const navItems: IRoleNavData[] = [
     title: true
   },
   {
-    name: 'Patient',
+    name: 'Patients',
     url: '/patients',
     iconComponent: { name: 'cil-bed' },
     roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
@@ -37,6 +37,12 @@ export const navItems: IRoleNavData[] = [
     name: 'Specialities',
     url: '/specialities',
     iconComponent: { name: 'cil-library' },
+    roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
+  },
+  {
+    name: 'Users Panel',
+    url: '/users',
+    iconComponent: { name: 'cil-group' },
     roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
   }
 ];

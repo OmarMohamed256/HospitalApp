@@ -13,7 +13,7 @@ export class ServiceService {
   baseUrl = environment.apiUrl;
   serviceParams: ServiceParams = {
     pageNumber: 1,
-    pageSize: 5,
+    pageSize: 15,
     searchTerm: '',
     specialityId: null
   };

@@ -1,0 +1,54 @@
+
+<c-navbar colorScheme="dark" expand="lg" class="bg-dark">
+    <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+      <button cButton color="light"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
+          Add new patient</span></button>
+
+          <select name="roleName" class="w-25" aria-label="roleName" [(ngModel)]="userParams.roleName" cSelect (change)="getUsers()">
+            <option value="" disabled>Roles</option>
+            <option *ngFor="let role of roles" [value]="role">
+              {{role}}
+            </option>
+          </select>
+          
+      <form cForm class="d-flex" role="search" (submit)="getUsers()">
+        <input cFormControl type="search" placeholder="Search" name="searchTerm" aria-label="Search" class="me-2" [(ngModel)]="userParams.searchTerm">
+        <button cButton color="light" variant="outline" type="submit">Search</button>
+      </form>
+      <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+  
+    </div>
+  </c-navbar>
+  
+  <table cTable *ngIf="users && users.length > 0">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Role</th>
+        <th scope="col">Email</th>
+        <th scope="col">Mobile</th>
+        <th scope="col">Age</th>
+        <th scope="col" class="arrow-filter" [ngStyle]="{'cursor': 'pointer'}" (click)="toggleOrder()">
+          Date Created
+          <svg cIcon [name]="userParams.order === 'desc' ? 'cil-arrow-bottom' : 'cil-arrow-top'"></svg>
+        </th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users" routerLink="{{user.id}}" class="user-table">
+        <td>{{user.fullName}}</td>
+        <td>{{user.userRoles![0].roleName}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.phoneNumber}}</td>
+        <td>{{user.age}}</td>
+        <td>{{user.dateCreated | date:'short'}}</td>
+        <td class="pt-1"><button cButton color="primary" class="btn-m">Edit</button></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="d-flex justify-content-center" *ngIf="pagination">
+    <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+  </div>

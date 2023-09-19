@@ -7,5 +7,6 @@
         public string? SearchTerm  { get; set; } = "";
         public string Gender  { get; set; } = "";
         public int? DoctorSpecialityId  { get; set; } = null;
+        public string? RoleName { get; set; }
     }
 }

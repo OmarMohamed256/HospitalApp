@@ -41,15 +41,6 @@ namespace API.Services.Implementations
             return _mapper.Map<UserInfoDto>(user);
         }
 
-        public async Task<PagedList<UserInfoDto>> GetUsersByRoleAsync(UserParams userParams, string roleName)
-        {
-            PagedList<AppUser> users = await _userRepository.GetAllUsersWithRoleAsync(userParams, roleName);
-
-            var userInfoDtos = _mapper.Map<IEnumerable<UserInfoDto>>(users);
-
-            return new PagedList<UserInfoDto>(userInfoDtos, users.TotalCount, users.CurrentPage, users.PageSize);
-        }
-
         public async Task<bool> UpdateUser(UserUpdateDto userUpdateDto)
         {
 

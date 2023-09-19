@@ -24,25 +24,33 @@ export class UserService {
     return this.userParams;
   }
 
-  getUsersByRole(userParams: UserParams, roleName: string) {
-    var response = this.memberCache.get(Object.values(userParams).join("-"));
+  getUserData(userParams: UserParams) {
+    const cacheKey = Object.values(userParams).join("-");
+    const response = this.memberCache.get(cacheKey);
     if (response) {
       return of(response);
     }
+  
     let params = getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
     params = params.append('orderBy', userParams.orderBy);
     params = params.append('order', userParams.order);
     if (userParams.searchTerm.trim() !== '') params = params.append('searchTerm', userParams.searchTerm.trim());
     if (userParams.gender.trim() !== '') params = params.append('gender', userParams.gender.trim());
     if (userParams.doctorSpecialityId !== null) params = params.append('doctorSpecialityId', userParams.doctorSpecialityId);
+    if (userParams.roleName.trim() !== '') params = params.append('roleName', userParams.roleName.trim());
 
-
-
-    return getPaginatedResult<UserData[]>(this.baseUrl + 'user/byRole/' + roleName, params, this.http)
+    const url = this.baseUrl + 'user/all/';
+  
+    return getPaginatedResult<UserData[]>(url, params, this.http)
       .pipe(map(response => {
-        this.memberCache.set(Object.values(userParams).join("-"), response);
+        this.memberCache.set(cacheKey, response);
         return response;
-      }))
+      }));
+  }
+  
+  
+  getUsers(userParams: UserParams) {
+    return this.getUserData(userParams);
   }
 
   getUser(id: string) {

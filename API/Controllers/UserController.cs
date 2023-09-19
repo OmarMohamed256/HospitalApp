@@ -34,15 +34,6 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("byRole/{roleName}")] // Define a specific route for this action
-        [Authorize(Policy = Polices.RequireReceptionistRole)]
-        public async Task<ActionResult<IEnumerable<UserInfoDto>>> GetUsersWithRole([FromQuery] UserParams userParams, string roleName)
-        {
-            var users = await _userService.GetUsersByRoleAsync(userParams, roleName);
-            Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
-            return Ok(users);
-        }
-        [HttpGet]
         [Route("{Id}", Name = "GetUser")] // Define a specific route for this action
         [Authorize(Policy = Polices.RequireDoctorRole)]
         public async Task<ActionResult<UserInfoDto>> GetUserById(string Id)

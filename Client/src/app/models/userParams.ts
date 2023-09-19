@@ -5,6 +5,7 @@ export class UserParams extends PaginationParams {
   order = 'asc';
   gender = '';
   searchTerm = '';
+  roleName = '';
   
   doctorSpecialityId: number | null = null;
 

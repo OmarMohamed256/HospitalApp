@@ -1,52 +1,49 @@
 import { Component, OnInit } from '@angular/core';
-import { GenderList } from 'src/app/constants/genders';
-import { ROLES } from 'src/app/constants/roles';
+import { ROLES_ARRAY } from 'src/app/constants/roles';
 import { UserService } from 'src/app/core/services/user.service';
 import { Pagination } from 'src/app/models/pagination';
 import { UserData } from 'src/app/models/userData';
 import { UserParams } from 'src/app/models/userParams';
+
 @Component({
-  selector: 'app-dashboard-patients',
-  templateUrl: './dashboard-patients.component.html',
-  styleUrls: ['./dashboard-patients.component.scss']
+  selector: 'app-dashboard-users',
+  templateUrl: './dashboard-users.component.html',
+  styleUrls: ['./dashboard-users.component.scss']
 })
-export class DashboardPatientsComponent implements OnInit {
-  patients: UserData[] | null = [];
-  roleName = ROLES.PATIENT;
+export class DashboardUsersComponent implements OnInit {
+  users: UserData[] | null = [];
   userParams: UserParams = new UserParams({
     pageNumber: 1,
-    pageSize: 15,
-    roleName: this.roleName
+    pageSize: 15
   });
   pagination: Pagination | null = null;
-  genderList = GenderList;
-
+  roles = ROLES_ARRAY;
   constructor(private userService: UserService) {
   }
   ngOnInit(): void {
-    this.getPatients();
+    this.getUsers();
   }
-  getPatients() {
+
+  getUsers() {
     this.userService.getUsers(this.userParams).subscribe(response => {
-      this.patients = response.result;
+      this.users = response.result;
       this.pagination = response.pagination
+      console.log(this.users)
     })
   }
 
   pageChanged(event: number) {
     this.userParams.pageNumber = event;
-    this.getPatients();
-  }
-
-  toggleOrder() {
-    this.userParams.order = (this.userParams.order === 'asc') ? 'desc' : 'asc';
-    this.getPatients();
+    this.getUsers();
   }
 
   resetFilters() {
     this.userParams = this.userService.resetUserParams();
-    this.userParams.roleName = this.roleName;
-    this.getPatients();
+    this.getUsers();
+  }
+  toggleOrder() {
+    this.userParams.order = (this.userParams.order === 'asc') ? 'desc' : 'asc';
+    this.getUsers();
   }
 
 }
