@@ -15,6 +15,7 @@ namespace API.Helpers
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
             CreateMap<Service, ServiceDto>().ReverseMap();
             CreateMap<DoctorServiceDto, DoctorService>().ReverseMap();
+            CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();
 
             CreateMap<RegisterDto, AppUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Username))

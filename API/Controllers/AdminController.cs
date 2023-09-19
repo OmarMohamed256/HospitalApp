@@ -1,16 +1,21 @@
+using API.Models.DTOS;
 using API.Services.Interfaces;
-using HospitalApp.Constants;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Authorize(Policy = Polices.RequireReceptionistRole)]
+    // [Authorize(Policy = Polices.RequireAdminRole)]
     public class AdminController : BaseApiController
     {
-        private IUserService _userService;
-        public AdminController(IUserService userService)
+        private readonly IAdminService _adminService;
+        public AdminController(IAdminService adminService)
         {
-            _userService = userService;
+            _adminService = adminService;
+        }
+        [HttpPost("CreateUser")]
+        public async Task<ActionResult<CreateUserDto>> CreateUser(CreateUserDto createUserDto)
+        {
+            return await _adminService.CreateUser(createUserDto);
         }
     }
 }

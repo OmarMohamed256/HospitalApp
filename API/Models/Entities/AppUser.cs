@@ -29,5 +29,6 @@ namespace webapi.Entities
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
         public virtual ICollection<DoctorService>? DoctorServices { get; set; }
+        public virtual ICollection<DoctorWorkingHours>? DoctorWorkingHours { get; set; }
     }
 }

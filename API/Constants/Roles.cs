@@ -6,6 +6,14 @@ namespace HospitalApp.Constants
         public const string Receptionist = "Receptionist";
         public const string Doctor = "Doctor";
         public const string Patient = "Patient";
+        public static bool IsValidRole(string role)
+        {
+            return role switch
+            {
+                Admin or Receptionist or Doctor or Patient => true,
+                _ => false,
+            };
+        }
     }
 
     public static class Polices

@@ -7,6 +7,6 @@ namespace API.Services.Interfaces
     {
         Task<ActionResult<UserDto>> Login(LoginDto loginDto);
         Task<UserDto> CreatePatientAsync(RegisterDto registerDto);
-
+        Task<bool> UserExists(string username);
     }
 }

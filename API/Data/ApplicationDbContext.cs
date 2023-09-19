@@ -20,7 +20,9 @@ namespace Hospital.Data
         public DbSet<Service> Services { get; set; }
         public DbSet<CustomItem> CustomItems { get; set; }
         public DbSet<DoctorService> DoctorServices { get; set; }
-        public DbSet<InvoiceItem> InvoiceItems  { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public DbSet<DoctorWorkingHours> DoctorWorkingHours { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -104,6 +106,12 @@ namespace Hospital.Data
                 .HasForeignKey(ids => ids.DoctorServiceId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .IsRequired(false);
+
+            modelBuilder.Entity<DoctorWorkingHours>()
+                .HasOne(ids => ids.Doctor)
+                .WithMany(ds => ds.DoctorWorkingHours)
+                .HasForeignKey(ids => ids.DoctorId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
