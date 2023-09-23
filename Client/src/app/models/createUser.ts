@@ -11,5 +11,7 @@ export interface CreateUser {
     doctorSpecialityId:    number;
     doctorWorkingHours: DoctorWorkingHours[];
     role:                  string;
+    dateCreated:           string;
+    dateUpdated:           string;
 }
 

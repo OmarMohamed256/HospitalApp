@@ -20,5 +20,8 @@ namespace API.Models.DTOS
         public ICollection<DoctorWorkingHoursDto>? DoctorWorkingHours { get; set; }
         [Required]
         public string Role { get; set; }
+        public DateTime? DateCreated { get; set; }
+        public DateTime? DateUpdated { get; set; }
+
     }
 }

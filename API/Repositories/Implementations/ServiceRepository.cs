@@ -49,5 +49,13 @@ namespace API.Repositories.Implementations
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<List<int>> GetServicesIdsBySpecialityId(int specialityId)
+        {
+            return await _context.Services
+                .Where(s => s.ServiceSpecialityId == specialityId)
+                .Select(d => d.Id)
+                .ToListAsync();
+        }
     }
 }

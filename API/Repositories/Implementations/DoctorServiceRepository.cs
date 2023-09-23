@@ -26,17 +26,24 @@ namespace API.Repositories.Implementations
             _context.DoctorServices.Update(doctorService);
         }
 
-        public async Task CreateDoctorServicesForService(Service service)
+        public async Task CreateDoctorServicesForService(int serviceId, List<int> doctorIdsWithSpeciality)
         {
-            var doctorIdsWithSpeciality = await _context.Users
-                .Where(d => d.DoctorSpecialityId == service.ServiceSpecialityId)
-                .Select(d => d.Id)
-                .ToListAsync();
-
             var doctorServices = doctorIdsWithSpeciality.Select(doctorId => new DoctorService
             {
                 DoctorId = doctorId,
-                ServiceId = service.Id,
+                ServiceId = serviceId,
+                DoctorPercentage = 50,
+                HospitalPercentage = 50
+            }).ToList();
+
+            await _context.DoctorServices.AddRangeAsync(doctorServices);
+        }
+        public async Task CreateDoctorServicesForDoctor(int doctorId, List<int> serviceIdsWithSpeciality)
+        {
+            var doctorServices = serviceIdsWithSpeciality.Select(serviceId => new DoctorService
+            {
+                DoctorId = doctorId,
+                ServiceId = serviceId,
                 DoctorPercentage = 50,
                 HospitalPercentage = 50
             }).ToList();
@@ -44,34 +51,16 @@ namespace API.Repositories.Implementations
             await _context.DoctorServices.AddRangeAsync(doctorServices);
         }
 
-        public async Task UpdateDoctorServicesForService(Service service)
+        public async Task<List<DoctorService>> GetDoctorServiceByServiceId(int Id)
         {
-            // Start a new transaction
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            return await _context.DoctorServices
+                .Where(ds => ds.ServiceId == Id)
+                .ToListAsync();
+        }
 
-            try
-            {
-                // Fetch and delete existing DoctorServices for the service
-                var doctorServicesToDelete = await _context.DoctorServices
-                    .Where(ds => ds.ServiceId == service.Id)
-                    .ToListAsync();
-
-                _context.DoctorServices.RemoveRange(doctorServicesToDelete);
-
-                await _context.SaveChangesAsync();
-
-                // Create new DoctorServices for the service
-                await CreateDoctorServicesForService(service);
-
-                // Commit the transaction
-                await transaction.CommitAsync();
-            }
-            catch (Exception e)
-            {
-                // Rollback the transaction in case of any errors
-                await transaction.RollbackAsync();
-                throw; // Re-throw the exception to be handled by the calling code
-            }
+        public void DeleteDoctorServices(List<DoctorService> servicesToRemove)
+        {
+            _context.DoctorServices.RemoveRange(servicesToRemove);
         }
 
         public async Task<bool> SaveAllAsync()
@@ -83,5 +72,6 @@ namespace API.Repositories.Implementations
         {
             return await _context.DoctorServices.AsNoTracking().FirstOrDefaultAsync(ds => ds.Id == Id);
         }
+
     }
 }

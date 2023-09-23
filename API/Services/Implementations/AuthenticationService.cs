@@ -29,7 +29,7 @@ namespace API.Services.Implementations
 
         }
 
-        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
+        public async Task<UserDto> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByNameAsync(loginDto.Username);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
@@ -46,7 +46,8 @@ namespace API.Services.Implementations
 
         public async Task<UserDto> CreatePatientAsync(RegisterDto registerDto)
         {
-            if (await UserExists(registerDto.Username)) throw new BadRequestException("Username is already taken.");
+            bool userExists = await UserExists(registerDto.Username);
+            if (userExists) throw new BadRequestException("Username is already taken.");
             var user = _mapper.Map<AppUser>(registerDto);
             user.UserName = registerDto.Username.ToLower();
 

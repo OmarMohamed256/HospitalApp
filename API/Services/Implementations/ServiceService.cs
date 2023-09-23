@@ -1,4 +1,5 @@
 using System.Transactions;
+using API.Constants;
 using API.Errors;
 using API.Helpers;
 using API.Models.DTOS;
@@ -6,7 +7,6 @@ using API.Models.Entities;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
 using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services.Implementations
@@ -16,92 +16,113 @@ namespace API.Services.Implementations
         private readonly IServiceRepository _serviceRepository;
         private readonly IMapper _mapper;
         private readonly IDoctorServiceRepository _doctorServiceRepository;
-        public ServiceService(IServiceRepository serviceRepository, IMapper mapper, IDoctorServiceRepository doctorServiceRepository)
+        private readonly IUserRepository _doctorRepository;
+        public ServiceService(IServiceRepository serviceRepository, IMapper mapper,
+        IDoctorServiceRepository doctorServiceRepository, IUserRepository doctorRepository)
         {
             _serviceRepository = serviceRepository;
             _mapper = mapper;
             _doctorServiceRepository = doctorServiceRepository;
+            _doctorRepository = doctorRepository;
         }
-        public async Task<ActionResult<ServiceDto>> CreateServiceAsync(ServiceDto serviceDto)
+        public async Task<ServiceDto> CreateServiceAsync(ServiceDto serviceDto)
         {
             // Create a new Service entity without setting the Id
             var service = _mapper.Map<Service>(serviceDto);
 
             // Start a new transaction
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            try
             {
-                try
+                // Add the service to the database
+                _serviceRepository.AddService(service);
+                bool saveService = await _serviceRepository.SaveAllAsync();
+                // Save changes to the database
+                if (saveService)
                 {
-                    // Add the service to the database
-                    _serviceRepository.AddService(service);
-
-                    // Save changes to the database
-                    if (await _serviceRepository.SaveAllAsync())
-                    {
-                        // Create doctor services for the newly added service
-                        await _doctorServiceRepository.CreateDoctorServicesForService(service);
-
-                        // Save changes to create doctor services
-                        if (await _serviceRepository.SaveAllAsync())
-                        {
-                            // Commit the transaction
-                            scope.Complete();
-
-                            serviceDto.Id = service.Id;
-                            return serviceDto;
-                        }
-                        else
-                        {
-                            // Rollback the transaction
-                            scope.Dispose();
-                            throw new ApiException(500, "Failed to create doctor services for the service");
-                        }
-                    }
-                    else
-                    {
-                        // Rollback the transaction
-                        scope.Dispose();
-                        throw new ApiException(500, "Failed to add service");
-                    }
+                    var serviceDtoNew = await HandleDoctorServicesAsync(service, serviceDto);
+                    scope.Complete();
+                    return serviceDtoNew;
                 }
-                catch (Exception ex)
+                else
                 {
-                    // Handle and log the exception
                     // Rollback the transaction
                     scope.Dispose();
-                    throw; // Re-throw the exception to be handled by the calling code
+                    throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add service");
                 }
+            }
+            catch (Exception)
+            {
+                // Handle and log the exception
+                // Rollback the transaction
+                scope.Dispose();
+                throw; // Re-throw the exception to be handled by the calling code
             }
         }
 
-        public async Task<ActionResult<ServiceDto>> UpdateServiceAsync(ServiceDto serviceDto)
+        public async Task<ServiceDto> UpdateServiceAsync(ServiceDto serviceDto)
         {
-            var service = _mapper.Map<Service>(serviceDto);
+            // Start a new transaction
+            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            try
+            {
+                var service = _mapper.Map<Service>(serviceDto);
+                _serviceRepository.UpdateService(service);
 
-            _serviceRepository.UpdateService(service);
+                var servicesToDelete = await _doctorServiceRepository.GetDoctorServiceByServiceId(service.Id);
 
-            // Call UpdateDoctorServicesForService after updating the service
-            await _doctorServiceRepository.UpdateDoctorServicesForService(service);
+                if (servicesToDelete == null || !servicesToDelete.Any())
+                {
+                    var result = await HandleDoctorServicesAsync(service, serviceDto);
+                    scope.Complete();
+                    return result;
+                }
 
-            if (await _serviceRepository.SaveAllAsync())
+                // Call UpdateDoctorServicesForService after updating the service
+                _doctorServiceRepository.DeleteDoctorServices(servicesToDelete);
+                bool deleteDoctorsResult = await _serviceRepository.SaveAllAsync();
+                if (deleteDoctorsResult)
+                {
+                    var result = await HandleDoctorServicesAsync(service, serviceDto);
+                    scope.Complete();
+                    return result;
+                }
+                else throw new ApiException(HttpStatusCode.InternalServerError, "Failed to update service");
+            }
+            catch (Exception)
+            {
+                // If an exception occurs, the transaction will be rolled back when the TransactionScope is disposed
+                throw;
+            }
+        }
+
+        private async Task<ServiceDto> HandleDoctorServicesAsync(Service service, ServiceDto serviceDto)
+        {
+            var doctorsWithSpecialityId = await _doctorRepository.GetDoctorsIdsBySpecialityId(service.ServiceSpecialityId);
+            if (!doctorsWithSpecialityId.Any())
             {
                 serviceDto.Id = service.Id;
                 return serviceDto;
             }
             else
             {
-                throw new ApiException(500, "Failed to update service");
+                await _doctorServiceRepository.CreateDoctorServicesForService(service.Id, doctorsWithSpecialityId);
+                bool createDoctorServicesResult = await _serviceRepository.SaveAllAsync();
+                if (createDoctorServicesResult)
+                {
+                    serviceDto.Id = service.Id;
+                    return serviceDto;
+                }
             }
+            throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add doctor services");
         }
-
-
-
 
         public async Task<bool> DeleteServiceAsync(int id)
         {
-            var service = await _serviceRepository.GetServiceById(id) ?? throw new ApiException(404, "Service Does not Exist");
+            var service = await _serviceRepository.GetServiceById(id) ?? throw new ApiException(HttpStatusCode.NotFound, "Service Does not Exist");
             _serviceRepository.DeleteService(service);
-            if (await _serviceRepository.SaveAllAsync()) return true;
+            bool deleteServiceResult = await _serviceRepository.SaveAllAsync();
+            if (deleteServiceResult) return true;
             return false;
         }
 

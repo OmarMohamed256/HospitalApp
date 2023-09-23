@@ -1,3 +1,4 @@
+using API.Constants;
 using API.Errors;
 using API.Helpers;
 using API.Models.DTOS;
@@ -44,7 +45,7 @@ namespace API.Services.Implementations
         public async Task<bool> UpdateUser(UserUpdateDto userUpdateDto)
         {
 
-            var user = await _userManager.FindByIdAsync(userUpdateDto.Id.ToString()) ?? throw new ApiException(404, "User Not Found");
+            var user = await _userManager.FindByIdAsync(userUpdateDto.Id.ToString()) ?? throw new ApiException(HttpStatusCode.NotFound, "User Not Found");
 
             user.FullName = userUpdateDto.FullName ?? user.FullName;
             user.Age = userUpdateDto.Age ?? user.Age;

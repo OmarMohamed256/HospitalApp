@@ -5,7 +5,7 @@ namespace API.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<ActionResult<UserDto>> Login(LoginDto loginDto);
+        Task<UserDto> Login(LoginDto loginDto);
         Task<UserDto> CreatePatientAsync(RegisterDto registerDto);
         Task<bool> UserExists(string username);
     }

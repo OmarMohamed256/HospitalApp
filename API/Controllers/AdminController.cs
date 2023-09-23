@@ -13,7 +13,7 @@ namespace API.Controllers
             _adminService = adminService;
         }
         [HttpPost("CreateUser")]
-        public async Task<ActionResult<CreateUserDto>> CreateUser(CreateUserDto createUserDto)
+        public async Task<ActionResult<UserInfoDto>> CreateUser(CreateUserDto createUserDto)
         {
             return await _adminService.CreateUser(createUserDto);
         }

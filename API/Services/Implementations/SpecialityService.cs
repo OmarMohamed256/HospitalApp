@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Constants;
 using API.Errors;
 using API.Models.DTOS;
 using API.Repositories.Interfaces;
@@ -23,16 +24,17 @@ namespace API.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<ActionResult<SpecialityDto>> AddSpeciality(SpecialityDto specialityDto)
+        public async Task<SpecialityDto> AddSpeciality(SpecialityDto specialityDto)
         {
             var speciality = _mapper.Map<Speciality>(specialityDto);
             _specialityRepository.AddSpeciality(speciality);
-            if (await _specialityRepository.SaveAllAsync())
+            bool addSpecialityResult = await _specialityRepository.SaveAllAsync();
+            if (addSpecialityResult)
             {
                 specialityDto.Id = speciality.Id;
                 return specialityDto;
             }
-            throw new ApiException(500, "Failed to add speciality");
+            throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add speciality");
         }
 
         public async Task<IEnumerable<SpecialityDto>> GetAllSpecialitiesAsync()

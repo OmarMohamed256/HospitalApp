@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ROLES } from 'src/app/constants/roles';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { CreateUser } from 'src/app/models/createUser';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
 import { UserData } from 'src/app/models/userData';
@@ -23,8 +24,7 @@ export class DashboardDoctorsComponent implements OnInit {
   specialityList: Speciality[] = [];
   modalVisibility: boolean = false;
 
-  constructor(private userService: UserService, private specialityService: SpecialityService)
-  {
+  constructor(private userService: UserService, private specialityService: SpecialityService) {
   }
   ngOnInit(): void {
     this.getDoctors();
@@ -36,7 +36,7 @@ export class DashboardDoctorsComponent implements OnInit {
       this.pagination = response.pagination
     })
   }
-  
+
   pageChanged(event: number) {
     this.userParams.pageNumber = event;
     this.getDoctors();
@@ -44,7 +44,7 @@ export class DashboardDoctorsComponent implements OnInit {
 
   toggleOrder() {
     this.userParams.order = (this.userParams.order === 'asc') ? 'desc' : 'asc';
-    this.getDoctors(); 
+    this.getDoctors();
   }
 
   resetFilters() {
@@ -64,4 +64,9 @@ export class DashboardDoctorsComponent implements OnInit {
   openCreateUserModal() {
     this.modalVisibility = !this.modalVisibility
   }
+
+  handleUserCreated(createdUser: UserData) {
+    this.doctors?.push(createdUser);
+  }
+  
 }

@@ -11,6 +11,6 @@ namespace API.Repositories.Interfaces
         Task<Service> GetServiceById(int id);
         Task<bool> SaveAllAsync();
         Task<PagedList<Service>> GetServicesAsync(ServiceParams serviceParams);
-
+        Task<List<int>> GetServicesIdsBySpecialityId(int specialityId);
     }
 }

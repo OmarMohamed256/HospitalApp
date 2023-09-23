@@ -62,5 +62,12 @@ namespace API.Repositories.Implementations
             return await PagedList<AppUser>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
         }
 
+        public async Task<List<int>> GetDoctorsIdsBySpecialityId(int specialityId)
+        {
+            return await _context.Users
+                .Where(d => d.DoctorSpecialityId == specialityId)
+                .Select(d => d.Id)
+                .ToListAsync();
+        }
     }
 }

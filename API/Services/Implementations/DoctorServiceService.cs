@@ -1,3 +1,4 @@
+using API.Constants;
 using API.Errors;
 using API.Models.DTOS;
 using API.Models.Entities;
@@ -30,15 +31,15 @@ namespace API.Services.Implementations
 
         public async Task<DoctorServiceUpdateDto> UpdateDoctorService(DoctorServiceUpdateDto doctorServiceUpdateDto)
         {
-            var doctorService = await _doctorServiceRepository.GetDoctorServiceById(doctorServiceUpdateDto.Id) ?? throw new ApiException(404, "Service does not exist");
+            var doctorService = await _doctorServiceRepository.GetDoctorServiceById(doctorServiceUpdateDto.Id) ?? throw new ApiException(HttpStatusCode.NotFound, "Service does not exist");
             doctorService.HospitalPercentage = doctorServiceUpdateDto.HospitalPercentage;
             doctorService.DoctorPercentage = doctorServiceUpdateDto.DoctorPercentage;
 
             _doctorServiceRepository.UpdateDoctorService(doctorService);
+            bool updateDoctorService = await _doctorServiceRepository.SaveAllAsync();
+            if (updateDoctorService) return doctorServiceUpdateDto;
 
-            if (await _doctorServiceRepository.SaveAllAsync()) return doctorServiceUpdateDto;
-
-            throw new ApiException(500, "Failed to update DoctorService");
+            throw new ApiException(HttpStatusCode.InternalServerError, "Failed to update DoctorService");
         }
     }
 }

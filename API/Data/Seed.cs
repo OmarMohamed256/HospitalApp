@@ -24,7 +24,7 @@ namespace webapi.Data
             // };
             // context.Appointments.Add(appointment);
             // await context.SaveChangesAsync();
-
+            
             if (await userManager.Users.AnyAsync()) return;
 
             // Seed Roles

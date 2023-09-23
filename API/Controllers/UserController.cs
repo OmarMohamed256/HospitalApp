@@ -20,7 +20,8 @@ namespace API.Controllers
         [Authorize(Policy = Polices.RequireReceptionistRole)]
         public async Task<ActionResult> UpdateUserAsAdmin(UserUpdateDto userUpdateDto)
         {
-            if (await _userService.UpdateUser(userUpdateDto)) return NoContent();
+            bool isUpdated = await _userService.UpdateUser(userUpdateDto);
+            if (isUpdated) return NoContent();
             return BadRequest("Failed to update user");
         }
         [HttpGet]

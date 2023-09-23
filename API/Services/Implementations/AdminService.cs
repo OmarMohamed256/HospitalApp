@@ -1,4 +1,5 @@
 using System.Transactions;
+using API.Constants;
 using API.Errors;
 using API.Models.DTOS;
 using API.Models.Entities;
@@ -17,77 +18,91 @@ namespace API.Services.Implementations
         private readonly IAuthenticationService _authenticationService;
         private readonly IAdminRepository _adminRepository;
         private readonly IMapper _mapper;
-        public AdminService(UserManager<AppUser> userManager, IMapper mapper, IAuthenticationService authenticationService, IAdminRepository adminRepository)
+        private readonly IServiceRepository _serviceRepository;
+        private readonly IDoctorServiceRepository _doctorServiceRepository;
+        public AdminService(UserManager<AppUser> userManager, IMapper mapper, IAuthenticationService authenticationService,
+        IAdminRepository adminRepository, IDoctorServiceRepository doctorServiceRepository, IServiceRepository serviceRepository)
         {
             _userManager = userManager;
             _authenticationService = authenticationService;
             _adminRepository = adminRepository;
             _mapper = mapper;
+            _serviceRepository = serviceRepository;
+            _doctorServiceRepository = doctorServiceRepository;
         }
 
-        public async Task<CreateUserDto> CreateUser(CreateUserDto createUserDto)
+        public async Task<UserInfoDto> CreateUser(CreateUserDto createUserDto)
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            bool userExists = await _authenticationService.UserExists(createUserDto.Username);
+            if (userExists) throw new ApiException(HttpStatusCode.BadRequest, "Username is already taken");
+            var user = new AppUser
             {
-                try
+                UserName = createUserDto.Username.ToLower(),
+                Email = createUserDto.Email,
+                Gender = createUserDto.Gender,
+                Age = createUserDto.Age,
+                FullName = createUserDto.FullName,
+                PhoneNumber = createUserDto.PhoneNumber,
+                DoctorSpecialityId = createUserDto.DoctorSpecialityId,
+            };
+            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            try
+            {
+                // Create User
+                var result = await _userManager.CreateAsync(user, createUserDto.Password);
+                if (!result.Succeeded) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to create user");
+
+                if (!Roles.IsValidRole(createUserDto.Role)) throw new ApiException(HttpStatusCode.NotFound, "Invalid role specified");
+                // Add roles to user
+                var roleResults = await _userManager.AddToRoleAsync(user, createUserDto.Role);
+
+                if (!roleResults.Succeeded) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add role");
+
+                if (createUserDto.Role == Roles.Doctor)
                 {
-                    if (await _authenticationService.UserExists(createUserDto.Username))
-                        throw new ApiException(400, "Username is already taken");
-
-                    var user = new AppUser
+                    if (createUserDto.DoctorWorkingHours != null)
                     {
-                        UserName = createUserDto.Username.ToLower(),
-                        Email = createUserDto.Email,
-                        Gender = createUserDto.Gender,
-                        Age = createUserDto.Age,
-                        FullName = createUserDto.FullName,
-                        PhoneNumber = createUserDto.PhoneNumber,
-                        DoctorSpecialityId = createUserDto.DoctorSpecialityId,
-                    };
-
-                    var result = await _userManager.CreateAsync(user, createUserDto.Password);
-                    if (!result.Succeeded)
-                    {
-                        throw new ApiException(500, "Failed to create user");
-                    }
-                    else
-                    {
-                        createUserDto.Id = user.Id;
-                    }
-
-                    if (!Roles.IsValidRole(createUserDto.Role))
-                        throw new ApiException(400, "Invalid role specified");
-
-                    var roleResults = await _userManager.AddToRoleAsync(user, createUserDto.Role);
-                    if (!roleResults.Succeeded)
-                        throw new ApiException(500, "Failed to add role");
-
-                    if (createUserDto.Role == Roles.Doctor)
-                    {
-                        if (createUserDto.DoctorWorkingHours != null)
+                        foreach (var workingHour in createUserDto.DoctorWorkingHours)
                         {
-                            foreach (var workingHour in createUserDto.DoctorWorkingHours)
-                            {
-                                workingHour.DoctorId = createUserDto.Id;
-                            }
+                            workingHour.DoctorId = user.Id;
                         }
+                        // Add woking hours to doctor
                         var workingHours = _mapper.Map<IEnumerable<DoctorWorkingHours>>(createUserDto.DoctorWorkingHours);
                         await _adminRepository.AddDoctorWorkingHours(workingHours);
                         var adminResult = await _adminRepository.SaveAllAsync();
-                        if(!adminResult) throw new ApiException(500, "Failed to add working hours");
-
+                        if (!adminResult) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add working hours");
                     }
 
-                    scope.Complete(); // Mark the transaction as complete, to be committed
-                }
-                catch (Exception)
-                {
-                    // No need to explicitly rollback, TransactionScope will handle it automatically
-                    throw; // Re-throw the exception for further handling
-                }
-            }
+                    // Add Doctor service
+                    if (user.DoctorSpecialityId.HasValue)
+                    {
+                        var servicesWithSpecialityId = await _serviceRepository.GetServicesIdsBySpecialityId(user.DoctorSpecialityId.Value);
+                        if (!servicesWithSpecialityId.Any())
+                        {
+                            scope.Complete();
+                            return _mapper.Map<UserInfoDto>(user);
+                        }
 
-            return createUserDto;
+                        await _doctorServiceRepository.CreateDoctorServicesForDoctor(user.Id, servicesWithSpecialityId);
+                        bool saveDoctorService = await _serviceRepository.SaveAllAsync();
+                        if (saveDoctorService)
+                        {
+                            scope.Complete();
+                            return _mapper.Map<UserInfoDto>(user);
+                        }
+                        else throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add doctor services");
+                    }
+
+                }
+
+                scope.Complete(); // Mark the transaction as complete, to be committed
+                return _mapper.Map<UserInfoDto>(user);
+            }
+            catch (Exception)
+            {
+                // No need to explicitly rollback, TransactionScope will handle it automatically
+                throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add doctor"); // Re-throw the exception for further handling
+            }
         }
 
     }

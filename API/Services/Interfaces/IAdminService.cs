@@ -4,6 +4,6 @@ namespace API.Services.Interfaces
 {
     public interface IAdminService
     {
-        Task<CreateUserDto> CreateUser(CreateUserDto createUserDto);
+        Task<UserInfoDto> CreateUser(CreateUserDto createUserDto);
     }
 }
