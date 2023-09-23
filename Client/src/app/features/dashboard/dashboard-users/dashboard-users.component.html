@@ -1,8 +1,8 @@
 
 <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
     <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
-      <button cButton color="light"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
-          Add new patient</span></button>
+      <button cButton color="light" (click)="openCreateUserModal()"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
+        Add new user</span></button>
 
           <select name="roleName" class="w-25" aria-label="roleName" [(ngModel)]="userParams.roleName" cSelect (change)="getUsers()">
             <option value="" disabled>Roles</option>
@@ -52,3 +52,6 @@
     <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
       [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
   </div>
+  <app-add-user-modal 
+(userCreated)="handleUserCreated($event)" 
+[(visible)]="modalVisibility"></app-add-user-modal>

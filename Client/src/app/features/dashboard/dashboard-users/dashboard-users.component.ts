@@ -18,6 +18,8 @@ export class DashboardUsersComponent implements OnInit {
   });
   pagination: Pagination | null = null;
   roles = ROLES_ARRAY;
+  modalVisibility: boolean = false;
+
   constructor(private userService: UserService) {
   }
   ngOnInit(): void {
@@ -45,5 +47,11 @@ export class DashboardUsersComponent implements OnInit {
     this.userParams.order = (this.userParams.order === 'asc') ? 'desc' : 'asc';
     this.getUsers();
   }
+  openCreateUserModal() {
+    this.modalVisibility = !this.modalVisibility
+  }
 
+  handleUserCreated(createdUser: UserData) {
+    this.users?.push(createdUser);
+  }
 }
