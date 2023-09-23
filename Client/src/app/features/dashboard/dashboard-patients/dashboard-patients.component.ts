@@ -20,6 +20,7 @@ export class DashboardPatientsComponent implements OnInit {
   });
   pagination: Pagination | null = null;
   genderList = GenderList;
+  modalVisibility: boolean = false;
 
   constructor(private userService: UserService) {
   }
@@ -47,6 +48,14 @@ export class DashboardPatientsComponent implements OnInit {
     this.userParams = this.userService.resetUserParams();
     this.userParams.roleName = this.roleName;
     this.getPatients();
+  }
+
+  openCreateUserModal() {
+    this.modalVisibility = !this.modalVisibility
+  }
+
+  handleUserCreated(createdUser: UserData) {
+    this.patients?.push(createdUser);
   }
 
 }

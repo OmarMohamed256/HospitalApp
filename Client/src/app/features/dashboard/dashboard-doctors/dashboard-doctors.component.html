@@ -52,4 +52,4 @@
     <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
       [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
   </div>
-  <app-add-user-modal (userCreated)="handleUserCreated($event)" [specialityList]="specialityList" [(visible)]="modalVisibility"></app-add-user-modal>
+  <app-add-user-modal [selectedRole]="'Doctor'" (userCreated)="handleUserCreated($event)" [specialityList]="specialityList" [(visible)]="modalVisibility"></app-add-user-modal>

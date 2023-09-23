@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { ROLES } from 'src/app/constants/roles';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -24,7 +25,7 @@ export class DashboardDoctorsComponent implements OnInit {
   specialityList: Speciality[] = [];
   modalVisibility: boolean = false;
 
-  constructor(private userService: UserService, private specialityService: SpecialityService) {
+  constructor(private userService: UserService, private specialityService: SpecialityService, private toastr: ToastrService) {
   }
   ngOnInit(): void {
     this.getDoctors();
@@ -67,6 +68,7 @@ export class DashboardDoctorsComponent implements OnInit {
 
   handleUserCreated(createdUser: UserData) {
     this.doctors?.push(createdUser);
+    this.toastr.success("Doctor Created Successfully");
   }
   
 }

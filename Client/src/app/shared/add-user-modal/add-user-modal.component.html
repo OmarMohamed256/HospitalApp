@@ -68,24 +68,12 @@
     </div>
     <div class="row">
       <div class="col">
-        <label cLabel>Speciality</label>
-        <select name="doctorSpecialityId" aria-label="doctorSpecialityId" cSelect
-          [formControl]="$any(createUser.controls['doctorSpecialityId'])">
-          <option disabled value="" selected>Speciality</option>
-          <option *ngFor="let speciality of specialityList" [value]="speciality.id">
-            {{speciality.name}}
-          </option>
-        </select>
-      </div>
-      <div class="col">
         <div class="mb-3">
           <label cLabel>Phone Number</label>
           <app-text-input icon="cilUser" [formControl]='$any(createUser.controls["phoneNumber"])'
             [label]='"Phone Number"'></app-text-input>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col">
         <div class="mb-3">
           <label cLabel>Gender</label>
@@ -96,6 +84,18 @@
             </option>
           </select>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mb-3" *ngIf="createUser.value.role == 'Doctor'">
+        <label cLabel>Speciality</label>
+        <select name="doctorSpecialityId" aria-label="doctorSpecialityId" cSelect
+          [formControl]="$any(createUser.controls['doctorSpecialityId'])">
+          <option disabled value="" selected>Speciality</option>
+          <option *ngFor="let speciality of specialityList" [value]="speciality.id">
+            {{speciality.name}}
+          </option>
+        </select>
       </div>
       <div class="col">
         <label cLabel>Role</label>
@@ -121,13 +121,15 @@
                 <div class="col">
                   <select formControlName="startTime" class="form-select">
                     <option value="" selected>Select a start time</option>
-                    <option *ngFor="let time of getHalfHourIntervals(); trackBy: trackByFn" [value]="time.timeSpanValue">{{ time.displayValue }}</option>
+                    <option *ngFor="let time of getHalfHourIntervals(); trackBy: trackByFn"
+                      [value]="time.timeSpanValue">{{ time.displayValue }}</option>
                   </select>
                 </div>
                 <div class="col">
                   <select formControlName="endTime" class="form-select">
                     <option value="" selected>Select an end time</option>
-                    <option *ngFor="let time of getHalfHourIntervals(); trackBy: trackByFn" [value]="time.timeSpanValue">{{ time.displayValue }}</option>
+                    <option *ngFor="let time of getHalfHourIntervals(); trackBy: trackByFn"
+                      [value]="time.timeSpanValue">{{ time.displayValue }}</option>
                   </select>
                   <div class="col" *ngIf="control.get('endTime').hasError('endTimeRequired')">
                     <div class="text-danger">End time is required when start time is selected.</div>

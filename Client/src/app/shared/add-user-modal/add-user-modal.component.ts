@@ -26,6 +26,7 @@ export class AddUserModalComponent {
   createUserModel: CreateUser | undefined;
   genderList = GenderList;
   @Output() userCreated = new EventEmitter<UserData>();
+  @Input() selectedRole = '';
 
   constructor(private fb: FormBuilder, private adminService: AdminService) {
   }
@@ -40,6 +41,7 @@ export class AddUserModalComponent {
   }
 
   intializeForm() {
+    
     this.createUser = this.fb.group({
       username: ['', Validators.required],
       email: ['', Validators.required],
@@ -49,7 +51,7 @@ export class AddUserModalComponent {
       confirmPassword: ['', Validators.required],
       phoneNumber: ['', Validators.required],
       gender: ['', Validators.required],
-      role: ['', Validators.required],
+      role: [this.selectedRole, Validators.required],
       doctorSpecialityId: [''],
       doctorWorkingHours: this.fb.array([]),
     });
@@ -154,12 +156,18 @@ export class AddUserModalComponent {
       fullName: this.createUser.get('fullName')?.value,
       phoneNumber: this.createUser.get('phoneNumber')?.value,
       password: this.createUser.get('password')?.value,
-      doctorSpecialityId: +this.createUser.get('doctorSpecialityId')?.value,
       role: this.createUser.get('role')?.value,
     };
 
     if (doctorWorkingHours.length > 0) {
       user.doctorWorkingHours = doctorWorkingHours;
+    }
+    const selectedRole = this.createUser.get('role')?.value;
+    if (selectedRole === 'Doctor') {
+      const doctorSpecialityId = +this.createUser.get('doctorSpecialityId')?.value;
+      if (doctorSpecialityId) {
+        user.doctorSpecialityId = doctorSpecialityId;
+      }
     }
     return user as CreateUser;
   }

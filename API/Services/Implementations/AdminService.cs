@@ -101,7 +101,7 @@ namespace API.Services.Implementations
             catch (Exception)
             {
                 // No need to explicitly rollback, TransactionScope will handle it automatically
-                throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add doctor"); // Re-throw the exception for further handling
+                throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add user"); // Re-throw the exception for further handling
             }
         }
 
