@@ -10,6 +10,7 @@ namespace HospitalApp.Models.Entities
         public virtual ICollection<AppUser>? Doctors { get; set; }
         public virtual ICollection<Appointment>? Appointments { get; set; }
         public virtual ICollection<Service>? Services { get; set; }
+        public virtual ICollection<InventoryItem>? InventoryItems { get; set; }
 
     }
 }

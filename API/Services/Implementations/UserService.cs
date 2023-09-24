@@ -5,9 +5,7 @@ using API.Models.DTOS;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
 using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using webapi.Entities;
 
 namespace API.Services.Implementations

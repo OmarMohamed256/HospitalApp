@@ -4,6 +4,7 @@ using Hospital.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230924203043_ChangedServiceSpecialityIdToInventoryItemSpecialityId")]
+    partial class ChangedServiceSpecialityIdToInventoryItemSpecialityId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,9 +124,12 @@ namespace HospitalApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ServiceSpecialityId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("InventoryItemSpecialityId");
+                    b.HasIndex("ServiceSpecialityId");
 
                     b.ToTable("InventoryItems");
                 });
@@ -677,13 +683,13 @@ namespace HospitalApp.Data.Migrations
 
             modelBuilder.Entity("API.Models.Entities.InventoryItem", b =>
                 {
-                    b.HasOne("HospitalApp.Models.Entities.Speciality", "InventoryItemSpeciality")
-                        .WithMany("InventoryItems")
-                        .HasForeignKey("InventoryItemSpecialityId")
+                    b.HasOne("HospitalApp.Models.Entities.Speciality", "ServiceSpeciality")
+                        .WithMany()
+                        .HasForeignKey("ServiceSpecialityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("InventoryItemSpeciality");
+                    b.Navigation("ServiceSpeciality");
                 });
 
             modelBuilder.Entity("API.Models.Entities.InvoiceDoctorService", b =>
@@ -902,8 +908,6 @@ namespace HospitalApp.Data.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Doctors");
-
-                    b.Navigation("InventoryItems");
 
                     b.Navigation("Services");
                 });

@@ -20,8 +20,12 @@ namespace Hospital.Data
         public DbSet<Service> Services { get; set; }
         public DbSet<CustomItem> CustomItems { get; set; }
         public DbSet<DoctorService> DoctorServices { get; set; }
-        public DbSet<InvoiceItem> InvoiceItems { get; set; }
         public DbSet<DoctorWorkingHours> DoctorWorkingHours { get; set; }
+        public DbSet<InventoryItem> InventoryItems { get; set; }
+        public DbSet<SupplyOrder> SupplyOrders { get; set; }
+        public DbSet<ServiceInventoryItem> ServiceInventoryItems { get; set; }
+        public DbSet<InvoiceDoctorService> InvoiceDoctorService { get; set; }
+        public DbSet<InvoiceDoctorServiceSupplyOrders> InvoiceDoctorServiceSupplyOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -93,25 +97,58 @@ namespace Hospital.Data
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<InvoiceItem>()
-                .HasOne(ids => ids.Invoice)
-                .WithMany(i => i.InvoiceItems)
-                .HasForeignKey(ids => ids.InvoiceId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
-
-            modelBuilder.Entity<InvoiceItem>()
-                .HasOne(ids => ids.DoctorService)
-                .WithMany(ds => ds.InvoiceItems)
-                .HasForeignKey(ids => ids.DoctorServiceId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
-
             modelBuilder.Entity<DoctorWorkingHours>()
                 .HasOne(ids => ids.Doctor)
                 .WithMany(ds => ds.DoctorWorkingHours)
                 .HasForeignKey(ids => ids.DoctorId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SupplyOrder>()
+                .HasOne(so => so.InventoryItem)
+                .WithMany(ii => ii.SupplyOrders)
+                .HasForeignKey(so => so.InventoryItemId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<ServiceInventoryItem>()
+                .HasOne(sii => sii.InventoryItem)
+                .WithMany(ii => ii.ServiceInventoryItems)
+                .HasForeignKey(sii => sii.InventoryItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ServiceInventoryItem>()
+                .HasOne(sii => sii.Service)
+                .WithMany(s => s.ServiceInventoryItems)
+                .HasForeignKey(sii => sii.ServiceId);
+            
+            modelBuilder.Entity<InvoiceDoctorServiceSupplyOrders>()
+                .HasOne(sii => sii.SupplyOrder)
+                .WithMany(ii => ii.InvoiceDoctorServiceSupplyOrders)
+                .HasForeignKey(sii => sii.SupplyOrderId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<InvoiceDoctorServiceSupplyOrders>()
+                .HasOne(sii => sii.InvoiceDoctorService)
+                .WithMany(s => s.InvoiceDoctorServiceSupplyOrders)
+                .HasForeignKey(sii => sii.InvoiceDoctorServiceId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<InvoiceDoctorService>()
+                .HasOne(sii => sii.Invoice)
+                .WithMany(ii => ii.InvoiceDoctorService)
+                .HasForeignKey(sii => sii.InvoiceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<InvoiceDoctorService>()
+                .HasOne(sii => sii.DoctorService)
+                .WithMany(s => s.InvoiceDoctorService)
+                .HasForeignKey(sii => sii.DoctorServiceId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<InventoryItem>()
+                .HasOne(ii => ii.InventoryItemSpeciality)
+                .WithMany(s => s.InventoryItems)
+                .HasForeignKey(ii => ii.InventoryItemSpecialityId);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

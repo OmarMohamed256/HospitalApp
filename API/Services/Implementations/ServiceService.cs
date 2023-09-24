@@ -7,7 +7,6 @@ using API.Models.Entities;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services.Implementations
 {
@@ -99,20 +98,12 @@ namespace API.Services.Implementations
         private async Task<ServiceDto> HandleDoctorServicesAsync(Service service, ServiceDto serviceDto)
         {
             var doctorsWithSpecialityId = await _doctorRepository.GetDoctorsIdsBySpecialityId(service.ServiceSpecialityId);
-            if (!doctorsWithSpecialityId.Any())
-            {
-                serviceDto.Id = service.Id;
-                return serviceDto;
-            }
+            if (!doctorsWithSpecialityId.Any()) return _mapper.Map<ServiceDto>(service);
             else
             {
                 await _doctorServiceRepository.CreateDoctorServicesForService(service.Id, doctorsWithSpecialityId);
                 bool createDoctorServicesResult = await _serviceRepository.SaveAllAsync();
-                if (createDoctorServicesResult)
-                {
-                    serviceDto.Id = service.Id;
-                    return serviceDto;
-                }
+                if (createDoctorServicesResult) return _mapper.Map<ServiceDto>(service);
             }
             throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add doctor services");
         }

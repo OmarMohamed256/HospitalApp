@@ -29,11 +29,8 @@ namespace API.Services.Implementations
             var speciality = _mapper.Map<Speciality>(specialityDto);
             _specialityRepository.AddSpeciality(speciality);
             bool addSpecialityResult = await _specialityRepository.SaveAllAsync();
-            if (addSpecialityResult)
-            {
-                specialityDto.Id = speciality.Id;
-                return specialityDto;
-            }
+            if (addSpecialityResult) return _mapper.Map<SpecialityDto>(speciality);
+            
             throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add speciality");
         }
 
