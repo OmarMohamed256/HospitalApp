@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment.development';
 })
 export class SpecialityService {
   baseUrl = environment.apiUrl;
-
   constructor(private http: HttpClient) { }
 
   getSpecialities() {

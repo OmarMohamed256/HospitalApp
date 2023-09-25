@@ -7,5 +7,6 @@ namespace API.Repositories.Interfaces
     {
         void AddAppointment(Appointment appointment);
         Task<PagedList<Appointment>> GetAppointmentsForUser(AppointmentParams appointmentParams, int patientId);
+        Task<PagedList<Appointment>> GetAppointments(AppointmentParams appointmentParams);
     }
 }

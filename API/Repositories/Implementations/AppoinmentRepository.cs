@@ -21,11 +21,18 @@ namespace API.Repositories.Implementations
             _context.Appointments.Add(appointment);
         }
 
+        public Task<PagedList<Appointment>> GetAppointments(AppointmentParams appointmentParams)
+        {
+            var query = _context.Appointments
+                .Include(a => a.Doctor)
+                .Include(a => a.Patient);
+            throw new NotImplementedException("f");
+        }
+
         public async Task<PagedList<Appointment>> GetAppointmentsForUser(AppointmentParams appointmentParams, int patientId)
         {
             var query = _context.Appointments
             .Include(a => a.Doctor)
-            .Include(s => s.AppointmentSpeciality)
             .Where(p => p.PatientId == patientId)
             .AsQueryable();
 
@@ -33,6 +40,7 @@ namespace API.Repositories.Implementations
                 query = query.Where(u => u.AppointmentSpecialityId == appointmentParams.SpecialityId);
 
             if (!string.IsNullOrEmpty(appointmentParams.Type)) query = query.Where(u => u.Type == appointmentParams.Type);
+
             query = (appointmentParams.OrderBy, appointmentParams.Order) switch
             {
                 ("dateUpdated", "asc") => query.OrderBy(u => u.DateUpdated),

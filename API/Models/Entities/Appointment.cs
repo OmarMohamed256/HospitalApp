@@ -24,7 +24,7 @@ namespace HospitalApp.Models.Entities
         public int PatientId { get; set; }
         public int AppointmentSpecialityId  { get; set; } // Added property for SpecialityId
         public virtual AppUser Doctor { get; set; }
-        public virtual AppUser User { get; set; }
+        public virtual AppUser Patient { get; set; }
         public virtual Speciality AppointmentSpeciality { get; set; } // Added navigation property for Speciality
         public virtual Invoice? Invoice { get; set; }
 

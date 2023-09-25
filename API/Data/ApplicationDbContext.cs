@@ -56,7 +56,7 @@ namespace Hospital.Data
 
             // Configure the relationship for BookedAppointments
             modelBuilder.Entity<Appointment>()
-                .HasOne(a => a.User)
+                .HasOne(a => a.Patient)
                 .WithMany(u => u.BookedAppointments)
                 .HasForeignKey(a => a.PatientId)
                 .OnDelete(DeleteBehavior.NoAction);

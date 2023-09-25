@@ -1,3 +1,15 @@
+<c-navbar colorScheme="dark" expand="lg" class="bg-dark">
+  <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+
+    <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
+      [(ngModel)]="appointmentParams.specialityId" cSelect (change)="getAppointments()">
+      <option [value]="null" disabled>Speciality</option>
+      <option *ngFor="let speciality of specialityList" [value]="speciality.id">
+        {{ speciality.name }}
+      </option>
+    </select>
+  </div>
+</c-navbar>
 <table cTable *ngIf="appointments">
     <thead>
       <tr>
@@ -22,7 +34,7 @@
       <tr *ngFor="let appointment of appointments" class="user-table">
         <td>{{appointment.doctor?.fullName}}</td>
         <td>{{user?.fullName}}</td>
-        <td>{{appointment.speciality?.name}}</td>
+        <td>{{getSpecialityNameById(appointment.appointmentSpecialityId)}}</td>
         <td>{{appointment.status}}</td>
         <td>{{appointment.type}}</td>
         <td>{{appointment.dateCreated | date:'short'}}</td>

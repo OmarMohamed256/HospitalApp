@@ -15,6 +15,5 @@ namespace API.Models.Entities
         public int  QuantityUsed { get; set; }
         public int  ItemPrice { get; set; }
         public int  TotalPrice { get; set; }
-
     }
 }
