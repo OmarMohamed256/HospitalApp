@@ -1,0 +1,63 @@
+<c-nav variant="tabs">
+  <c-nav-item>
+    <a [active]="true" [cTabContent]="tabContent" [tabPaneIdx]="0" cNavLink>
+      Inventory Items
+    </a>
+  </c-nav-item>
+  <c-nav-item>
+    <a [cTabContent]="tabContent" [tabPaneIdx]="1" cNavLink>
+      Supply Orders
+    </a>
+  </c-nav-item>
+  <c-nav-item>
+    <a [cTabContent]="tabContent" [tabPaneIdx]="2" cNavLink>
+      Sell Orders
+    </a>
+  </c-nav-item>
+</c-nav>
+<c-tab-content #tabContent="cTabContent">
+  <c-tab-pane class="p-3">
+    <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
+      <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+    
+        <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
+          [(ngModel)]="inventoryItemParams.specialityId" cSelect (change)="getInventoryItems()">
+          <option [value]="null" disabled>Speciality</option>
+          <option *ngFor="let speciality of specialityList" [value]="speciality.id">
+            {{ speciality.name }}
+          </option>
+        </select>
+    
+    
+        <form cForm class="d-flex" role="search" (submit)="getInventoryItems()">
+          <input cFormControl type="search" placeholder="Search" name="searchTerm" aria-label="Search" class="me-2"
+            [(ngModel)]="inventoryItemParams.searchTerm">
+          <button cButton color="light" variant="outline" type="submit">Search</button>
+        </form>
+        <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+    
+      </div>
+    </c-navbar>
+    <table cTable *ngIf="inventoryItems && inventoryItems.length > 0">
+      <thead>
+        <tr>
+          <th scope="col">Item Name</th>
+          <th scope="col">Speciality</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let inventoryItem of inventoryItems" class="user-table">
+          <td>{{inventoryItem.name}}</td>
+          <td>{{getSpecialityNameById(inventoryItem.inventoryItemSpecialityId)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </c-tab-pane>
+  <c-tab-pane class="p-3">
+  </c-tab-pane>
+  <c-tab-pane class="p-3"></c-tab-pane>
+</c-tab-content>
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+</div>

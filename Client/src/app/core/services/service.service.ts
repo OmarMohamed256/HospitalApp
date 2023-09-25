@@ -41,10 +41,7 @@ export class ServiceService {
         return response;
       }))
   }
-  setServiceParams(params: ServiceParams) {
-    this.serviceParams = params;
-  }
-
+  
   createService(service: Service) {
     return this.http.post<Service>(this.baseUrl + 'service/', service).pipe(
       map((newService: Service) => {

@@ -40,6 +40,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/dashboard/dashboard-users/dashboard-users.module').then((m) => m.DashboardUsersModule)
       },
+      {
+        path: 'inventory',
+        loadChildren: () =>
+          import('./features/dashboard/dashboard-inventory/dashboard-inventory.module').then((m) => m.DashboardInventoryModule)
+      },
     ]
   },
   {
