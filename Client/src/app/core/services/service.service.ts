@@ -39,7 +39,7 @@ export class ServiceService {
       .pipe(map(response => {
         this.serviceCache.set(Object.values(serviceParams).join("-"), response);
         return response;
-      }))
+      }));
   }
   
   createService(service: Service) {

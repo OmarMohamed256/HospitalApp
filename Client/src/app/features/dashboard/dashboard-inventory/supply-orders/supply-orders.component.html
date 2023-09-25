@@ -1,0 +1,52 @@
+<c-navbar colorScheme="dark" expand="lg" class="bg-dark">
+    <div navbar class="d-flex flex-column gap-2 justify-content-between w-100 px-5">
+
+        <div class="d-flex flex-row justify-content-between">
+            <select name="speciality" *ngIf="orderByList" class="w-25" [(ngModel)]="supplyOrderParams.orderBy" cSelect>
+                <option [value]="null" disabled>Order By</option>
+                <option *ngFor="let orderBy of orderByList" [value]="orderBy.value">
+                    {{ orderBy.display }}
+                </option>
+            </select>
+            <select name="speciality" *ngIf="orderList" class="w-25" [(ngModel)]="supplyOrderParams.order" cSelect>
+                <option [value]="null" disabled>Order</option>
+                <option *ngFor="let order of orderList" [value]="order.value">
+                    {{ order.display }}
+                </option>
+            </select>
+            <button cButton color="light" (click)="getSupplyOrders()">Apply Filters</button>
+        </div>
+
+        <div class="d-flex flex-row justify-content-between">
+            <form cForm class="d-flex" role="search" (submit)="getSupplyOrders()">
+                <input cFormControl type="search" placeholder="Search" name="searchTerm" aria-label="Search" class="me-2"
+                    [(ngModel)]="supplyOrderParams.searchTerm">
+                <button cButton color="light" variant="outline" type="submit">Search</button>
+            </form>
+            <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+        </div>
+
+    </div>
+</c-navbar>
+<table cTable *ngIf="supplyOrders && supplyOrders.length > 0">
+    <thead>
+        <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Item Price</th>
+            <th scope="col">Expiry Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let supplyOrder of supplyOrders" class="user-table">
+            <td>{{supplyOrder.itemName}}</td>
+            <td>{{supplyOrder.quantity}}</td>
+            <td>{{supplyOrder.itemPrice}}</td>
+            <td>{{supplyOrder.expiryDate | date}}</td>
+        </tr>
+    </tbody>
+</table>
+<div class="d-flex justify-content-center" *ngIf="pagination">
+    <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+  </div>

@@ -21,6 +21,7 @@ export class DashboardInventoryComponent implements OnInit {
   };
   pagination: Pagination | null = null;
   specialityList: Speciality[] = [];
+  activePane = 0;
 
   constructor(private inventoryService: InventoryService, private specialityService: SpecialityService) {
   }
@@ -53,5 +54,8 @@ export class DashboardInventoryComponent implements OnInit {
   resetFilters() {
     this.inventoryItemParams = this.inventoryService.resetParams();
     this.getInventoryItems()
+  }
+  onTabChange($event: number) {
+    this.activePane = $event;
   }
 }

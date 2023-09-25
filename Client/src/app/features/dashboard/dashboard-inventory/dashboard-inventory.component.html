@@ -15,7 +15,7 @@
     </a>
   </c-nav-item>
 </c-nav>
-<c-tab-content #tabContent="cTabContent">
+<c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
   <c-tab-pane class="p-3">
     <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
       <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
@@ -52,12 +52,13 @@
         </tr>
       </tbody>
     </table>
+    <div class="d-flex justify-content-center" *ngIf="pagination">
+      <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+        [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+    </div>
   </c-tab-pane>
-  <c-tab-pane class="p-3">
+  <c-tab-pane class="p-3" *ngIf="activePane === 1">
+    <app-supply-orders></app-supply-orders>
   </c-tab-pane>
   <c-tab-pane class="p-3"></c-tab-pane>
 </c-tab-content>
-<div class="d-flex justify-content-center" *ngIf="pagination">
-  <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
-    [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
-</div>

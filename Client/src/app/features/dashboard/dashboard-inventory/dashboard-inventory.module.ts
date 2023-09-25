@@ -5,6 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { CommonSharedModule } from "src/app/shared/common-shared.module";
 import { DashboardInventoryRoutingModule } from "./dashboard-inventory-routing.module";
 import { DashboardInventoryComponent } from "./dashboard-inventory.component";
+import { SupplyOrdersComponent } from './supply-orders/supply-orders.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { DashboardInventoryComponent } from "./dashboard-inventory.component";
     SharedModule,
     ModalModule
     ],
-  declarations: [DashboardInventoryComponent]
+  declarations: [DashboardInventoryComponent, SupplyOrdersComponent]
 })
 export class DashboardInventoryModule {
 }
