@@ -93,6 +93,7 @@ builder.Services.AddScoped<ISpecialityRepository, SpecialityRepository>();
 builder.Services.AddScoped<IDoctorServiceRepository, DoctorServiceRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IInventoryItemRepository, InventoryItemRepository>();
+builder.Services.AddScoped<ISupplyOrderRepository, SupplyOrderRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -104,6 +105,7 @@ builder.Services.AddScoped<ISpecialityService, SpecialityService>();
 builder.Services.AddScoped<IDoctorServiceService, DoctorServiceService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IInventoryItemService, InventoryItemService>();
+builder.Services.AddScoped<ISupplyOrderService, SupplyOrderService>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 

@@ -18,6 +18,11 @@ namespace API.Repositories.Implementations
             _context.Add(inventoryItem);
         }
 
+        public async Task<InventoryItem> GetInventoryItemAsync(int inventoryItemId)
+        {
+            return await _context.InventoryItems.FirstOrDefaultAsync(ii => ii.Id == inventoryItemId);
+        }
+
         public async Task<PagedList<InventoryItem>> GetInventoryItemsAsync(InventoryItemParams inventoryItemParams)
         {
             var query = _context.InventoryItems.AsQueryable();

@@ -8,6 +8,7 @@ namespace API.Repositories.Interfaces
         void AddInventoryItem(InventoryItem inventoryItem);
         void UpdateInventoryItem(InventoryItem inventoryItem);
         Task<PagedList<InventoryItem>> GetInventoryItemsAsync(InventoryItemParams inventoryItemParams);
+        Task<InventoryItem> GetInventoryItemAsync(int inventoryItemId);
         Task<bool> SaveAllAsync();
     }
 }
