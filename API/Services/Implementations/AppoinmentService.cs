@@ -1,3 +1,5 @@
+using API.Constants;
+using API.Errors;
 using API.Helpers;
 using API.Models.DTOS;
 using API.Repositories.Interfaces;
@@ -18,26 +20,31 @@ namespace API.Services.Implementations
             _mapper = mapper;
 
         }
-        public async Task<PagedList<AppointmentDto>> GetAppointmentsForUser(AppointmentParams appointmentParams, int patientId)
-        {
-            PagedList<Appointment> appointments = await _appointmentRepository.GetAppointmentsForUser(appointmentParams, patientId);
-            IEnumerable<AppointmentDto> appointmentsDto = appointments.Select(appointment => new AppointmentDto
-            {
-                Id = appointment.Id,
-                AppointmentSpecialityId = appointment.AppointmentSpecialityId,
-                DateCreated = appointment.DateCreated,
-                DateUpdated = appointment.DateUpdated,
-                CreationNote = appointment.CreationNote,
-                DateOfVisit = appointment.DateOfVisit,
-                DrawUrl = appointment.DrawUrl,
-                DoctorId = appointment.DoctorId,
-                PatientId = appointment.PatientId,
-                Status = appointment.Status,
-                Type = appointment.Type,
-                Doctor = _mapper.Map<UserInfoDto>(appointment.Doctor),
-                Speciality = _mapper.Map<SpecialityDto>(appointment.AppointmentSpeciality),
-            }).ToList();
 
+        public async Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto)
+        {
+            var appointment = _mapper.Map<Appointment>(appointmentDto);
+
+            if (appointment.Id != 0) _appointmentRepository.UpdateAppointment(appointment);
+            else _appointmentRepository.AddAppointment(appointment);
+
+            var result = await _appointmentRepository.SaveAllAsync();
+            if (result) return _mapper.Map<AppointmentDto>(appointment);
+
+            throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add/update appointment");
+        }
+
+        public async Task<PagedList<AppointmentDto>> GetAppointmentsAsync(AppointmentParams appointmentParams)
+        {
+            PagedList<Appointment> appointments = await _appointmentRepository.GetAppointmentsAsync(appointmentParams);
+            var appointmentsDto = _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
+            return new PagedList<AppointmentDto>(appointmentsDto, appointments.TotalCount, appointments.CurrentPage, appointments.PageSize);
+        }
+
+        public async Task<PagedList<AppointmentDto>> GetAppointmentsForPatientAsync(AppointmentParams appointmentParams, int patientId)
+        {
+            PagedList<Appointment> appointments = await _appointmentRepository.GetAppointmentsByPatientIdAsync(appointmentParams, patientId);
+            var appointmentsDto = _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
             return new PagedList<AppointmentDto>(appointmentsDto, appointments.TotalCount, appointments.CurrentPage, appointments.PageSize);
         }
     }

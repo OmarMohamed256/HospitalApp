@@ -15,13 +15,33 @@ namespace API.Controllers
         {
             _appoinmentService = appoinmentService;
         }
-        [HttpGet("{userId}")]
+        [HttpGet("{patientId}")]
         public async Task<ActionResult<PagedList<AppointmentDto>>> GetAppointmentsByUserId
-        ([FromQuery] AppointmentParams appointmentParams,[Required] int userId)
+            ([FromQuery] AppointmentParams appointmentParams, [Required] int patientId)
         {
-            var appointments = await _appoinmentService.GetAppointmentsForUser(appointmentParams, userId);
+            var appointments = await _appoinmentService.GetAppointmentsForPatientAsync(appointmentParams, patientId);
             Response.AddPaginationHeader(appointments.CurrentPage, appointments.PageSize, appointments.TotalCount, appointments.TotalPages);
             return Ok(appointments);
+        }
+
+        [HttpGet]
+        [Route("all")]
+        public async Task<ActionResult<PagedList<AppointmentDto>>> GetAppointments
+            ([FromQuery] AppointmentParams appointmentParams)
+        {
+            var appointments = await _appoinmentService.GetAppointmentsAsync(appointmentParams);
+            Response.AddPaginationHeader(appointments.CurrentPage, appointments.PageSize, appointments.TotalCount, appointments.TotalPages);
+            return Ok(appointments);
+        }
+        [HttpPost]
+        public async Task<ActionResult<AppointmentDto>> CreateAppointmentAsync(AppointmentDto appointmentDto)
+        {
+            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto);
+        }
+        [HttpPut]
+        public async Task<ActionResult<AppointmentDto>> UpdateAppointmentAsync(AppointmentDto appointmentDto)
+        {
+            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto);
         }
 
     }

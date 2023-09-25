@@ -26,7 +26,6 @@ namespace API.Controllers
         }
         [HttpGet]
         [Route("all")]
-        [Authorize(Policy = Polices.RequireReceptionistRole)]
         public async Task<ActionResult<PagedList<UserInfoDto>>> GetUsers([FromQuery] UserParams userParams)
         {
             var users = await _userService.GetAllUsersAsync(userParams);
@@ -36,7 +35,6 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{Id}", Name = "GetUser")] // Define a specific route for this action
-        [Authorize(Policy = Polices.RequireDoctorRole)]
         public async Task<ActionResult<UserInfoDto>> GetUserById(string Id)
         {
             var user = await _userService.GetUserById(Id);
