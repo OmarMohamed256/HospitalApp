@@ -26,7 +26,11 @@ namespace API.Services.Implementations
             var appointment = _mapper.Map<Appointment>(appointmentDto);
 
             if (appointment.Id != 0) _appointmentRepository.UpdateAppointment(appointment);
-            else _appointmentRepository.AddAppointment(appointment);
+            else
+            {
+                appointment.Status = string.IsNullOrEmpty(appointment.Status) ? "booked" : appointment.Status;
+                _appointmentRepository.AddAppointment(appointment);
+            }
 
             var result = await _appointmentRepository.SaveAllAsync();
             if (result) return _mapper.Map<AppointmentDto>(appointment);

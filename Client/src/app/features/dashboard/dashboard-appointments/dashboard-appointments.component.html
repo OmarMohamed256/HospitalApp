@@ -1,6 +1,7 @@
 <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
     <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
-  
+      <button cButton color="light" routerLink="/appointments/add"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
+        Add new appointment</span></button>
       <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
         [(ngModel)]="appointmentParams.specialityId" cSelect (change)="getAppointments()">
         <option [value]="null" disabled>Speciality</option>

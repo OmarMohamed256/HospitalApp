@@ -8,7 +8,7 @@ namespace API.Models.DTOS
     public class AppointmentDto
     {
         public int Id { get; set; }
-        public string Status { get; set; }
+        public string? Status { get; set; }
         public string Type { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
