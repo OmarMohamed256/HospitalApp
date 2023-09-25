@@ -16,6 +16,12 @@ export const navItems: IRoleNavData[] = [
     title: true
   },
   {
+    name: 'Appointments',
+    url: '/appointments',
+    iconComponent: { name: 'cil-calendar' },
+    roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
+  },
+  {
     name: 'Patients',
     url: '/patients',
     iconComponent: { name: 'cil-bed' },
@@ -40,15 +46,15 @@ export const navItems: IRoleNavData[] = [
     roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
   },
   {
-    name: 'Users Panel',
-    url: '/users',
-    iconComponent: { name: 'cil-group' },
-    roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
-  },
-  {
     name: 'Inventory',
     url: '/inventory',
     iconComponent: { name: 'cil-hospital' },
+    roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
+  },
+  {
+    name: 'Users Panel',
+    url: '/users',
+    iconComponent: { name: 'cil-group' },
     roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
   }
 ];

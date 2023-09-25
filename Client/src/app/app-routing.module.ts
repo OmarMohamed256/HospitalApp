@@ -16,6 +16,11 @@ const routes: Routes = [
     },
     children: [
       {
+        path: 'appointments',
+        loadChildren: () =>
+          import('./features/dashboard/dashboard-appointments/dashboard-appointments.module').then((m) => m.DashboardAppointmentModule)
+      },
+      {
         path: 'patients',
         loadChildren: () =>
           import('./features/dashboard/dashboard-patients/dashboard-patients.module').then((m) => m.DashboardPatientModule)

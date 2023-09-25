@@ -14,7 +14,6 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { CommonSharedModule } from './shared/common-shared.module';
-import { DashboardInventoryComponent } from './features/dashboard/dashboard-inventory/dashboard-inventory.component';
 
 const APP_CONTAINERS = [
   DefaultHeaderComponent,

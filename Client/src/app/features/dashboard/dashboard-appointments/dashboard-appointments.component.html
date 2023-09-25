@@ -1,26 +1,25 @@
 <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
-  <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+    <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+  
+      <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
+        [(ngModel)]="appointmentParams.specialityId" cSelect (change)="getAppointments()">
+        <option [value]="null" disabled>Speciality</option>
+        <option *ngFor="let speciality of specialityList" [value]="speciality.id">
+          {{ speciality.name }}
+        </option>
+      </select>
 
-    <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
-      [(ngModel)]="appointmentParams.specialityId" cSelect (change)="getAppointments()">
-      <option [value]="null" disabled>Speciality</option>
-      <option *ngFor="let speciality of specialityList" [value]="speciality.id">
-        {{ speciality.name }}
-      </option>
-    </select>
-    
-    <select name="type" *ngIf="typeList" class="w-25" aria-label="type"
-    [(ngModel)]="appointmentParams.type" cSelect (change)="getAppointments()">
-    <option [value]="''" disabled>Type</option>
-    <option *ngFor="let type of typeList" [value]="type.value">
-      {{ type.display }}
-    </option>
-  </select>
+      <select name="type" *ngIf="typeList" class="w-25" aria-label="type"
+        [(ngModel)]="appointmentParams.type" cSelect (change)="getAppointments()">
+        <option [value]="''" disabled>Type</option>
+        <option *ngFor="let type of typeList" [value]="type.value">
+          {{ type.display }}
+        </option>
+      </select>
+      <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
 
-  <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
-
-  </div>
-</c-navbar>
+    </div>
+  </c-navbar>
 <table cTable *ngIf="appointments">
     <thead>
       <tr>
@@ -44,7 +43,7 @@
     <tbody>
       <tr *ngFor="let appointment of appointments" class="user-table">
         <td>{{appointment.doctor?.fullName}}</td>
-        <td>{{user?.fullName}}</td>
+        <td>{{appointment.patient?.fullName}}</td>
         <td>{{getSpecialityNameById(appointment.appointmentSpecialityId)}}</td>
         <td>{{appointment.status}}</td>
         <td>{{appointment.type}}</td>
