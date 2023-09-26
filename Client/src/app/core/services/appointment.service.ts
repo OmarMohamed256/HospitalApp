@@ -73,4 +73,11 @@ export class AppointmentService {
     this.appointmentParams = new AppointmentParams();
     return this.appointmentParams;
   }
+  getDoctorUpcomingAppointmentsDates(doctorId: string) {
+    return this.http.get<Date[]>(this.baseUrl + 'appointment/getUpcomingDoctorAppointmentDates/' + doctorId);
+  }
+
+  createAppointment(appointment: Appointment) {
+    return this.http.post<Appointment>(this.baseUrl + 'appointment', appointment)
+  }
 }

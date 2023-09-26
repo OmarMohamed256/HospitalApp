@@ -17,8 +17,6 @@ namespace HospitalApp.Models.Entities
         public DateTime DateUpdated { get; set; }
         public DateTime DateOfVisit { get; set; }
         public string? CreationNote { get; set; }
-        public string? DrawUrl { get; set; }
-
         public int? InvoiceId { get; set; }
         public int DoctorId { get; set; }
         public int PatientId { get; set; }

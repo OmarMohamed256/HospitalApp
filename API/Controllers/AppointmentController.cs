@@ -25,6 +25,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("getUpcomingDoctorAppointmentDates/{doctorId}")]
+        public async Task<ActionResult<List<DateTime>>> GetUpcomingAppointmentsForDoctorAsync(int doctorId)
+        {
+            var appointmentsList = await _appoinmentService.GetUpcomingAppointmentsDatesByDoctorIdAsync(doctorId);
+            return Ok(appointmentsList);
+        }
+
+        [HttpGet]
         [Route("all")]
         public async Task<ActionResult<PagedList<AppointmentDto>>> GetAppointments
             ([FromQuery] AppointmentParams appointmentParams)

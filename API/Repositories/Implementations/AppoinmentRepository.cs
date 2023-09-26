@@ -3,7 +3,6 @@ using API.Repositories.Interfaces;
 using Hospital.Data;
 using HospitalApp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using webapi.Entities;
 
 namespace API.Repositories.Implementations
 {
@@ -74,9 +73,24 @@ namespace API.Repositories.Implementations
 
             return await PagedList<Appointment>.CreateAsync(query, appointmentParams.PageNumber, appointmentParams.PageSize);
         }
+
+        public async Task<List<DateTime>> GetUpcomingAppointmentsDatesByDoctorIdAsync(int doctorId)
+        {
+            var upcomingDates = await _context.Appointments
+                .Where(a => a.DoctorId == doctorId && a.DateOfVisit >= DateTime.Now)
+                .Select(a => a.DateOfVisit) // Selecting only DateOfVisit
+                .ToListAsync();
+            return upcomingDates;
+        }
+
         public async Task<bool> SaveAllAsync()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<Appointment> GetAppointmentsForUserByDateOfVisit(DateTime dateOfVisit)
+        {
+            return await _context.Appointments.SingleOrDefaultAsync(a => a.DateOfVisit == dateOfVisit);
         }
     }
 }

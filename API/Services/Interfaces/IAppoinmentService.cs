@@ -6,6 +6,7 @@ namespace API.Services.Interfaces
     public interface IAppoinmentService
     {
         Task<PagedList<AppointmentDto>> GetAppointmentsForPatientAsync(AppointmentParams appointmentParams, int patientId);
+        Task<List<DateTime>> GetUpcomingAppointmentsDatesByDoctorIdAsync(int doctorId);
         Task<PagedList<AppointmentDto>> GetAppointmentsAsync(AppointmentParams appointmentParams);
         Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto);
     }

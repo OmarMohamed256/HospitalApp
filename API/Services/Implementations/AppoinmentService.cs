@@ -23,18 +23,22 @@ namespace API.Services.Implementations
 
         public async Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto)
         {
+            // before creating/updating an appointment make sure that doctor doesnt have an appointment booked at dateOfVisit
+            // and make sure that patient doesnt already have an appointment at same time
+
             var appointment = _mapper.Map<Appointment>(appointmentDto);
-
-            if (appointment.Id != 0) _appointmentRepository.UpdateAppointment(appointment);
-            else
+            if (await IsAppointmentValid(appointment))
             {
-                appointment.Status = string.IsNullOrEmpty(appointment.Status) ? "booked" : appointment.Status;
-                _appointmentRepository.AddAppointment(appointment);
+                if (appointment.Id != 0) _appointmentRepository.UpdateAppointment(appointment);
+                else
+                {
+                    appointment.Status = string.IsNullOrEmpty(appointment.Status) ? "booked" : appointment.Status;
+                    _appointmentRepository.AddAppointment(appointment);
+                }
+
+                var result = await _appointmentRepository.SaveAllAsync();
+                if (result) return _mapper.Map<AppointmentDto>(appointment);
             }
-
-            var result = await _appointmentRepository.SaveAllAsync();
-            if (result) return _mapper.Map<AppointmentDto>(appointment);
-
             throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add/update appointment");
         }
 
@@ -50,6 +54,22 @@ namespace API.Services.Implementations
             PagedList<Appointment> appointments = await _appointmentRepository.GetAppointmentsByPatientIdAsync(appointmentParams, patientId);
             var appointmentsDto = _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
             return new PagedList<AppointmentDto>(appointmentsDto, appointments.TotalCount, appointments.CurrentPage, appointments.PageSize);
+        }
+
+        public async Task<List<DateTime>> GetUpcomingAppointmentsDatesByDoctorIdAsync(int doctorId)
+        {
+            var upcomingAppointments = await _appointmentRepository.GetUpcomingAppointmentsDatesByDoctorIdAsync(doctorId);
+            return upcomingAppointments;
+        }
+
+        private async Task<bool> IsAppointmentValid(Appointment appointment)
+        {
+            // Check doctor's availability, patient's availability, date of visit, etc.
+            var patientAppointmentExist = await _appointmentRepository.GetAppointmentsForUserByDateOfVisit(appointment.DateOfVisit);
+            if (patientAppointmentExist != null) throw new ApiException(HttpStatusCode.BadRequest, "Patient already has an appointment at same time");
+            var doctorAppointmentList = await _appointmentRepository.GetUpcomingAppointmentsDatesByDoctorIdAsync(appointment.DoctorId);
+            if (doctorAppointmentList.Any(date => date.Equals(appointment.DateOfVisit.Date) )) throw new ApiException(HttpStatusCode.BadRequest, "Doctor already has an appointment at the specified date.");
+            return true;
         }
     }
 }
