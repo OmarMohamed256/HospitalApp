@@ -42,6 +42,12 @@ namespace API.Services.Implementations
             throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add/update appointment");
         }
 
+        public async Task<AppointmentDto> GetAppointmentByIdAsync(int appointmentId)
+        {
+            var appointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentId);
+            return _mapper.Map<AppointmentDto>(appointment);
+        }
+
         public async Task<PagedList<AppointmentDto>> GetAppointmentsAsync(AppointmentParams appointmentParams)
         {
             PagedList<Appointment> appointments = await _appointmentRepository.GetAppointmentsAsync(appointmentParams);

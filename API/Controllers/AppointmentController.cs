@@ -41,6 +41,16 @@ namespace API.Controllers
             Response.AddPaginationHeader(appointments.CurrentPage, appointments.PageSize, appointments.TotalCount, appointments.TotalPages);
             return Ok(appointments);
         }
+        [HttpGet]
+        [Route("getAppointmentById/{appointmentId}")]
+        public async Task<ActionResult<PagedList<AppointmentDto>>> GetAppointmentById
+            (int appointmentId)
+        {
+            var appointment = await _appoinmentService.GetAppointmentByIdAsync(appointmentId);
+            if(appointment == null) return BadRequest("Appointment does not exist");
+            return Ok(appointment);
+        }
+
         [HttpPost]
         public async Task<ActionResult<AppointmentDto>> CreateAppointmentAsync(AppointmentDto appointmentDto)
         {

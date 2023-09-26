@@ -42,7 +42,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let appointment of appointments" class="user-table">
+      <tr *ngFor="let appointment of appointments" class="user-table" routerLink="add">
         <td>{{appointment.doctor?.fullName}}</td>
         <td>{{appointment.patient?.fullName}}</td>
         <td>{{getSpecialityNameById(appointment.appointmentSpecialityId)}}</td>

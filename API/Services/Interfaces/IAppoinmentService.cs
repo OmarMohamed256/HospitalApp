@@ -8,6 +8,7 @@ namespace API.Services.Interfaces
         Task<PagedList<AppointmentDto>> GetAppointmentsForPatientAsync(AppointmentParams appointmentParams, int patientId);
         Task<List<DateTime>> GetUpcomingAppointmentsDatesByDoctorIdAsync(int doctorId);
         Task<PagedList<AppointmentDto>> GetAppointmentsAsync(AppointmentParams appointmentParams);
+        Task<AppointmentDto> GetAppointmentByIdAsync(int appointmentId);
         Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto);
     }
 }

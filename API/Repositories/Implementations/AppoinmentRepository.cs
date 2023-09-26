@@ -92,5 +92,10 @@ namespace API.Repositories.Implementations
         {
             return await _context.Appointments.SingleOrDefaultAsync(a => a.DateOfVisit == dateOfVisit);
         }
+
+        public async Task<Appointment> GetAppointmentByIdAsync(int appointmentId)
+        {
+            return await _context.Appointments.FirstOrDefaultAsync(a => a.Id == appointmentId);
+        }
     }
 }
