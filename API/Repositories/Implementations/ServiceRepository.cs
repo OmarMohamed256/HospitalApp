@@ -30,7 +30,8 @@ namespace API.Repositories.Implementations
 
         public async Task<Service> GetServiceById(int id)
         {
-            return await _context.Services.AsNoTracking()
+            return await _context.Services
+                .Include(s => s.ServiceInventoryItems)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
@@ -56,6 +57,21 @@ namespace API.Repositories.Implementations
                 .Where(s => s.ServiceSpecialityId == specialityId)
                 .Select(d => d.Id)
                 .ToListAsync();
+        }
+
+        public async Task AddServiceInventoryItemsRangeAsync(ICollection<ServiceInventoryItem> ServiceInventoryItems)
+        {
+            await _context.ServiceInventoryItems.AddRangeAsync(ServiceInventoryItems);
+        }
+
+        public async Task<ICollection<ServiceInventoryItem>> GetServiceInventoryItemsByServiceId(int serviceId)
+        {
+            return await _context.ServiceInventoryItems.Where(sit => sit.ServiceId == serviceId).ToListAsync();
+        }
+
+        public void DeleteServiceInventoryItemsRangeAsync(ICollection<ServiceInventoryItem> ServiceInventoryItems)
+        {
+            _context.ServiceInventoryItems.RemoveRange(ServiceInventoryItems);
         }
     }
 }

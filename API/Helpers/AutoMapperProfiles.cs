@@ -18,7 +18,15 @@ namespace API.Helpers
                 }).ToList()));
             CreateMap<Speciality, SpecialityDto>().ReverseMap();
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
+
             CreateMap<Service, ServiceDto>().ReverseMap();
+            CreateMap<ServiceInventoryItem, CreateServiceInventoryItemDTO>()
+                .ForMember(dest => dest.QuantityNeeded, opt => opt.MapFrom(src => src.QuantityNeeded))
+                .ForMember(dest => dest.InventoryItemId, opt => opt.MapFrom(src => src.InventoryItemId))
+                .ReverseMap();
+            CreateMap<Service, CreateServiceDTO>()
+            .ForMember(dest => dest.ServiceInventoryItems, opt => opt.MapFrom(src => src.ServiceInventoryItems)).ReverseMap();
+
             CreateMap<DoctorServiceDto, DoctorService>().ReverseMap();
             CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();
             CreateMap<InventoryItemDto, InventoryItem>().ReverseMap();

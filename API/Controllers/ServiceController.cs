@@ -18,23 +18,20 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = Polices.RequireAdminRole)]
-        public async Task<ActionResult<ServiceDto>> CreateServiceAsync(ServiceDto serviceDto)
+        public async Task<ActionResult<CreateServiceDTO>> CreateServiceAsync(CreateServiceDTO serviceDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return await _serviceService.CreateServiceAsync(serviceDto);
         }
 
         [HttpPut]
-        [Authorize(Policy = Polices.RequireAdminRole)]
-        public async Task<ActionResult<ServiceDto>> UpdateServiceAsync(ServiceDto serviceDto)
+        public async Task<ActionResult<CreateServiceDTO>> UpdateServiceAsync(CreateServiceDTO serviceDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return await _serviceService.UpdateServiceAsync(serviceDto);
         }
 
         [HttpGet]
-        [Authorize(Policy = Polices.RequireReceptionistRole)]
         public async Task<ActionResult<PagedList<ServiceDto>>> GetServicesAsync([FromQuery] ServiceParams serviceParams)
         {
             var services = await _serviceService.GetServicesAsync(serviceParams);
@@ -43,7 +40,6 @@ namespace API.Controllers
         }
 
         [HttpDelete("{serviceId}")]
-        [Authorize(Policy = Polices.RequireAdminRole)]
         public async Task<ActionResult> DeleteServiceAsync(int serviceId)
         {
             var result = await _serviceService.DeleteServiceAsync(serviceId);

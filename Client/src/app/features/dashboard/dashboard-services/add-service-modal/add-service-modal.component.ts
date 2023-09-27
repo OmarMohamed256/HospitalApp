@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { InventoryService } from 'src/app/core/services/inventory.service';
 import { ServiceService } from 'src/app/core/services/service.service';
 import { InventoryItemParams } from 'src/app/models/inventoryItemParams';
 import { InventoryItem } from 'src/app/models/inventoryItems';
@@ -35,14 +36,28 @@ export class AddServiceModalComponent implements OnInit {
   };
 
   constructor(private fb: FormBuilder, private serviceService: ServiceService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService, private invetoryService: InventoryService) {
   }
   ngOnInit(): void {
     this.intializeForm();
   }
 
+  searchItems(event: any) {
+    if (event.term.trim().length > 1) {
+      this.inventoryItemParams.searchTerm = event.term;
+      this.invetoryService.getInventoryItems(this.inventoryItemParams).subscribe(response => {
+        this.inventoryItems = response.result;
+      });
+    }
+  }
+
+  onItemsSelect(items: InventoryItem[]) {
+    console.log(items);
+  }
+
   modelToggeled(e: any) {
     this.visible = e;
+    if(!e) this.resetForm();
     this.visibleChange.emit(this.visible);
   }
 
@@ -69,7 +84,8 @@ export class AddServiceModalComponent implements OnInit {
       next: (response) => {
         this.service = response as Service; // This should not overwrite the newService object
         this.serviceCreated.emit(this.service); // Emit the newService object
-        this.resetFormAndCloseModal();
+        this.resetForm();
+        this.modelToggeled(false);
         this.toastr.success("Service created successfully")
       },
       error: (err) => {
@@ -84,7 +100,8 @@ export class AddServiceModalComponent implements OnInit {
       next: (response) => {
         this.service = response as Service; // This should not overwrite the newService object
         this.serviceCreated.emit(this.service); // Emit the newService object
-        this.resetFormAndCloseModal();
+        this.resetForm();
+        this.modelToggeled(false);
         this.toastr.success("Service updated successfully")
       },
       error: (err) => {
@@ -93,8 +110,9 @@ export class AddServiceModalComponent implements OnInit {
       }
     });
   }
-  // Add this method
-  resetFormAndCloseModal() {
+
+
+  resetForm() {
     this.intializeForm();
     this.service = {
       id: 0,
@@ -103,7 +121,6 @@ export class AddServiceModalComponent implements OnInit {
       serviceSpecialityId: 0
     };
     this.createServiceForm.reset();
-    this.modelToggeled(false);
   }
 
   mapFormToService() {

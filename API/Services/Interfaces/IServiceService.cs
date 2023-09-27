@@ -6,8 +6,8 @@ namespace API.Services.Interfaces
 {
     public interface IServiceService
     {
-        Task<ServiceDto> CreateServiceAsync(ServiceDto serviceDto);
-        Task<ServiceDto> UpdateServiceAsync(ServiceDto serviceDto);
+        Task<CreateServiceDTO> CreateServiceAsync(CreateServiceDTO serviceDto);
+        Task<CreateServiceDTO> UpdateServiceAsync(CreateServiceDTO serviceDto);
         Task<PagedList<ServiceDto>> GetServicesAsync(ServiceParams serviceParams);
         Task<bool> DeleteServiceAsync(int id);
     }
