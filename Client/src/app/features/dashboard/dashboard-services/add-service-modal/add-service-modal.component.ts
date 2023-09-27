@@ -20,7 +20,6 @@ export class AddServiceModalComponent implements OnInit {
   service: Service = {
     id: 0, // Assuming you don't have an ID until it's created
     name: '',
-    disposablesPrice: 0,
     totalPrice: 0,
     serviceSpecialityId: 0 // Assuming you don't have a speciality ID until it's selected
   };
@@ -40,7 +39,6 @@ export class AddServiceModalComponent implements OnInit {
   intializeForm() {
     this.createServiceForm = this.fb.group({
       name: [this.service.name, Validators.required],
-      disposablesPrice: [this.service.disposablesPrice, Validators.required],
       totalPrice: [this.service.totalPrice, Validators.required],
       serviceSpecialityId: [this.service.serviceSpecialityId, Validators.required]
     });
@@ -92,7 +90,6 @@ export class AddServiceModalComponent implements OnInit {
     this.service = { // Reset the service object
       id: 0,
       name: '',
-      disposablesPrice: 0,
       totalPrice: 0,
       serviceSpecialityId: 0
     };

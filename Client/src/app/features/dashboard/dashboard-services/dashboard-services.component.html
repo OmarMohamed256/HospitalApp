@@ -37,7 +37,6 @@
     <tr *ngFor="let service of services" (click)="setServiceToUpdate(service)" class="user-table">
       <td>{{service.name}}</td>
       <td>{{service.totalPrice}}</td>
-      <td>{{service.disposablesPrice}}</td>
       <td>{{ getSpecialityNameById(service.serviceSpecialityId) }}</td>
       <td class="pt-1"><button cButton color="danger" class="btn-m" (click)="deleteService(service.id, $event)"><svg cIcon
             name="cil-trash"></svg></button></td>
