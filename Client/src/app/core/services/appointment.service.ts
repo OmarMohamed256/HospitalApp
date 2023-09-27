@@ -21,10 +21,10 @@ export class AppointmentService {
     type: '',
     specialityId: null
   };
+
   constructor(private http: HttpClient) { }
 
   getAppointmentsByUserId(appointmentParams: AppointmentParams, userId: string) {
-    
     if (this.currentUserId !== userId) {
       this.appointmentCache.clear();
       this.currentUserId = userId;
@@ -79,5 +79,20 @@ export class AppointmentService {
 
   createAppointment(appointment: Appointment) {
     return this.http.post<Appointment>(this.baseUrl + 'appointment', appointment)
+  }
+
+  updateAppointment(appointment: Appointment) {
+    return this.http.put<Appointment>(this.baseUrl + 'appointment', appointment)
+  }
+
+  getAppointmentById(appointmentId: string) {
+    const appointment = [... this.appointmentCache.values()]
+    .reduce((arr, elem) => arr.concat(elem.result), [])
+    .find((appointment: Appointment) => appointment.id?.toString() == appointmentId);
+
+  if (appointment) {
+    return of(appointment);
+  }
+  return this.http.get<Appointment>(this.baseUrl + 'appointment/getAppointmentById/' + appointmentId);
   }
 }

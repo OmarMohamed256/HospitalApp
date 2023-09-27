@@ -72,7 +72,7 @@ namespace API.Services.Implementations
         {
             // Check doctor's availability, patient's availability, date of visit, etc.
             var patientAppointmentExist = await _appointmentRepository.GetAppointmentsForUserByDateOfVisit(appointment.DateOfVisit);
-            if (patientAppointmentExist != null) throw new ApiException(HttpStatusCode.BadRequest, "Patient already has an appointment at same time");
+            if (patientAppointmentExist != null && patientAppointmentExist.Id != appointment.Id) throw new ApiException(HttpStatusCode.BadRequest, "Patient already has an appointment at same time");
             var doctorAppointmentList = await _appointmentRepository.GetUpcomingAppointmentsDatesByDoctorIdAsync(appointment.DoctorId);
             if (doctorAppointmentList.Any(date => date.Equals(appointment.DateOfVisit.Date) )) throw new ApiException(HttpStatusCode.BadRequest, "Doctor already has an appointment at the specified date.");
             return true;

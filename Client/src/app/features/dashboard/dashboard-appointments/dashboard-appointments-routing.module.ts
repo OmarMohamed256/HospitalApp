@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardAppointmentsComponent } from './dashboard-appointments.component';
 import { AddAppointmentComponent } from './add-appointment/add-appointment.component';
+import { UpdateAppointmentComponent } from './update-appointment/update-appointment.component';
+import { AppointmentDetailedResolver } from 'src/app/core/resolvers/appointment-detailed.resolver';
 
 
 const routes: Routes = [
@@ -17,6 +19,14 @@ const routes: Routes = [
     component: AddAppointmentComponent,
     data: {
       title: `Add Appointment`
+    }
+  },
+  {
+    path:'update/:id',
+    component: UpdateAppointmentComponent,
+    resolve: { appointment: AppointmentDetailedResolver },
+    data: {
+      title: `Update Appointment`
     }
   }
 ];

@@ -8,6 +8,7 @@ export interface Appointment {
     dateCreated?:             Date;
     dateUpdated?:             Date;
     dateOfVisit:             Date;
+    creationNote?:            string;
     doctorId:                number;
     patientId:               number;
     appointmentSpecialityId: number;

@@ -1,3 +1,4 @@
+import { DoctorWorkingHours } from "./doctorWorkingHours";
 import { Role } from "./role";
 
 export interface UserData {

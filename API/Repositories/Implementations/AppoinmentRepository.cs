@@ -95,7 +95,10 @@ namespace API.Repositories.Implementations
 
         public async Task<Appointment> GetAppointmentByIdAsync(int appointmentId)
         {
-            return await _context.Appointments.FirstOrDefaultAsync(a => a.Id == appointmentId);
+            return await _context.Appointments
+            .Include(a => a.Doctor)
+            .Include(a => a.Patient)
+            .FirstOrDefaultAsync(a => a.Id == appointmentId);
         }
     }
 }

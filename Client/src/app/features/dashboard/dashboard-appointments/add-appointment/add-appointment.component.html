@@ -36,7 +36,7 @@
     <div class="col">
       <div class="mb-3">
         <label cLabel>Doctor</label>
-        <ng-select [items]="doctortList" [virtualScroll]="true" [bindLabel]="'fullName'"
+        <ng-select [items]="doctorList" [virtualScroll]="true" [bindLabel]="'fullName'"
           (search)="searchDoctors($event)" (change)="onDoctorSelect($event)">
         </ng-select>
       </div>

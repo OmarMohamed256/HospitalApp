@@ -13,8 +13,6 @@ namespace API.Models.DTOS
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
         public DateTime DateOfVisit { get; set; }
-        public string? DrawUrl { get; set; }
-
         public int DoctorId { get; set; }
         public int PatientId { get; set; }
         public int AppointmentSpecialityId { get; set; } // Added property for SpecialityId

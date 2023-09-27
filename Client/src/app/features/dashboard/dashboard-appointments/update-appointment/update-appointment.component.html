@@ -1,0 +1,84 @@
+<form [formGroup]="UpdateAppointmentForm" (ngSubmit)="submitUpdateAppointmentForm()" cForm autocomplete="off">
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Type</label>
+                <select name="type" aria-label="type" cSelect
+                formControlName="type">
+                    <option value="">Type</option>
+                    <option *ngFor="let type of typeList" [value]="type.value">
+                        {{type.display}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Speciality</label>
+                <select name="appointmentSpecialityId" cSelect
+                    formControlName="appointmentSpecialityId">
+                    <option value="">Speciality</option>
+                    <option *ngFor="let speciality of specialityList" [value]="speciality.id">
+                        {{speciality.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Patient</label>
+                <ng-select [items]="patientList" [virtualScroll]="true" [(ngModel)]="selectedPatient" [bindLabel]="'fullName'"
+                    (search)="searchPatients($event)" [ngModelOptions]="{standalone: true}" (change)="onPatientSelect($event)">
+                </ng-select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Doctor</label>
+                <ng-select [items]="doctorList" [virtualScroll]="true" [(ngModel)]="selectedDoctor" [bindLabel]="'fullName'"
+                    (search)="searchDoctors($event)" [ngModelOptions]="{standalone: true}" (change)="onDoctorSelect($event)">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="availableTimeSlots.length > 0">
+        <div class="col">
+          <div class="mb-3">
+            <label>Day</label>
+            <select cSelect [(ngModel)]="selectedDay" (change)="getDayAvailableTimes()" [ngModelOptions]="{standalone: true}">
+                <option disabled value="null">Select Day</option>
+              <option *ngFor="let day of availableDays" [value]="day">{{ day }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label>Time</label>
+            <select cSelect [(ngModel)]="selectedTime" [ngModelOptions]="{standalone: true}">
+                {{"Selected Time:" + selectedTime}}
+                <option disabled value="null">Select Time</option>
+              <option *ngFor="let time of availableTimesForSelectedDay" [value]="time">{{ time | date:'shortTime' }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Note</label>
+                <textarea class="form-control" formControlName="creationNote"
+                    rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="validationErrors.length > 0">
+        <ul class="text-danger">
+            <li *ngFor="let error of validationErrors">
+                {{error}}
+            </li>
+        </ul>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Appointment</button>
+</form>
