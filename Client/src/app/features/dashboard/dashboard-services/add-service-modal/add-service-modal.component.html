@@ -20,8 +20,7 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Name</label>
-          <app-text-input icon="cilUser"
-            [formControl]='$any(createServiceForm.controls["name"])' [label]='"Name"'></app-text-input>
+          <app-text-input icon="cilUser" formControlName="name" [label]='"Name"'></app-text-input>
             
         </div>
       </div>
@@ -30,15 +29,15 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Total Price</label>
-          <app-text-input icon="cilUser"
-            [formControl]='$any(createServiceForm.controls["totalPrice"])' [label]='"Total Price"'></app-text-input>
+          <app-text-input icon="cilUser" formControlName="totalPrice"
+          [label]='"Total Price"'></app-text-input>
             
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Speciality</label>
-          <select name="speciality"  aria-label="speciality" cSelect [formControl]="$any(createServiceForm.controls['serviceSpecialityId'])">
+          <select name="speciality"  aria-label="speciality" cSelect formControlName="serviceSpecialityId">
             <option value="" disabled selected>Select speciality</option>
             <option *ngFor="let service of specialityList" [value]="service.id">
               {{service.name}}

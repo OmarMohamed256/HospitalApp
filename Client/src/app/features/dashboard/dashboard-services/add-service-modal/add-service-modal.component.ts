@@ -2,6 +2,8 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ServiceService } from 'src/app/core/services/service.service';
+import { InventoryItemParams } from 'src/app/models/inventoryItemParams';
+import { InventoryItem } from 'src/app/models/inventoryItems';
 import { Service } from 'src/app/models/service';
 import { Speciality } from 'src/app/models/speciality';
 
@@ -15,6 +17,14 @@ export class AddServiceModalComponent implements OnInit {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() serviceCreated = new EventEmitter<Service>();
   @Input() specialityList: Speciality[] = [];
+  inventoryItems: InventoryItem[] = [];
+  inventoryItemParams: InventoryItemParams = {
+    pageNumber: 1,
+    pageSize: 15,
+    searchTerm: '',
+    specialityId: null
+  };
+
   createServiceForm!: FormGroup;
   validationErrors: string[] = [];
   service: Service = {
@@ -38,16 +48,15 @@ export class AddServiceModalComponent implements OnInit {
 
   intializeForm() {
     this.createServiceForm = this.fb.group({
+      id:[this.service.id, Validators.required],
       name: [this.service.name, Validators.required],
       totalPrice: [this.service.totalPrice, Validators.required],
       serviceSpecialityId: [this.service.serviceSpecialityId, Validators.required]
     });
-    this.createServiceForm.valueChanges.subscribe(formValue => {
-      this.service = { ...this.service, ...formValue };
-    });
   }
 
   createUpdateService() {
+    this.mapFormToService();
     if (this.service.id == 0) {
       this.createService();
     }else {
@@ -87,13 +96,22 @@ export class AddServiceModalComponent implements OnInit {
   // Add this method
   resetFormAndCloseModal() {
     this.intializeForm();
-    this.service = { // Reset the service object
+    this.service = {
       id: 0,
       name: '',
       totalPrice: 0,
       serviceSpecialityId: 0
     };
     this.createServiceForm.reset();
-    this.modelToggeled(false); // Close the modal
+    this.modelToggeled(false);
+  }
+
+  mapFormToService() {
+    this.service = {
+      id: this.createServiceForm.get('id')?.value,
+      serviceSpecialityId: this.createServiceForm.get('serviceSpecialityId')?.value,
+      name: this.createServiceForm.get('name')?.value,
+      totalPrice: this.createServiceForm.get('totalPrice')?.value,
+    }
   }
 }

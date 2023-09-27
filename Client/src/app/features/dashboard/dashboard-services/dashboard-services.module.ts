@@ -6,6 +6,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonSharedModule } from "src/app/shared/common-shared.module";
 import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
+import { NgSelectModule } from "@ng-select/ng-select";
 
 @NgModule({
   imports: [
@@ -20,7 +21,8 @@ import { AddServiceModalComponent } from './add-service-modal/add-service-modal.
     InputGroupTextDirective,
     CommonSharedModule,
     SharedModule,
-    ModalModule
+    ModalModule,
+    NgSelectModule
     ],
   declarations: [DashboardServicesComponent, AddServiceModalComponent]
 })

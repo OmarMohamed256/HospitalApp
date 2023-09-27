@@ -30,7 +30,7 @@ namespace API.Repositories.Implementations
 
         public async Task<Service> GetServiceById(int id)
         {
-            return await _context.Services
+            return await _context.Services.AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Id == id);
         }
 
