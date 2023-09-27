@@ -12,6 +12,7 @@ import { Speciality } from 'src/app/models/speciality';
 import { UserData } from 'src/app/models/userData';
 import { UserParams } from 'src/app/models/userParams';
 import { Appointment } from 'src/app/models/appointment';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-add-appointment',
@@ -52,7 +53,7 @@ export class AddAppointmentComponent implements OnInit  {
 
   constructor(private fb: FormBuilder, private specialityService: SpecialityService,
     private userService: UserService, private doctorWorkingHoursService: DoctorWorkingHoursService,
-    private appointmentService: AppointmentService) {
+    private appointmentService: AppointmentService, private datePipe: DatePipe) {
   }
 
   ngOnInit(): void {
@@ -198,7 +199,8 @@ export class AddAppointmentComponent implements OnInit  {
       const selectedDate = new Date(this.selectedDay);
       const selectedTime = new Date(this.selectedTime);
       selectedDate.setHours(selectedTime.getHours(), selectedTime.getMinutes());
-      return selectedDate;
+      let formattedDate = this.datePipe.transform(selectedDate, 'yyyy-MM-ddTHH:mm:ss.SSSSSSS');
+      return formattedDate;
     }
     return null;
   }

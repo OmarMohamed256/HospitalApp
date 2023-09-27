@@ -240,6 +240,9 @@ export class UpdateAppointmentComponent implements OnInit {
     if(this.UpdateAppointmentForm.valid) {
       this.updateAppointment();
     }
+    else
+    {
+    }
   }
 
   mapFormToAppointment() {
