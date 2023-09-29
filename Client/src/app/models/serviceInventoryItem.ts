@@ -1,4 +1,11 @@
+import { InventoryItem } from "./inventoryItems";
+import { Service } from "./service";
+
 export interface ServiceInventoryItem {
-    inventoryItemId:                    number;
-    quantityNeeded:                  string;
+    id?:              number;
+    serviceId?:       number;
+    inventoryItemId?: number;
+    quantityNeeded?:  number;
+    inventoryItem?:   InventoryItem;
+    service?: Service;
 }

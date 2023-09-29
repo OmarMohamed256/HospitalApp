@@ -5,6 +5,7 @@ import { ServiceParams } from 'src/app/models/serviceParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { Service } from 'src/app/models/service';
+import { ServiceInventoryItem } from 'src/app/models/serviceInventoryItem';
 
 @Injectable({
   providedIn: 'root'
@@ -69,5 +70,9 @@ export class ServiceService {
         return newService;  // Return the new service here
       })
     );
+  }
+
+  getServiceInventoryItems(serviceId : number) {
+    return this.http.get<ServiceInventoryItem[]>(this.baseUrl + 'service/getServiceInventoryItems/' + serviceId)
   }
 }

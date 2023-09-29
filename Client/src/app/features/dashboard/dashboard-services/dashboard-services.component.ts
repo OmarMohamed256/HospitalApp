@@ -9,6 +9,8 @@ import { Service } from 'src/app/models/service';
 import { ServiceParams } from 'src/app/models/serviceParams';
 import { Speciality } from 'src/app/models/speciality';
 import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
+import { FormArray } from '@angular/forms';
+import { ServiceInventoryItem } from 'src/app/models/serviceInventoryItem';
 
 @Component({
   selector: 'app-dashboard-services',
@@ -29,8 +31,7 @@ export class DashboardServicesComponent implements OnInit {
   @ViewChild(AddServiceModalComponent) addServiceModal!: AddServiceModalComponent;
 
   constructor(private iconSetService: IconSetService,
-    private serviceService: ServiceService, private specialityService: SpecialityService, private toastr: ToastrService)
-  {
+    private serviceService: ServiceService, private specialityService: SpecialityService, private toastr: ToastrService) {
     iconSetService.icons = { ...iconSubset };
   }
 
@@ -81,13 +82,29 @@ export class DashboardServicesComponent implements OnInit {
   }
 
   setServiceToUpdate(service: Service) {
+    this.setServiceInventoryItems(service);
     this.addServiceModal.service = service;
     this.addServiceModal.intializeForm();
     this.openModal();
   }
 
-  getServiceInventoryItems() {
-    
+  mapServiceInventoryItemToInventoryItem(serviceInventoryItem: ServiceInventoryItem[]) {
+    return serviceInventoryItem.map(item => ({
+      id: item.inventoryItem?.id || 0,  // Assuming a default value of 0 for id
+      name: item.inventoryItem?.name || '',
+      inventoryItemSpecialityId: item.inventoryItem?.inventoryItemSpecialityId || 0,
+      quantityNeeded: item.quantityNeeded || 1
+    }));
+  }
+
+  setServiceInventoryItems(service: Service) {
+    return this.serviceService.getServiceInventoryItems(service.id).subscribe(response => {
+      service.serviceInventoryItems = response;
+      const inventoryItems = this.mapServiceInventoryItemToInventoryItem(service.serviceInventoryItems!);
+      this.addServiceModal.selectedItems = inventoryItems
+      this.addServiceModal.inventoryItems = inventoryItems
+      this.addServiceModal.updateSelectedInventoryItems(inventoryItems);
+    })
   }
 
   getSpecialityNameById(id: number): string {
@@ -98,7 +115,7 @@ export class DashboardServicesComponent implements OnInit {
   onServiceCreated(newService: Service) {
     if (newService) {
       const index = this.services!.findIndex(service => service.id === newService.id);
-  
+
       if (index !== -1) {
         // Service with the same ID already exists, replace it
         this.services![index] = newService;
@@ -108,7 +125,7 @@ export class DashboardServicesComponent implements OnInit {
       }
     }
   }
-  
-  
+
+
 
 }

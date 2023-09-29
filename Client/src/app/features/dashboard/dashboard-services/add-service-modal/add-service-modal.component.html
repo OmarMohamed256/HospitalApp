@@ -46,7 +46,7 @@
       <div class="col" *ngIf="createServiceForm.get('serviceSpecialityId')?.value != null">
         <div class="mb-3">
           <label cLabel>Inventory Items</label>
-          <ng-select [items]="inventoryItems" [virtualScroll]="true" [bindLabel]="'name'" [bindValue]="'id'"
+          <ng-select [items]="inventoryItems" [virtualScroll]="true" [bindLabel]="'name'" [bindValue]="'id'" [compareWith]="compareInventoryItems"
             (search)="searchItems($event)" [multiple]="true" (change)="onItemsSelect($event)" [(ngModel)]="selectedItems" [ngModelOptions]="{standalone: true}">
           </ng-select>
         </div>

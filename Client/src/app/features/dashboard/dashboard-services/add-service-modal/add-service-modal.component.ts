@@ -54,20 +54,26 @@ export class AddServiceModalComponent implements OnInit {
     }
   }
 
+  compareInventoryItems(item1: InventoryItem, item2: InventoryItem): boolean {
+    return item1.id === item2.id &&
+           item1.name === item2.name &&
+           item1.inventoryItemSpecialityId === item2.inventoryItemSpecialityId;
+  }
+
   onItemsSelect(items: InventoryItem[]) {
     this.updateSelectedInventoryItems(items);
   }
 
 
-  updateSelectedInventoryItems(items: InventoryItem[]) {
+  updateSelectedInventoryItems(items: any) {
     const selectedInventoryItemFormArray = this.createServiceForm.get('selectedInventoryItem') as FormArray;
     selectedInventoryItemFormArray.clear();
 
-    items.forEach(item => {
+    items.forEach((item: any) => {
       selectedInventoryItemFormArray.push(this.fb.group({
         inventoryItemId: [item.id],
         itemName: [item.name],
-        quantityNeeded: [1]
+        quantityNeeded: [item.quantityNeeded == null ? 1 : item.quantityNeeded]
       }));
     });
   }
@@ -149,7 +155,7 @@ export class AddServiceModalComponent implements OnInit {
       serviceSpecialityId: 0
     };
     this.createServiceForm.reset();
-    this.inventoryItems = [];
+        this.inventoryItems = [];
     this.inventoryItems = [...this.inventoryItems];
     this.selectedItems = [];
   }
