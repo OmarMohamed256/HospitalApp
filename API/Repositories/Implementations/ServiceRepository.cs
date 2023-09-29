@@ -64,9 +64,12 @@ namespace API.Repositories.Implementations
             await _context.ServiceInventoryItems.AddRangeAsync(ServiceInventoryItems);
         }
 
-        public async Task<ICollection<ServiceInventoryItem>> GetServiceInventoryItemsByServiceId(int serviceId)
+        public async Task<ICollection<ServiceInventoryItem>> GetServiceInventoryItemsByServiceIdAsync(int serviceId)
         {
-            return await _context.ServiceInventoryItems.Where(sit => sit.ServiceId == serviceId).ToListAsync();
+            return await _context.
+                ServiceInventoryItems
+                .Include(sit => sit.InventoryItem)
+                .Where(sit => sit.ServiceId == serviceId).ToListAsync();
         }
 
         public void DeleteServiceInventoryItemsRangeAsync(ICollection<ServiceInventoryItem> ServiceInventoryItems)

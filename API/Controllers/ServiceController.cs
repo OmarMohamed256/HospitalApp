@@ -38,6 +38,13 @@ namespace API.Controllers
             Response.AddPaginationHeader(services.CurrentPage, services.PageSize, services.TotalCount, services.TotalPages);
             return Ok(services);
         }
+        [HttpGet]
+        [Route("getServiceInventoryItems/{serviceId}")]
+        public async Task<ActionResult<ICollection<ServiceInventoryItemDto>>> GetServiceInventoryItemsByServiceId(int serviceId)
+        {
+            var services = await _serviceService.GetServiceInventoryItemsByServiceId(serviceId);
+            return Ok(services);
+        }
 
         [HttpDelete("{serviceId}")]
         public async Task<ActionResult> DeleteServiceAsync(int serviceId)

@@ -26,6 +26,9 @@ namespace API.Helpers
                 .ReverseMap();
             CreateMap<Service, CreateServiceDTO>()
             .ForMember(dest => dest.ServiceInventoryItems, opt => opt.MapFrom(src => src.ServiceInventoryItems)).ReverseMap();
+            CreateMap<ServiceInventoryItemDto, ServiceInventoryItem>()
+                .ForMember(dest => dest.InventoryItem, opt => opt.MapFrom(src => src.InventoryItem))
+                .ReverseMap();
 
             CreateMap<DoctorServiceDto, DoctorService>().ReverseMap();
             CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();

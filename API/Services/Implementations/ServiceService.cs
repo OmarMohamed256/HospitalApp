@@ -166,5 +166,11 @@ namespace API.Services.Implementations
             var servicesDtos = _mapper.Map<IEnumerable<ServiceDto>>(services);
             return new PagedList<ServiceDto>(servicesDtos, services.TotalCount, services.CurrentPage, services.PageSize);
         }
+
+        public async Task<ICollection<ServiceInventoryItemDto>> GetServiceInventoryItemsByServiceId(int serviceId)
+        {
+            var servinceInventoryITems = await _serviceRepository.GetServiceInventoryItemsByServiceIdAsync(serviceId);
+            return _mapper.Map<ICollection<ServiceInventoryItemDto>>(servinceInventoryITems);
+        }
     }
 }

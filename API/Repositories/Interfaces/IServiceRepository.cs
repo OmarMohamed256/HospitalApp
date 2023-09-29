@@ -10,7 +10,7 @@ namespace API.Repositories.Interfaces
         void DeleteService(Service service);
         Task AddServiceInventoryItemsRangeAsync(ICollection<ServiceInventoryItem> ServiceInventoryItems);
         void DeleteServiceInventoryItemsRangeAsync(ICollection<ServiceInventoryItem> ServiceInventoryItems);
-        Task <ICollection<ServiceInventoryItem>> GetServiceInventoryItemsByServiceId(int serviceId);
+        Task <ICollection<ServiceInventoryItem>> GetServiceInventoryItemsByServiceIdAsync(int serviceId);
         Task<Service> GetServiceById(int id);
         Task<bool> SaveAllAsync();
         Task<PagedList<Service>> GetServicesAsync(ServiceParams serviceParams);
