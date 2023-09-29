@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 import { ServiceService } from 'src/app/core/services/service.service';
@@ -19,6 +19,8 @@ export class AddServiceModalComponent implements OnInit {
   @Output() serviceCreated = new EventEmitter<Service>();
   @Input() specialityList: Speciality[] = [];
   inventoryItems: InventoryItem[] = [];
+  selectedItems: InventoryItem[] = [];
+
   inventoryItemParams: InventoryItemParams = {
     pageNumber: 1,
     pageSize: 15,
@@ -45,6 +47,7 @@ export class AddServiceModalComponent implements OnInit {
   searchItems(event: any) {
     if (event.term.trim().length > 1) {
       this.inventoryItemParams.searchTerm = event.term;
+      this.inventoryItemParams.specialityId = this.createServiceForm.get('serviceSpecialityId')?.value;
       this.invetoryService.getInventoryItems(this.inventoryItemParams).subscribe(response => {
         this.inventoryItems = response.result;
       });
@@ -52,26 +55,51 @@ export class AddServiceModalComponent implements OnInit {
   }
 
   onItemsSelect(items: InventoryItem[]) {
-    console.log(items);
+    this.updateSelectedInventoryItems(items);
+  }
+
+
+  updateSelectedInventoryItems(items: InventoryItem[]) {
+    const selectedInventoryItemFormArray = this.createServiceForm.get('selectedInventoryItem') as FormArray;
+    selectedInventoryItemFormArray.clear();
+
+    items.forEach(item => {
+      selectedInventoryItemFormArray.push(this.fb.group({
+        inventoryItemId: [item.id],
+        itemName: [item.name],
+        quantityNeeded: [1]
+      }));
+    });
   }
 
   modelToggeled(e: any) {
     this.visible = e;
-    if(!e) this.resetForm();
+    if (!e) this.resetForm();
     this.visibleChange.emit(this.visible);
   }
 
   intializeForm() {
     this.createServiceForm = this.fb.group({
-      id:[this.service.id, Validators.required],
+      id: [this.service.id, Validators.required],
       name: [this.service.name, Validators.required],
       totalPrice: [this.service.totalPrice, Validators.required],
-      serviceSpecialityId: [this.service.serviceSpecialityId, Validators.required]
+      serviceSpecialityId: [this.service.serviceSpecialityId, Validators.required],
+      selectedInventoryItem: this.fb.array([])
     });
+  }
+
+  resetFormInventoryItems() {
+    const selectedInventoryItemArray = this.createServiceForm.get('selectedInventoryItem') as FormArray;
+    selectedInventoryItemArray.clear();
+    this.inventoryItems = [];
+    this.inventoryItems = [...this.inventoryItems];
+    this.selectedItems = [];
   }
 
   createUpdateService() {
     this.mapFormToService();
+    console.log(this.service)
+
     if (this.service.id == 0) {
       this.createService();
     }else {
@@ -121,14 +149,18 @@ export class AddServiceModalComponent implements OnInit {
       serviceSpecialityId: 0
     };
     this.createServiceForm.reset();
+    this.inventoryItems = [];
+    this.inventoryItems = [...this.inventoryItems];
+    this.selectedItems = [];
   }
 
   mapFormToService() {
     this.service = {
-      id: this.createServiceForm.get('id')?.value,
+      id: this.createServiceForm.get('id')?.value == null ? 0 : this.createServiceForm.get('id')?.value,
       serviceSpecialityId: this.createServiceForm.get('serviceSpecialityId')?.value,
       name: this.createServiceForm.get('name')?.value,
       totalPrice: this.createServiceForm.get('totalPrice')?.value,
+      serviceInventoryItems: this.createServiceForm.get('selectedInventoryItem')?.value
     }
   }
 }

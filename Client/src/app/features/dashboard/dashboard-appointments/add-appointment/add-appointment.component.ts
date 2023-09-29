@@ -33,6 +33,7 @@ export class AddAppointmentComponent implements OnInit  {
   availableDays: string[] = [];
   availableTimesForSelectedDay: Date[] = [];
 
+
   rolePatient = ROLES.PATIENT;
   roleDoctor = ROLES.DOCTOR;
 

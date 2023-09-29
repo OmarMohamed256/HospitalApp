@@ -86,6 +86,10 @@ export class DashboardServicesComponent implements OnInit {
     this.openModal();
   }
 
+  getServiceInventoryItems() {
+    
+  }
+
   getSpecialityNameById(id: number): string {
     const speciality = this.specialityList.find(item => item.id === id);
     return speciality ? speciality.name : '';

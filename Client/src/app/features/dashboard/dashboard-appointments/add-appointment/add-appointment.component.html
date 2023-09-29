@@ -15,7 +15,7 @@
       <div class="mb-3">
         <label cLabel>Speciality</label>
         <select name="appointmentSpecialityId" cSelect
-          [formControl]="$any(CreateAppointmentForm.controls['appointmentSpecialityId'])">
+          [formControl]="$any(CreateAppointmentForm.controls['appointmentSpecialityId'])" >
           <option value="">Speciality</option>
           <option *ngFor="let speciality of specialityList" [value]="speciality.id">
             {{speciality.name}}
@@ -33,7 +33,7 @@
         </ng-select>
       </div>
     </div>
-    <div class="col">
+    <div class="col" *ngIf="CreateAppointmentForm.get('appointmentSpecialityId')?.value != ''">
       <div class="mb-3">
         <label cLabel>Doctor</label>
         <ng-select [items]="doctorList" [virtualScroll]="true" [bindLabel]="'fullName'"

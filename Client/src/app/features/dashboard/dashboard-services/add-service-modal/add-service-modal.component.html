@@ -1,4 +1,5 @@
-<c-modal #scrollableLongContentModal id="scrollableLongContentModal" size="xl" (visibleChange)="modelToggeled($event)" [visible]="visible" scrollable>
+<c-modal #scrollableLongContentModal id="scrollableLongContentModal" size="xl" (visibleChange)="modelToggeled($event)"
+  [visible]="visible" scrollable>
   <c-modal-header>
     <h5 cModalTitle>Service</h5>
     <button [cModalToggle]="scrollableLongContentModal.id" cButtonClose></button>
@@ -26,8 +27,7 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Total Price</label>
-          <app-text-input icon="cilUser" formControlName="totalPrice"
-          [label]='"Total Price"'></app-text-input>
+          <app-text-input icon="cilUser" formControlName="totalPrice" [label]='"Total Price"'></app-text-input>
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Speciality</label>
-          <select name="speciality"  aria-label="speciality" cSelect formControlName="serviceSpecialityId">
+          <select name="speciality" aria-label="speciality" cSelect formControlName="serviceSpecialityId" (change)="resetFormInventoryItems()">
             <option value="" disabled selected>Select speciality</option>
             <option *ngFor="let service of specialityList" [value]="service.id">
               {{service.name}}
@@ -43,16 +43,30 @@
           </select>
         </div>
       </div>
-      <div class="col">
+      <div class="col" *ngIf="createServiceForm.get('serviceSpecialityId')?.value != null">
         <div class="mb-3">
           <label cLabel>Inventory Items</label>
-          <ng-select [items]="inventoryItems" [virtualScroll]="true" [bindLabel]="'name'"
-            (search)="searchItems($event)" [multiple]="true" (change)="onItemsSelect($event)">
+          <ng-select [items]="inventoryItems" [virtualScroll]="true" [bindLabel]="'name'" [bindValue]="'id'"
+            (search)="searchItems($event)" [multiple]="true" (change)="onItemsSelect($event)" [(ngModel)]="selectedItems" [ngModelOptions]="{standalone: true}">
           </ng-select>
         </div>
       </div>
     </div>
-
+    <div formArrayName="selectedInventoryItem">
+      <div *ngFor="let control of $any(createServiceForm.controls['selectedInventoryItem']).controls; let i = index"
+        [formGroupName]="i">
+        <div class="row">
+          <div class="col">
+            <label for="itemName{{i}}">Name</label>
+            <input type="text" class="form-control" id="itemName{{i}}" formControlName="itemName" readonly>
+          </div>
+          <div class="col">
+            <label for="quantityNeeded{{i}}">Quantity Needed</label>
+            <input type="number" class="form-control" id="quantityNeeded{{i}}" formControlName="quantityNeeded">
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row" *ngIf="validationErrors.length > 0">
       <ul class="text-danger">
         <li *ngFor="let error of validationErrors">
