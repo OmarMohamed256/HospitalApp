@@ -4,6 +4,7 @@ import { DashboardAppointmentsComponent } from './dashboard-appointments.compone
 import { AddAppointmentComponent } from './add-appointment/add-appointment.component';
 import { UpdateAppointmentComponent } from './update-appointment/update-appointment.component';
 import { AppointmentDetailedResolver } from 'src/app/core/resolvers/appointment-detailed.resolver';
+import { FinalizeAppointmentComponent } from './finalize-appointment/finalize-appointment.component';
 
 
 const routes: Routes = [
@@ -27,6 +28,13 @@ const routes: Routes = [
     resolve: { appointment: AppointmentDetailedResolver },
     data: {
       title: `Update Appointment`
+    }
+  },
+  {
+    path:'finalize/:id',
+    component: FinalizeAppointmentComponent,
+    data: {
+      title: `Finalize Appointment`
     }
   }
 ];

@@ -8,6 +8,7 @@ import { DashboardAppointmentsComponent } from './dashboard-appointments.compone
 import { AddAppointmentComponent } from './add-appointment/add-appointment.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UpdateAppointmentComponent } from './update-appointment/update-appointment.component';
+import { FinalizeAppointmentComponent } from './finalize-appointment/finalize-appointment.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,7 @@ import { UpdateAppointmentComponent } from './update-appointment/update-appointm
     ModalModule,
     NgSelectModule
     ],
-  declarations: [DashboardAppointmentsComponent, AddAppointmentComponent, UpdateAppointmentComponent],
+  declarations: [DashboardAppointmentsComponent, AddAppointmentComponent, UpdateAppointmentComponent, FinalizeAppointmentComponent],
   providers:[DatePipe]
 })
 export class DashboardAppointmentModule {

@@ -1,61 +1,67 @@
 <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
-    <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
-      <button cButton color="light" routerLink="/appointments/add"> <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
+  <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+    <button cButton color="light" routerLink="/appointments/add"> <span class=""><svg class="border rounded border-dark"
+          cIcon name="cilPlus"></svg>
         Add new appointment</span></button>
-      <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
-        [(ngModel)]="appointmentParams.specialityId" cSelect (change)="getAppointments()">
-        <option [value]="null" disabled>Speciality</option>
-        <option *ngFor="let speciality of specialityList" [value]="speciality.id">
-          {{ speciality.name }}
-        </option>
-      </select>
+    <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
+      [(ngModel)]="appointmentParams.specialityId" cSelect (change)="getAppointments()">
+      <option [value]="null" disabled>Speciality</option>
+      <option *ngFor="let speciality of specialityList" [value]="speciality.id">
+        {{ speciality.name }}
+      </option>
+    </select>
 
-      <select name="type" *ngIf="typeList" class="w-25" aria-label="type"
-        [(ngModel)]="appointmentParams.type" cSelect (change)="getAppointments()">
-        <option [value]="''" disabled>Type</option>
-        <option *ngFor="let type of typeList" [value]="type.value">
-          {{ type.display }}
-        </option>
-      </select>
-      <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+    <select name="type" *ngIf="typeList" class="w-25" aria-label="type" [(ngModel)]="appointmentParams.type" cSelect
+      (change)="getAppointments()">
+      <option [value]="''" disabled>Type</option>
+      <option *ngFor="let type of typeList" [value]="type.value">
+        {{ type.display }}
+      </option>
+    </select>
+    <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
 
-    </div>
-  </c-navbar>
-<table cTable *ngIf="appointments">
-    <thead>
-      <tr>
-        <th scope="col">Doctor Name</th>
-        <th scope="col">Patient Name</th>
-        <th scope="col">Speciality</th>
-        <th scope="col">Status</th>
-        <th scope="col">Type</th>
-        <th scope="col" class="arrow-filter" [ngStyle]="{'cursor': 'pointer'}" (click)="toggleOrder('dateCreated')">
-            Date Created
-            <svg cIcon [name]="appointmentParams.orderBy === 'dateCreated' && appointmentParams.order === 'desc' ? 'cil-arrow-bottom' : 'cil-arrow-top'"></svg>
-          </th>
-          
-          <th scope="col" class="arrow-filter" [ngStyle]="{'cursor': 'pointer'}" (click)="toggleOrder('dateOfVisit')">
-            Date Of Visit
-            <svg cIcon [name]="appointmentParams.orderBy === 'dateOfVisit' && appointmentParams.order === 'desc' ? 'cil-arrow-bottom' : 'cil-arrow-top'"></svg>
-          </th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let appointment of appointments" class="user-table" routerLink="update/{{appointment.id}}">
-        <td>{{appointment.doctor?.fullName}}</td>
-        <td>{{appointment.patient?.fullName}}</td>
-        <td>{{getSpecialityNameById(appointment.appointmentSpecialityId)}}</td>
-        <td>{{appointment.status}}</td>
-        <td>{{appointment.type}}</td>
-        <td>{{appointment.dateCreated | date:'short'}}</td>
-        <td>{{appointment.dateOfVisit | date:'short'}}</td>
-        <td class="pt-1"><button cButton color="primary" class="btn-m">Edit</button></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="d-flex justify-content-center" *ngIf="pagination">
-    <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
-      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
   </div>
+</c-navbar>
+<table cTable *ngIf="appointments">
+  <thead>
+    <tr>
+      <th scope="col">Doctor Name</th>
+      <th scope="col">Patient Name</th>
+      <th scope="col">Speciality</th>
+      <th scope="col">Status</th>
+      <th scope="col">Type</th>
+      <th scope="col" class="arrow-filter" [ngStyle]="{'cursor': 'pointer'}" (click)="toggleOrder('dateCreated')">
+        Date Created
+        <svg cIcon
+          [name]="appointmentParams.orderBy === 'dateCreated' && appointmentParams.order === 'desc' ? 'cil-arrow-bottom' : 'cil-arrow-top'"></svg>
+      </th>
+
+      <th scope="col" class="arrow-filter" [ngStyle]="{'cursor': 'pointer'}" (click)="toggleOrder('dateOfVisit')">
+        Date Of Visit
+        <svg cIcon
+          [name]="appointmentParams.orderBy === 'dateOfVisit' && appointmentParams.order === 'desc' ? 'cil-arrow-bottom' : 'cil-arrow-top'"></svg>
+      </th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let appointment of appointments" class="user-table" routerLink="update/{{appointment.id}}">
+      <td>{{appointment.doctor?.fullName}}</td>
+      <td>{{appointment.patient?.fullName}}</td>
+      <td>{{getSpecialityNameById(appointment.appointmentSpecialityId)}}</td>
+      <td>{{appointment.status}}</td>
+      <td>{{appointment.type}}</td>
+      <td>{{appointment.dateCreated | date:'short'}}</td>
+      <td>{{appointment.dateOfVisit | date:'short'}}</td>
+      <td class="pt-1">
+        <button cButton color="success" class="btn-m" routerLink="finalize/{{appointment.id}}"
+          *ngIf="appointment.status != 'finalized'">Finalize</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+</div>

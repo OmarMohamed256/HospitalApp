@@ -26,7 +26,8 @@ export class DashboardAppointmentsComponent implements OnInit{
   specialityList: Speciality[] = [];
   typeList = AppointmentTypeList;
 
-  constructor(private appointmentService: AppointmentService, private specialityService: SpecialityService) {
+  constructor(private appointmentService: AppointmentService,
+    private specialityService: SpecialityService) {
   }
   ngOnInit(): void {
     this.getAppointments();
@@ -65,4 +66,5 @@ export class DashboardAppointmentsComponent implements OnInit{
     this.appointmentParams = this.appointmentService.resetParams();
     this.getAppointments();
   }
+
 }
