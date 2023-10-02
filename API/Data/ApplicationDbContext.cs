@@ -71,7 +71,8 @@ namespace Hospital.Data
             modelBuilder.Entity<CustomItem>()
                 .HasOne(ci => ci.Invoice)      // Each CustomItem has one Invoice
                 .WithMany(i => i.CustomItems)  // Each Invoice has many CustomItems
-                .HasForeignKey(ci => ci.InvoiceId); // Foreign key property
+                .HasForeignKey(ci => ci.InvoiceId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Invoice>()
                 .HasOne(i => i.Appointment)
@@ -169,7 +170,7 @@ namespace Hospital.Data
 
             return await base.SaveChangesAsync(cancellationToken);
         }
-        private void ConfigureDecimalProperties(ModelBuilder modelBuilder)
+        private static void ConfigureDecimalProperties(ModelBuilder modelBuilder)
         {
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {

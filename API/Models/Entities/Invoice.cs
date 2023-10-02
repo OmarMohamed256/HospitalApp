@@ -7,6 +7,7 @@ namespace API.Models.Entities
         public int Id { get; set; }
         public string PaymentMethod { get; set; }
         public decimal TotalDue { get; set; }
+        public decimal CustomItemsTotalPrice { get; set; }
         public decimal DiscountPercentage { get; set; }
         public decimal TotalAfterDiscount { get; set; }
         public decimal TotalPaid { get; set; }

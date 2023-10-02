@@ -42,7 +42,7 @@ namespace API.Services.Implementations
                     }
 
                     // Update invoice total
-                    await UpdateInvoiceTotalAsync(invoice);
+                    await UpdateInvoiceTotalsAsync(invoice);
 
                     FinalizeAppointment(invoiceDto.AppointmentId);
 
@@ -69,6 +69,22 @@ namespace API.Services.Implementations
                 TotalPaid = invoiceDto.TotalPaid,
                 TotalDue = 0,
             };
+            // Add custom items
+            if (invoiceDto.CustomItems != null)
+            {
+                invoice.CustomItems = new List<CustomItem>();
+                foreach (var customItemDto in invoiceDto.CustomItems)
+                {
+                    var customItem = new CustomItem
+                    {
+                        Name = customItemDto.Name,
+                        Price = customItemDto.Price,
+                        Units = customItemDto.Units,
+                        TotalPrice = customItemDto.Price * customItemDto.Units
+                    };
+                    invoice.CustomItems.Add(customItem);
+                }
+            }
             _invoiceRepository.AddInvoice(invoice);
             if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed adding invoice");
             return invoice;
@@ -140,11 +156,17 @@ namespace API.Services.Implementations
             invoice.TotalDue += invoiceDoctorService.TotalPrice;
         }
 
-        private async Task UpdateInvoiceTotalAsync(Invoice invoice)
+        private async Task UpdateInvoiceTotalsAsync(Invoice invoice)
         {
+            // Calculate total price including custom items
+            decimal totalPriceWithCustomItems = invoice.CustomItems?.Sum(item => item.TotalPrice) ?? 0;
+            invoice.CustomItemsTotalPrice = totalPriceWithCustomItems;
+            invoice.TotalDue += totalPriceWithCustomItems;
+
             // update totals with discount here
             invoice.TotalAfterDiscount = invoice.TotalDue * (1 - (invoice.DiscountPercentage / 100));
             invoice.TotalRemaining = invoice.TotalAfterDiscount - invoice.TotalPaid;
+
             var saveInvoiceResult = await _invoiceRepository.SaveAllAsync();
             if (!saveInvoiceResult) throw new Exception("Failed to save Invoice");
         }
