@@ -70,8 +70,18 @@ namespace API.Repositories.Implementations
 
         public async Task<DoctorService> GetDoctorServiceById(int Id)
         {
-            return await _context.DoctorServices.AsNoTracking().FirstOrDefaultAsync(ds => ds.Id == Id);
+            return await _context.DoctorServices
+                .AsNoTracking()
+                .FirstOrDefaultAsync(ds => ds.Id == Id);
         }
 
+        public async Task<DoctorService> GetDoctorServiceWithServiceAndItemsById(int Id)
+        {
+            return await _context.DoctorServices
+                .AsNoTracking()
+                .Include(ds => ds.Service)
+                    .ThenInclude(s => s.ServiceInventoryItems)
+                .FirstOrDefaultAsync(ds => ds.Id == Id);
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace API.Models.Entities
 {
-    public class InvoiceDoctorServiceSupplyOrders
+    public class    InvoiceDoctorServiceSupplyOrders
     {
         public int Id { get; set; }
         public int? InvoiceDoctorServiceId { get; set; }
@@ -13,7 +13,7 @@ namespace API.Models.Entities
         public int? SupplyOrderId { get; set; }
         public virtual SupplyOrder? SupplyOrder {get; set;}
         public int  QuantityUsed { get; set; }
-        public int  ItemPrice { get; set; }
-        public int  TotalPrice { get; set; }
+        public decimal  ItemPrice { get; set; }
+        public decimal  TotalPrice { get; set; }
     }
 }

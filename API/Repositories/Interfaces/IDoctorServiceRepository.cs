@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Models.Entities;
-using webapi.Entities;
 
 namespace API.Repositories.Interfaces
 {
@@ -15,7 +10,7 @@ namespace API.Repositories.Interfaces
         void UpdateDoctorService(DoctorService doctorService);
         Task CreateDoctorServicesForService(int serviceId, List<int> doctorIdsWithSpeciality);
         Task CreateDoctorServicesForDoctor(int doctorId, List<int> serviceIdsWithSpeciality);
-        // Task UpdateDoctorServicesForService(Service service);
+        Task<DoctorService> GetDoctorServiceWithServiceAndItemsById(int Id);
         void DeleteDoctorServices(List<DoctorService> servicesToRemove);
         Task<bool> SaveAllAsync();
     }

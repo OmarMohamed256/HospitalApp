@@ -13,6 +13,6 @@ namespace API.Repositories.Interfaces
         Task<PagedList<Appointment>> GetAppointmentsAsync(AppointmentParams appointmentParams);
         Task<Appointment> GetAppointmentsForUserByDateOfVisit(DateTime dateOfVisit);
         Task<bool> SaveAllAsync();
-
+        int UpdateAppointmentStatus(int appointmentId, string status);
     }
 }

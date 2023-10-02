@@ -9,6 +9,7 @@ namespace API.Models.Entities
         public virtual DoctorService? DoctorService {get; set;}
         public int ServiceQuantity { get; set; }
         public decimal TotalDisposablesPrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public decimal ServiceSoldPrice { get; set; }
         public string ServiceName { get; set; }
         public virtual ICollection<InvoiceDoctorServiceSupplyOrders>? InvoiceDoctorServiceSupplyOrders { get; set; }

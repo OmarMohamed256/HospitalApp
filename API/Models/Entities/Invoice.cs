@@ -5,11 +5,9 @@ namespace API.Models.Entities
     public class Invoice : ITrackableEntity
     {
         public int Id { get; set; }
-        public string Type { get; set; }
-        public string Status { get; set; }
         public string PaymentMethod { get; set; }
         public decimal TotalDue { get; set; }
-        public decimal Discount { get; set; }
+        public decimal DiscountPercentage { get; set; }
         public decimal TotalAfterDiscount { get; set; }
         public decimal TotalPaid { get; set; }
         public decimal TotalRemaining { get; set; }

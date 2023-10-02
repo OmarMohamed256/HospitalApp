@@ -100,5 +100,14 @@ namespace API.Repositories.Implementations
             .Include(a => a.Patient)
             .FirstOrDefaultAsync(a => a.Id == appointmentId);
         }
+
+        public int UpdateAppointmentStatus(int appointmentId, string status)
+        {
+            return _context.Appointments
+               .Where(u => u.Id == appointmentId)
+               .ExecuteUpdate(b =>
+                   b.SetProperty(u => u.Status, status)
+               );
+        }
     }
 }

@@ -2,6 +2,7 @@ using API.Helpers;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
 using Hospital.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories.Implementations
 {
@@ -20,7 +21,6 @@ namespace API.Repositories.Implementations
         {
             _context.SupplyOrders.Update(supplyOrder);
         }
-
         public async Task<PagedList<SupplyOrder>> GetSupplyOrdersAsync(SupplyOrderParams supplyOrderParams)
         {
             var query = _context.SupplyOrders.AsQueryable();
@@ -49,5 +49,16 @@ namespace API.Repositories.Implementations
             return await _context.SaveChangesAsync() > 0;
         }
 
+        public async Task<ICollection<SupplyOrder>> GetConsumableSupplyOrdersByInventoryItemId(int inventoryItemId)
+        {
+            return await _context.SupplyOrders
+                .Where(so => so.ExpiryDate >= DateTime.Now && so.InventoryItemId == inventoryItemId && so.Quantity > 0)
+                .OrderBy(so => so.ExpiryDate).ToListAsync();
+        }
+
+        public void UpdateSupplyOrdersRange(List<SupplyOrder> supplyOrders)
+        {
+            _context.SupplyOrders.UpdateRange(supplyOrders);
+        }
     }
 }
