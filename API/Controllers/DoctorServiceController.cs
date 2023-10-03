@@ -20,7 +20,7 @@ namespace API.Controllers
         [HttpGet("services-by-doctor/{doctorId}", Name = "GetServicesByDoctorId")]
         public async Task<ActionResult<IEnumerable<DoctorServiceDto>>> GetServicesByDoctorIdAsync(int doctorId)
         {
-            var services = await _doctorServiceService.GetDoctorServiceByDoctorId(doctorId);
+            var services = await _doctorServiceService.GetDoctorServiceWithServiceByDoctorId(doctorId);
             return Ok(services);
         }
         [HttpPut]

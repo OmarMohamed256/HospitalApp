@@ -33,6 +33,7 @@ const routes: Routes = [
   {
     path:'finalize/:id',
     component: FinalizeAppointmentComponent,
+    resolve: { appointment: AppointmentDetailedResolver },
     data: {
       title: `Finalize Appointment`
     }

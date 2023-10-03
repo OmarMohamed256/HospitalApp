@@ -9,6 +9,7 @@ namespace API.Services.Interfaces
         Task<CreateServiceDTO> CreateServiceAsync(CreateServiceDTO serviceDto);
         Task<CreateServiceDTO> UpdateServiceAsync(CreateServiceDTO serviceDto);
         Task<PagedList<ServiceDto>> GetServicesAsync(ServiceParams serviceParams);
+        Task<decimal> GetServiceDisposablesPriceAsync(int serviceId, int serviceQuantity);
         Task<ICollection<ServiceInventoryItemDto>> GetServiceInventoryItemsByServiceId(int serviceId);
         Task<bool> DeleteServiceAsync(int id);
     }

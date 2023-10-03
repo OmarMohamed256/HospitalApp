@@ -17,9 +17,9 @@ namespace API.Services.Implementations
             _mapper = mapper;
             _doctorServiceRepository = doctorServiceRepository;
         }
-        public async Task<IEnumerable<DoctorServiceDto>> GetDoctorServiceByDoctorId(int doctorId)
+        public async Task<IEnumerable<DoctorServiceDto>> GetDoctorServiceWithServiceByDoctorId(int doctorId)
         {
-            var services = await _doctorServiceRepository.GetDoctorServiceByDoctorId(doctorId);
+            var services = await _doctorServiceRepository.GetDoctorServiceWithServiceByDoctorId(doctorId);
             return _mapper.Map<IEnumerable<DoctorServiceDto>>(services);
         }
 

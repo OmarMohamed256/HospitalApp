@@ -175,5 +175,6 @@ namespace API.Services.Implementations
             var updatedRecords = _appoinmentRepository.UpdateAppointmentStatus(appointmentId, "finalized");
             if (updatedRecords <= 0) throw new Exception("Failed to update Appointment status");
         }
+
     }
 }

@@ -13,7 +13,7 @@ namespace API.Repositories.Implementations
         {
             _context = context;
         }
-        public async Task<IEnumerable<DoctorService>> GetDoctorServiceByDoctorId(int doctorId)
+        public async Task<IEnumerable<DoctorService>> GetDoctorServiceWithServiceByDoctorId(int doctorId)
         {
             return await _context.DoctorServices
                 .Where(ds => ds.DoctorId == doctorId)

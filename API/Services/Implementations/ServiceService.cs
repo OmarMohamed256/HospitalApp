@@ -16,13 +16,16 @@ namespace API.Services.Implementations
         private readonly IMapper _mapper;
         private readonly IDoctorServiceRepository _doctorServiceRepository;
         private readonly IUserRepository _doctorRepository;
+        private readonly ISupplyOrderRepository _supplyOrderRepository;
         public ServiceService(IServiceRepository serviceRepository, IMapper mapper,
-        IDoctorServiceRepository doctorServiceRepository, IUserRepository doctorRepository)
+        IDoctorServiceRepository doctorServiceRepository, IUserRepository doctorRepository
+        , ISupplyOrderRepository supplyOrderRepository)
         {
             _serviceRepository = serviceRepository;
             _mapper = mapper;
             _doctorServiceRepository = doctorServiceRepository;
             _doctorRepository = doctorRepository;
+            _supplyOrderRepository = supplyOrderRepository;
         }
         public async Task<CreateServiceDTO> CreateServiceAsync(CreateServiceDTO createServiceDto)
         {
@@ -170,6 +173,41 @@ namespace API.Services.Implementations
         {
             var servinceInventoryITems = await _serviceRepository.GetServiceInventoryItemsByServiceIdAsync(serviceId);
             return _mapper.Map<ICollection<ServiceInventoryItemDto>>(servinceInventoryITems);
+        }
+
+        public async Task<decimal> GetServiceDisposablesPriceAsync(int serviceId, int serviceQuantity)
+        {
+            var servinceInventoryItems = await _serviceRepository.GetServiceInventoryItemsByServiceIdAsync(serviceId);
+            if (servinceInventoryItems.Count == 0) return 0;
+            decimal TotalDisposablesPrice = 0;
+            foreach (var item in servinceInventoryItems)
+            {
+                TotalDisposablesPrice += await GetDisposablePriceForAnInventoryItem(item.InventoryItem, serviceQuantity * item.QuantityNeeded);
+            }
+            return TotalDisposablesPrice;
+        }
+
+        private async Task<decimal> GetDisposablePriceForAnInventoryItem(InventoryItem inventoryItem, int quantityNeeded)
+        {
+            var consumableSupplyOrders = await _supplyOrderRepository.GetConsumableSupplyOrdersByInventoryItemId(inventoryItem.Id);
+            int totalQuantity = consumableSupplyOrders.Sum(order => order.Quantity);
+            if (totalQuantity < quantityNeeded) throw new Exception("Not enough supply orders to fulfill quantity needed for item: " + inventoryItem.Name);
+            decimal totalItemDisposablePrice = 0;
+            foreach (var supplyOrder in consumableSupplyOrders)
+            {
+                if (quantityNeeded > 0)
+                {
+                    int quantityToConsume = Math.Min(quantityNeeded, supplyOrder.Quantity);
+                    supplyOrder.Quantity -= quantityToConsume;
+                    quantityNeeded -= quantityToConsume;
+                    totalItemDisposablePrice += supplyOrder.ItemPrice * quantityToConsume;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return totalItemDisposablePrice;
         }
     }
 }

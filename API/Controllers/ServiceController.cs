@@ -45,6 +45,12 @@ namespace API.Controllers
             var services = await _serviceService.GetServiceInventoryItemsByServiceId(serviceId);
             return Ok(services);
         }
+        [HttpGet]
+        [Route("getServiceDisposablesPrice")]
+        public async Task<ActionResult<decimal>> GetServiceDisposablesPrice([FromQuery] int serviceId, [FromQuery] int serviceQuantity)
+        {
+            return await _serviceService.GetServiceDisposablesPriceAsync(serviceId, serviceQuantity);
+        }
 
         [HttpDelete("{serviceId}")]
         public async Task<ActionResult> DeleteServiceAsync(int serviceId)

@@ -1,1 +1,11 @@
-<p>finalize-appointment works!</p>
+<form [formGroup]="createInvoiceForm" cForm (ngSubmit)="createInvoiceForm.valid" autocomplete="off" *ngIf="doctor_services">
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Services</label>
+                <ng-select [items]="services" [virtualScroll]="true" [multiple]="true" [bindLabel]="'name'" [bindValue]="'id'">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+</form>
