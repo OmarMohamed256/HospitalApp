@@ -117,18 +117,20 @@ namespace API.Services.Implementations
         InvoiceDoctorService invoiceDoctorService, InvoiceDoctorServiceDto invoiceDoctorServiceDto, Invoice invoice)
         {
             if (doctorService.Service.ServiceInventoryItems == null) return;
-
             // retrieve items
             foreach (var item in doctorService.Service.ServiceInventoryItems)
             {
                 // retrieve supply orders
                 var consumableSupplyOrders = await _supplyOrderRepository.GetConsumableSupplyOrdersByInventoryItemId(item.InventoryItemId);
-                int quantityNeeded = item.QuantityNeeded;
+                int quantityNeeded = item.QuantityNeeded * invoiceDoctorService.ServiceQuantity;
+                int totalQuantity = consumableSupplyOrders.Sum(order => order.Quantity);
+                if (totalQuantity < quantityNeeded) throw new Exception("Not enough supply orders to fulfill quantity needed for an item in: " + doctorService.Service.Name + " Service");
+                
                 foreach (var supplyOrder in consumableSupplyOrders)
                 {
                     if (quantityNeeded > 0)
                     {
-                        int quantityToConsume = Math.Min(item.QuantityNeeded, supplyOrder.Quantity); // Determine how much can be consumed from this supply order
+                        int quantityToConsume = Math.Min(quantityNeeded, supplyOrder.Quantity); // Determine how much can be consumed from this supply order
                         supplyOrder.Quantity -= quantityToConsume;
                         quantityNeeded -= quantityToConsume;
                         // update supply order and add a new InvoiceDoctorServiceSupplyOrders
@@ -150,7 +152,6 @@ namespace API.Services.Implementations
                         break;
                     }
                 }
-                if (quantityNeeded > 0) throw new Exception("Not enough supply orders to fulfill quantity needed.");
             }
             invoiceDoctorService.TotalPrice += invoiceDoctorService.TotalDisposablesPrice * invoiceDoctorServiceDto.ServiceQuantity;
             invoice.TotalDue += invoiceDoctorService.TotalPrice;
