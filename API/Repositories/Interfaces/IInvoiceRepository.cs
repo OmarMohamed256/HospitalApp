@@ -7,6 +7,7 @@ namespace API.Repositories.Interfaces
         void AddInvoice(Invoice invoice);
         void AddInvoiceDoctorService(InvoiceDoctorService invoiceDoctorService);
         void AddInvoiceDoctorServiceOrders(InvoiceDoctorServiceSupplyOrders invoiceDoctorServiceSupplyOrder);
+        Task<Invoice> GetInvoiceByIdAsync(int invoiceId);
         Task<bool> SaveAllAsync();
     }
 }

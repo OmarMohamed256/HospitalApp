@@ -1,6 +1,7 @@
 using API.Models.Entities;
 using API.Repositories.Interfaces;
 using Hospital.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories.Implementations
 {
@@ -24,6 +25,14 @@ namespace API.Repositories.Implementations
         public void AddInvoiceDoctorServiceOrders(InvoiceDoctorServiceSupplyOrders invoiceDoctorServiceSupplyOrder)
         {
             _context.InvoiceDoctorServiceSupplyOrders.Add(invoiceDoctorServiceSupplyOrder);
+        }
+
+        public async Task<Invoice> GetInvoiceByIdAsync(int invoiceId)
+        {
+            return await _context.Invoices
+            .Include(i => i.CustomItems)
+            .Include(i => i.InvoiceDoctorService)
+            .SingleOrDefaultAsync(i => i.Id == invoiceId);
         }
 
         public async Task<bool> SaveAllAsync()

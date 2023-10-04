@@ -5,6 +5,7 @@ using API.Models.Entities;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace API.Services.Implementations
 {
@@ -177,5 +178,10 @@ namespace API.Services.Implementations
             if (updatedRecords <= 0) throw new Exception("Failed to update Appointment status");
         }
 
+        public async Task<InvoiceDto> GetInvoiceByIdAsync(int invoiceId)
+        {
+            var invoice = await _invoiceRepository.GetInvoiceByIdAsync(invoiceId) ?? throw new Exception("invoice does not exist");
+            return _mapper.Map<InvoiceDto>(invoice);
+        }
     }
 }

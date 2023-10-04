@@ -17,5 +17,10 @@ namespace API.Controllers
         {
             return await _invoiceService.CreateInvoiceAsync(invoiceDto);
         }
+        [HttpGet("{invoiceId}")]
+        public async Task<ActionResult<InvoiceDto>> CreateInvoiceAsync(int invoiceId)
+        {
+            return await _invoiceService.GetInvoiceByIdAsync(invoiceId);
+        }
     }
 }
