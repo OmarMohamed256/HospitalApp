@@ -95,4 +95,8 @@ export class AppointmentService {
   }
   return this.http.get<Appointment>(this.baseUrl + 'appointment/getAppointmentById/' + appointmentId);
   }
+
+  clearCache() {
+    this.appointmentCache.clear
+  }
 }

@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppointmentTypeList } from 'src/app/constants/appointmentTypes';
 import { ROLES } from 'src/app/constants/roles';
 import { AppointmentService } from 'src/app/core/services/appointment.service';
@@ -57,7 +57,8 @@ export class UpdateAppointmentComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private specialityService: SpecialityService,
     private userService: UserService, private doctorWorkingHoursService: DoctorWorkingHoursService,
-    private appointmentService: AppointmentService, private route: ActivatedRoute, private datePipe: DatePipe) {
+    private appointmentService: AppointmentService, private route: ActivatedRoute, private datePipe: DatePipe,
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -201,10 +202,10 @@ export class UpdateAppointmentComponent implements OnInit {
 
     const availableTimeSlots = timeSlots.filter(slot => {
       return !bookedDates.some(bookedDate =>
-        bookedDate.getTime() === slot.getTime() 
+        bookedDate.getTime() === slot.getTime()
       );
     });
-      return availableTimeSlots;
+    return availableTimeSlots;
   }
 
   getAvailableDays() {
@@ -221,6 +222,13 @@ export class UpdateAppointmentComponent implements OnInit {
       this.availableTimesForSelectedDay = this.availableTimeSlots.filter(slot => {
         return slot.toDateString() === selectedDate.toDateString();
       });
+      const selectedTimeDate = new Date(this.selectedTime!);
+      if (!this.availableTimesForSelectedDay.some(time => {
+        const timeDate = new Date(time);
+        return timeDate.getTime() === selectedTimeDate.getTime();
+      })) {
+        this.selectedTime = this.availableTimesForSelectedDay[0];
+      }
     }
   }
 
@@ -236,12 +244,9 @@ export class UpdateAppointmentComponent implements OnInit {
   }
 
   submitUpdateAppointmentForm() {
-    this.UpdateAppointmentForm.get('dateOfVisit')?.setValue(this.selectDayAndTime());
-    if(this.UpdateAppointmentForm.valid) {
+    if (this.UpdateAppointmentForm.valid) {
+      this.UpdateAppointmentForm.get('dateOfVisit')?.setValue(this.selectDayAndTime());
       this.updateAppointment();
-    }
-    else
-    {
     }
   }
 
@@ -261,10 +266,9 @@ export class UpdateAppointmentComponent implements OnInit {
 
   updateAppointment() {
     const appointment = this.mapFormToAppointment();
-    console.log(appointment)
     this.appointmentService.updateAppointment(appointment).subscribe({
       next: (response) => {
-        console.log(response);
+        this.appointmentService.clearCache();
       },
       error: (error) => {
         this.validationErrors = error;

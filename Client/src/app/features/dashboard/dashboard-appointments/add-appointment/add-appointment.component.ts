@@ -217,7 +217,7 @@ export class AddAppointmentComponent implements OnInit  {
     const appointment = this.mapFormToAppointment();
     this.appointmentService.createAppointment(appointment).subscribe({
       next: (response) => {
-        console.log(response);
+        this.appointmentService.clearCache();
       },
       error: (error) => {
         this.validationErrors = error;
@@ -236,4 +236,6 @@ export class AddAppointmentComponent implements OnInit  {
     }
     return appointment;
   }
+
+  
 }
