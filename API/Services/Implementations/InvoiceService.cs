@@ -25,7 +25,7 @@ namespace API.Services.Implementations
             _appoinmentRepository = appoinmentRepository;
             _mapper = mapper;
         }
-        public async Task<InvoiceDto> CreateInvoiceAsync(InvoiceDto invoiceDto)
+        public async Task<InvoiceDto> CreateInvoiceAsync(CreateInvoiceDto invoiceDto)
         {
             using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             try
@@ -59,7 +59,7 @@ namespace API.Services.Implementations
                 throw;
             }
         }
-        private async Task<Invoice> AddInvoiceAsync(InvoiceDto invoiceDto)
+        private async Task<Invoice> AddInvoiceAsync(CreateInvoiceDto invoiceDto)
         {
             var invoice = new Invoice
             {
@@ -90,11 +90,11 @@ namespace API.Services.Implementations
             return invoice;
         }
 
-        private async Task AddDoctorServiceToInvoiceAsync(InvoiceDto invoiceDto, Invoice invoice,
-        InvoiceDoctorServiceDto invoiceDoctorServiceDto)
+        private async Task AddDoctorServiceToInvoiceAsync(CreateInvoiceDto invoiceDto, Invoice invoice,
+        CreateInvoiceDoctorServiceDto invoiceDoctorServiceDto)
         {
             // retrieve service
-            var doctorServiceId = invoiceDoctorServiceDto.DoctorServiceId ?? throw new ApiException(400, "Service Id not supplied");
+            var doctorServiceId = invoiceDoctorServiceDto.DoctorServiceId;
             var doctorService = await _doctorServiceRepository.GetDoctorServiceWithServiceAndItemsById(doctorServiceId);
             var invoiceDoctorService = new InvoiceDoctorService
             {
@@ -114,7 +114,7 @@ namespace API.Services.Implementations
         }
 
         private async Task HandleInventoryItemsAsync(DoctorService doctorService,
-        InvoiceDoctorService invoiceDoctorService, InvoiceDoctorServiceDto invoiceDoctorServiceDto, Invoice invoice)
+        InvoiceDoctorService invoiceDoctorService, CreateInvoiceDoctorServiceDto invoiceDoctorServiceDto, Invoice invoice)
         {
             if (doctorService.Service.ServiceInventoryItems == null) return;
             // retrieve items
@@ -153,7 +153,7 @@ namespace API.Services.Implementations
                     }
                 }
             }
-            invoiceDoctorService.TotalPrice += invoiceDoctorService.TotalDisposablesPrice * invoiceDoctorServiceDto.ServiceQuantity;
+            invoiceDoctorService.TotalPrice += invoiceDoctorService.TotalDisposablesPrice;
             invoice.TotalDue += invoiceDoctorService.TotalPrice;
         }
 

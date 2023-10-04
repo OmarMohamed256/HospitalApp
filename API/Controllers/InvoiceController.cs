@@ -13,7 +13,7 @@ namespace API.Controllers
             _invoiceService = invoiceService;
         }
         [HttpPost]
-        public async Task<ActionResult<InvoiceDto>> CreateInvoiceAsync(InvoiceDto invoiceDto)
+        public async Task<ActionResult<InvoiceDto>> CreateInvoiceAsync(CreateInvoiceDto invoiceDto)
         {
             return await _invoiceService.CreateInvoiceAsync(invoiceDto);
         }

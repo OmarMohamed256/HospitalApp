@@ -30,14 +30,21 @@ namespace API.Helpers
                 .ForMember(dest => dest.InventoryItem, opt => opt.MapFrom(src => src.InventoryItem))
                 .ReverseMap();
 
+            CreateMap<InvoiceDoctorService, CreateInvoiceDoctorServiceDto>().ReverseMap();
             CreateMap<InvoiceDoctorService, InvoiceDoctorServiceDto>().ReverseMap();
+
+            CreateMap<CustomItem, CreateCustomItemDto>().ReverseMap();
             CreateMap<CustomItem, CustomItemDto>().ReverseMap();
+
+            CreateMap<CreateInvoiceDto, Invoice>()
+                .ForMember(dest => dest.InvoiceDoctorService, opt => opt.MapFrom(src => src.InvoiceDoctorServices))
+                .ForMember(dest => dest.CustomItems, opt => opt.MapFrom(src => src.CustomItems))
+                .ReverseMap();
 
             CreateMap<InvoiceDto, Invoice>()
                 .ForMember(dest => dest.InvoiceDoctorService, opt => opt.MapFrom(src => src.InvoiceDoctorServices))
                 .ForMember(dest => dest.CustomItems, opt => opt.MapFrom(src => src.CustomItems))
                 .ReverseMap();
-
 
             CreateMap<DoctorServiceDto, DoctorService>().ReverseMap();
             CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();

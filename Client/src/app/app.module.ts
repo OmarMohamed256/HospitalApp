@@ -14,6 +14,7 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { CommonSharedModule } from './shared/common-shared.module';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
 const APP_CONTAINERS = [
   DefaultHeaderComponent,
@@ -35,6 +36,8 @@ const APP_CONTAINERS = [
     IconSetService,
     { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+
   ],
   bootstrap: [AppComponent]
 })

@@ -19,6 +19,5 @@ namespace API.Models.Entities
         public virtual Appointment Appointment { get; set; }
         public virtual ICollection<CustomItem>? CustomItems { get; set; }
         public virtual ICollection<InvoiceDoctorService>? InvoiceDoctorService { get; set; }
-
     }
 }

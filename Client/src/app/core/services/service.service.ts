@@ -19,6 +19,7 @@ export class ServiceService {
     specialityId: null
   };
   serviceCache = new Map();
+  disposablesCache = new Map();
 
   constructor(private http: HttpClient) { }
 
@@ -74,5 +75,18 @@ export class ServiceService {
 
   getServiceInventoryItems(serviceId : number) {
     return this.http.get<ServiceInventoryItem[]>(this.baseUrl + 'service/getServiceInventoryItems/' + serviceId)
+  }
+
+  getServiceDispsablesPrice(serviceId: number, serviceQuantity: number) {
+    const cacheKey = `${serviceId}-${serviceQuantity}`;
+    const cachedPrice = this.disposablesCache.get(cacheKey);
+    if (cachedPrice) {
+      return of(cachedPrice);
+    }
+    return this.http.get<number>(this.baseUrl + 'service/getServiceDisposablesPrice?serviceId=' 
+    + serviceId + "&serviceQuantity=" + serviceQuantity).pipe(map(response => {
+      this.disposablesCache.set(cacheKey, response);
+      return response;
+    }));
   }
 }
