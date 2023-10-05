@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { PaymentList } from 'src/app/constants/paymentMethods';
 import { DoctorServiceService } from 'src/app/core/services/doctor-service.service';
 import { InvoiceService } from 'src/app/core/services/invoice.service';
@@ -9,6 +9,7 @@ import { Appointment } from 'src/app/models/appointment';
 import { CreateInvoice } from 'src/app/models/createInvoice';
 import { CreateInvoiceDoctorService } from 'src/app/models/createInvoiceDoctorService';
 import { DoctorService } from 'src/app/models/doctorService';
+import { Invoice } from 'src/app/models/invoice';
 import { Service } from 'src/app/models/service';
 
 @Component({
@@ -27,7 +28,7 @@ export class FinalizeAppointmentComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute,
     private doctorServiceService: DoctorServiceService, private serviceService: ServiceService,
-    private invoiceService: InvoiceService) {
+    private invoiceService: InvoiceService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -222,8 +223,16 @@ export class FinalizeAppointmentComponent implements OnInit {
   createInvoice() {
     var invoice = this.mapInvoiceFormToCreateInvoice();
     this.invoiceService.createInvoice(invoice).subscribe(response => {
-      console.log(response);
+      this.sendToInvoiceView(response);
     })
+  }
+
+  sendToInvoiceView(response: Invoice) {
+    const queryParams: any = { invoice: JSON.stringify(response) };
+    const navigationExtras: NavigationExtras = {
+      queryParams
+    };
+    this.router.navigate(['appointments/view-invoice/' + response.id ], navigationExtras);
   }
 
   mapCreateDoctorService() {

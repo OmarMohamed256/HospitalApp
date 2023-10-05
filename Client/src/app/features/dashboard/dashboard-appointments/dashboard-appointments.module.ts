@@ -9,6 +9,7 @@ import { AddAppointmentComponent } from './add-appointment/add-appointment.compo
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UpdateAppointmentComponent } from './update-appointment/update-appointment.component';
 import { FinalizeAppointmentComponent } from './finalize-appointment/finalize-appointment.component';
+import { InvoiceAppointmentComponent } from './invoice-appointment/invoice-appointment.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,7 @@ import { FinalizeAppointmentComponent } from './finalize-appointment/finalize-ap
     ModalModule,
     NgSelectModule
     ],
-  declarations: [DashboardAppointmentsComponent, AddAppointmentComponent, UpdateAppointmentComponent, FinalizeAppointmentComponent],
+  declarations: [DashboardAppointmentsComponent, AddAppointmentComponent, UpdateAppointmentComponent, FinalizeAppointmentComponent, InvoiceAppointmentComponent],
   providers:[DatePipe]
 })
 export class DashboardAppointmentModule {

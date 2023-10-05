@@ -15,4 +15,8 @@ export class InvoiceService {
   createInvoice(createInvoice: CreateInvoice) {
     return this.http.post<Invoice>(this.baseUrl + 'invoice/', createInvoice);
   }
+
+  getInvoice(invoiceId: number) {
+    return this.http.get<Invoice>(this.baseUrl + 'invoice/' + invoiceId);
+  }
 }

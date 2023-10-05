@@ -69,6 +69,7 @@ namespace API.Services.Implementations
                 PaymentMethod = invoiceDto.PaymentMethod,
                 TotalPaid = invoiceDto.TotalPaid,
                 TotalDue = 0,
+                FinalizationDate = DateTime.Now
             };
             // Add custom items
             if (invoiceDto.CustomItems != null)

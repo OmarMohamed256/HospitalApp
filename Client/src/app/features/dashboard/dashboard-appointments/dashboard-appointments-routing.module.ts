@@ -5,6 +5,8 @@ import { AddAppointmentComponent } from './add-appointment/add-appointment.compo
 import { UpdateAppointmentComponent } from './update-appointment/update-appointment.component';
 import { AppointmentDetailedResolver } from 'src/app/core/resolvers/appointment-detailed.resolver';
 import { FinalizeAppointmentComponent } from './finalize-appointment/finalize-appointment.component';
+import { InvoiceAppointmentComponent } from './invoice-appointment/invoice-appointment.component';
+import { InvoiceDetailedResolver } from 'src/app/core/resolvers/invoice-detailed.resolver';
 
 
 const routes: Routes = [
@@ -36,6 +38,14 @@ const routes: Routes = [
     resolve: { appointment: AppointmentDetailedResolver },
     data: {
       title: `Finalize Appointment`
+    }
+  },
+  {
+    path:'view-invoice/:id',
+    component: InvoiceAppointmentComponent,
+    resolve: { invoice: InvoiceDetailedResolver },
+    data: {
+      title: `Invoice Details`
     }
   }
 ];

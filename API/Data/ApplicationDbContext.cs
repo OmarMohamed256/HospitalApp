@@ -26,6 +26,7 @@ namespace Hospital.Data
         public DbSet<ServiceInventoryItem> ServiceInventoryItems { get; set; }
         public DbSet<InvoiceDoctorService> InvoiceDoctorService { get; set; }
         public DbSet<InvoiceDoctorServiceSupplyOrders> InvoiceDoctorServiceSupplyOrders { get; set; }
+        public DbSet<Room> Rooms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -120,7 +121,7 @@ namespace Hospital.Data
                 .HasOne(sii => sii.Service)
                 .WithMany(s => s.ServiceInventoryItems)
                 .HasForeignKey(sii => sii.ServiceId);
-            
+
             modelBuilder.Entity<InvoiceDoctorServiceSupplyOrders>()
                 .HasOne(sii => sii.SupplyOrder)
                 .WithMany(ii => ii.InvoiceDoctorServiceSupplyOrders)
@@ -150,6 +151,12 @@ namespace Hospital.Data
                 .HasOne(ii => ii.InventoryItemSpeciality)
                 .WithMany(s => s.InventoryItems)
                 .HasForeignKey(ii => ii.InventoryItemSpecialityId);
+
+            modelBuilder.Entity<AppUser>()
+                .HasOne(a => a.AssignedRoom)
+                .WithOne(r => r.Doctor)
+                .HasForeignKey<Room>(r => r.DoctorId);
+
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

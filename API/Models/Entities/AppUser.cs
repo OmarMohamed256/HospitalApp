@@ -18,8 +18,9 @@ namespace webapi.Entities
 
         // Navigation property for the doctor
         public int? DoctorSpecialityId { get; set; }
-
         public virtual Speciality? DoctorSpeciality { get; set; } // Added navigation property for Speciality
+        public int? AssignedRoomId { get; set; }
+        public virtual Room? AssignedRoom { get; set; }
 
         // Navigation Properties for Appointments booked by the user
         public virtual ICollection<Appointment> BookedAppointments { get; set; }
