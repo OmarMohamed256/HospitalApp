@@ -56,5 +56,11 @@ export const navItems: IRoleNavData[] = [
     url: '/users',
     iconComponent: { name: 'cil-group' },
     roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
-  }
+  },
+  {
+    name: 'Time Table',
+    url: '/time-table',
+    iconComponent: { name: 'cil-view-column' },
+    roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
+  },
 ];
