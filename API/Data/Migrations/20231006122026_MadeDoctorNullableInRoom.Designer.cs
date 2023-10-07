@@ -4,6 +4,7 @@ using Hospital.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231006122026_MadeDoctorNullableInRoom")]
+    partial class MadeDoctorNullableInRoom
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,14 +260,10 @@ namespace HospitalApp.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RoomNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoomSpecialityId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -272,8 +271,6 @@ namespace HospitalApp.Data.Migrations
                     b.HasIndex("DoctorId")
                         .IsUnique()
                         .HasFilter("[DoctorId] IS NOT NULL");
-
-                    b.HasIndex("RoomSpecialityId");
 
                     b.ToTable("Rooms");
                 });
@@ -761,15 +758,7 @@ namespace HospitalApp.Data.Migrations
                         .WithOne("AssignedRoom")
                         .HasForeignKey("API.Models.Entities.Room", "DoctorId");
 
-                    b.HasOne("HospitalApp.Models.Entities.Speciality", "Speciality")
-                        .WithMany("Rooms")
-                        .HasForeignKey("RoomSpecialityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Doctor");
-
-                    b.Navigation("Speciality");
                 });
 
             modelBuilder.Entity("API.Models.Entities.Service", b =>
@@ -955,8 +944,6 @@ namespace HospitalApp.Data.Migrations
                     b.Navigation("Doctors");
 
                     b.Navigation("InventoryItems");
-
-                    b.Navigation("Rooms");
 
                     b.Navigation("Services");
                 });

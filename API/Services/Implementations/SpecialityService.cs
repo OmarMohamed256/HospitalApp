@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Constants;
 using API.Errors;
 using API.Models.DTOS;
@@ -9,7 +5,6 @@ using API.Repositories.Interfaces;
 using API.Services.Interfaces;
 using AutoMapper;
 using HospitalApp.Models.Entities;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services.Implementations
 {

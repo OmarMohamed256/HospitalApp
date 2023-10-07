@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Models.DTOS;
 using API.Services.Interfaces;
+using API.SignalR;
+using HospitalApp.SignalR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Controllers
 {
@@ -12,15 +11,18 @@ namespace API.Controllers
     {
 
         private readonly ISpecialityService _specialityService;
+        private readonly IHubContext<AppointmentHub, IAppointmentHub> _appointmentNotification;
 
-        public SpecialityController(ISpecialityService specialityService)
+        public SpecialityController(ISpecialityService specialityService, IHubContext<AppointmentHub, IAppointmentHub> appointmentNotification)
         {
             _specialityService = specialityService;
+            _appointmentNotification = appointmentNotification;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SpecialityDto>>> GetSpecialitesAsync()
         {
             var specialites = await _specialityService.GetAllSpecialitiesAsync();
+            await _appointmentNotification.Clients.All.SendAppointmentFinalized(5);
             return Ok(specialites);
         }
         [HttpPost]

@@ -54,6 +54,8 @@ namespace API.Helpers
             .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
             .ForMember(dest => dest.Patient, opt => opt.MapFrom(src => src.Patient)).ReverseMap();
 
+            CreateMap<CreateRoomDto, Room>().ReverseMap();
+
             CreateMap<RegisterDto, AppUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Username))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))

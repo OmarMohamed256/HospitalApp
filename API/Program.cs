@@ -7,6 +7,7 @@ using API.Services.Implementations;
 using API.Services.Interfaces;
 using Hospital.Data;
 using HospitalApp.Constants;
+using HospitalApp.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -96,6 +97,7 @@ builder.Services.AddScoped<IInventoryItemRepository, InventoryItemRepository>();
 builder.Services.AddScoped<ISupplyOrderRepository, SupplyOrderRepository>();
 builder.Services.AddScoped<IDoctorWorkingHoursRepository, DoctorWorkingHoursRepository>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -110,6 +112,9 @@ builder.Services.AddScoped<IInventoryItemService, InventoryItemService>();
 builder.Services.AddScoped<ISupplyOrderService, SupplyOrderService>();
 builder.Services.AddScoped<IDoctorWorkingHoursService, DoctorWorkingHoursService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
@@ -140,5 +145,5 @@ app.UseAuthorization();
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
-
+app.MapHub<AppointmentHub>("hubs/appointment");
 app.Run();

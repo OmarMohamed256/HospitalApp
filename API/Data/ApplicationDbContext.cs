@@ -157,6 +157,10 @@ namespace Hospital.Data
                 .WithOne(r => r.Doctor)
                 .HasForeignKey<Room>(r => r.DoctorId);
 
+            modelBuilder.Entity<Room>()
+                .HasOne(r => r.Speciality)
+                .WithMany(s => s.Rooms)
+                .HasForeignKey(r => r.RoomSpecialityId);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
