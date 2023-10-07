@@ -1,3 +1,4 @@
+using API.Helpers;
 using API.Models.DTOS;
 using API.Models.Entities;
 
@@ -7,7 +8,7 @@ namespace API.Services.Interfaces
     {
         Task<CreateRoomDto> CreateUpdateRoom(CreateRoomDto room);
         Task<CreateRoomDto> GetRoomByIdAsync(int roomId);
-        Task<ICollection<CreateRoomDto>> GetAllRoomsAsync();
+        Task<PagedList<CreateRoomDto>> GetAllRoomsAsync(RoomParams roomParams);
         Task<bool> DeleteRoom(int roomId);
     }
 }

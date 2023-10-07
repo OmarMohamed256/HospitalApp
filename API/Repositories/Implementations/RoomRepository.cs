@@ -1,3 +1,4 @@
+using API.Helpers;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
 using Hospital.Data;
@@ -23,9 +24,10 @@ namespace API.Repositories.Implementations
             _context.Remove(room);
         }
 
-        public async Task<ICollection<Room>> GetAllRoomsAsync()
+        public async Task<PagedList<Room>> GetAllRoomsAsync(RoomParams roomParams)
         {
-            return await _context.Rooms.ToListAsync();
+            var query = _context.Rooms.AsQueryable();
+            return await PagedList<Room>.CreateAsync(query, roomParams.PageNumber, roomParams.PageSize);
         }
 
         public async Task<Room> GetRoomById(int roomId)

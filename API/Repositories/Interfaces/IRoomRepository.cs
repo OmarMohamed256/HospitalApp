@@ -1,3 +1,4 @@
+using API.Helpers;
 using API.Models.Entities;
 
 namespace API.Repositories.Interfaces
@@ -8,7 +9,7 @@ namespace API.Repositories.Interfaces
         void UpdateRoom(Room room);
         void DeleteRoom(Room room);
         Task <Room> GetRoomById(int roomId);
-        Task <ICollection<Room>> GetAllRoomsAsync();
+        Task <PagedList<Room>> GetAllRoomsAsync(RoomParams roomParams);
         Task<bool> SaveAllAsync();
     }
 }

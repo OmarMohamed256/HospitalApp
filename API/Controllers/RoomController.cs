@@ -1,3 +1,5 @@
+using API.Extenstions;
+using API.Helpers;
 using API.Models.DTOS;
 using API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +16,10 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ICollection<CreateRoomDto>>> GetRoomsAsync()
+        public async Task<ActionResult<ICollection<CreateRoomDto>>> GetRoomsAsync([FromQuery] RoomParams roomParams)
         {
-            var rooms = await _roomService.GetAllRoomsAsync();
+            var rooms = await _roomService.GetAllRoomsAsync(roomParams);
+            Response.AddPaginationHeader(rooms.CurrentPage, rooms.PageSize, rooms.TotalCount, rooms.TotalPages);
             return Ok(rooms);
         }
 

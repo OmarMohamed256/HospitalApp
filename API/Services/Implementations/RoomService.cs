@@ -1,3 +1,4 @@
+using API.Helpers;
 using API.Models.DTOS;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
@@ -37,9 +38,13 @@ namespace API.Services.Implementations
             return deleteResult;
         }
 
-        public async Task<ICollection<CreateRoomDto>> GetAllRoomsAsync()
+        public async Task<PagedList<CreateRoomDto>> GetAllRoomsAsync(RoomParams roomParams)
         {
-            return _mapper.Map<ICollection<CreateRoomDto>>(await _roomRepository.GetAllRoomsAsync());
+            PagedList<Room> rooms = await _roomRepository.GetAllRoomsAsync(roomParams);
+
+            var roomsDto = _mapper.Map<IEnumerable<CreateRoomDto>>(rooms);
+
+            return new PagedList<CreateRoomDto>(roomsDto, rooms.TotalCount, rooms.CurrentPage, rooms.PageSize);
         }
 
         public async Task<CreateRoomDto> GetRoomByIdAsync(int roomId)
