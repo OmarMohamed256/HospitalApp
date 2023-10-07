@@ -16,8 +16,14 @@ namespace API.Helpers
                     RoleId = ur.Role.Id,
                     RoleName = ur.Role.Name
                 }).ToList()));
+            
+            CreateMap<AppUser, RoomDoctorDto>()
+                .ForMember(dest => dest.Appointments, opt => opt.MapFrom(src => src.BookedWithAppointments))
+                .ReverseMap();
+
             CreateMap<Speciality, SpecialityDto>().ReverseMap();
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
+            CreateMap<Appointment, RoomAppointmentDto>().ReverseMap();
 
             CreateMap<Service, ServiceDto>().ReverseMap();
             CreateMap<ServiceInventoryItem, CreateServiceInventoryItemDTO>()
@@ -54,7 +60,9 @@ namespace API.Helpers
             .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
             .ForMember(dest => dest.Patient, opt => opt.MapFrom(src => src.Patient)).ReverseMap();
 
-            CreateMap<CreateRoomDto, Room>().ReverseMap();
+            CreateMap<Room, RoomDto>()
+            .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
+            .ReverseMap();
 
             CreateMap<RegisterDto, AppUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Username))

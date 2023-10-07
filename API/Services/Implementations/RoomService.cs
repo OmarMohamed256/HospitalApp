@@ -38,19 +38,19 @@ namespace API.Services.Implementations
             return deleteResult;
         }
 
-        public async Task<PagedList<CreateRoomDto>> GetAllRoomsAsync(RoomParams roomParams)
+        public async Task<PagedList<RoomDto>> GetAllRoomsAsync(RoomParams roomParams)
         {
-            PagedList<Room> rooms = await _roomRepository.GetAllRoomsAsync(roomParams);
+            PagedList<Room> rooms = await _roomRepository.GetAllRoomsWithUpComingAppointmentsAsync(roomParams);
 
-            var roomsDto = _mapper.Map<IEnumerable<CreateRoomDto>>(rooms);
+            var roomsDto = _mapper.Map<IEnumerable<RoomDto>>(rooms);
 
-            return new PagedList<CreateRoomDto>(roomsDto, rooms.TotalCount, rooms.CurrentPage, rooms.PageSize);
+            return new PagedList<RoomDto>(roomsDto, rooms.TotalCount, rooms.CurrentPage, rooms.PageSize);
         }
 
-        public async Task<CreateRoomDto> GetRoomByIdAsync(int roomId)
+        public async Task<RoomDto> GetRoomByIdAsync(int roomId)
         {
             var room = await _roomRepository.GetRoomById(roomId) ?? throw new Exception("Room not found");
-            return _mapper.Map<CreateRoomDto>(room);
+            return _mapper.Map<RoomDto>(room);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace API.Models.DTOS
         public decimal DiscountPercentage { get; set; }
         public decimal TotalPaid { get; set; }
         public int AppointmentId { get; set; }
-        public virtual ICollection<CreateCustomItemDto>? CustomItems { get; set; }
-        public virtual ICollection<CreateInvoiceDoctorServiceDto>? InvoiceDoctorServices { get; set; }
+        public ICollection<CreateCustomItemDto>? CustomItems { get; set; }
+        public ICollection<CreateInvoiceDoctorServiceDto>? InvoiceDoctorServices { get; set; }
     }
 }

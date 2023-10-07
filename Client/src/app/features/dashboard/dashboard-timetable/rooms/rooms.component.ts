@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RoomService } from 'src/app/core/services/room.service';
 import { Room } from 'src/app/models/room';
 import { RoomParams } from 'src/app/models/roomParams';
 
 @Component({
-  selector: 'app-dashboard-timetable',
-  templateUrl: './dashboard-timetable.component.html',
-  styleUrls: ['./dashboard-timetable.component.scss']
+  selector: 'app-rooms',
+  templateUrl: './rooms.component.html',
+  styleUrls: ['./rooms.component.scss']
 })
-export class DashboardTimetableComponent {
+export class RoomsComponent implements OnInit{
   rooms: Room[] = [];
   roomParams: RoomParams = {
     pageNumber: 1,
@@ -24,8 +24,5 @@ export class DashboardTimetableComponent {
       this.rooms = response.result;
     })
   }
-  activePane = 0;
-  onTabChange($event: number) {
-    this.activePane = $event;
-  }
+
 }

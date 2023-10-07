@@ -23,10 +23,10 @@ namespace webapi.Entities
         public virtual Room? AssignedRoom { get; set; }
 
         // Navigation Properties for Appointments booked by the user
-        public virtual ICollection<Appointment> BookedAppointments { get; set; }
+        public virtual ICollection<Appointment>? BookedAppointments { get; set; }
 
         // Navigation Properties for Appointments where the user is the doctor
-        public virtual ICollection<Appointment> BookedWithAppointments { get; set; }
+        public virtual ICollection<Appointment>? BookedWithAppointments { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
         public virtual ICollection<DoctorService>? DoctorServices { get; set; }

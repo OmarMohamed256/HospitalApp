@@ -5,6 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { CommonSharedModule } from "src/app/shared/common-shared.module";
 import { DashboardTimeTableRoutingModule } from "./dashboard-timetable-routing.module";
 import { DashboardTimetableComponent } from "./dashboard-timetable.component";
+import { RoomsComponent } from './rooms/rooms.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,7 @@ import { DashboardTimetableComponent } from "./dashboard-timetable.component";
     ModalModule,
     AlertModule
     ],
-  declarations: [DashboardTimetableComponent]
+  declarations: [DashboardTimetableComponent, RoomsComponent]
 })
 export class DashboardTimeTableModule {
 }

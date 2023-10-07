@@ -7,8 +7,8 @@ namespace API.Services.Interfaces
     public interface IRoomService
     {
         Task<CreateRoomDto> CreateUpdateRoom(CreateRoomDto room);
-        Task<CreateRoomDto> GetRoomByIdAsync(int roomId);
-        Task<PagedList<CreateRoomDto>> GetAllRoomsAsync(RoomParams roomParams);
+        Task<RoomDto> GetRoomByIdAsync(int roomId);
+        Task<PagedList<RoomDto>> GetAllRoomsAsync(RoomParams roomParams);
         Task<bool> DeleteRoom(int roomId);
     }
 }

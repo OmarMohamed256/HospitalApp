@@ -16,7 +16,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ICollection<CreateRoomDto>>> GetRoomsAsync([FromQuery] RoomParams roomParams)
+        public async Task<ActionResult<ICollection<RoomDto>>> GetRoomsAsync([FromQuery] RoomParams roomParams)
         {
             var rooms = await _roomService.GetAllRoomsAsync(roomParams);
             Response.AddPaginationHeader(rooms.CurrentPage, rooms.PageSize, rooms.TotalCount, rooms.TotalPages);

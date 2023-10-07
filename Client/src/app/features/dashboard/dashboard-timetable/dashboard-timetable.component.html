@@ -1,1 +1,19 @@
-<p>dashboard-timetable works!</p>
+<c-nav variant="tabs">
+    <c-nav-item>
+        <a [active]="true" [cTabContent]="tabContent" [tabPaneIdx]="0" cNavLink>
+            Time Table
+        </a>
+    </c-nav-item>
+    <c-nav-item>
+        <a [cTabContent]="tabContent" [tabPaneIdx]="1" cNavLink>
+            Rooms
+        </a>
+    </c-nav-item>
+</c-nav>
+<c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
+    <c-tab-pane class="p-3">
+    </c-tab-pane>
+    <c-tab-pane class="p-3">
+        <app-rooms *ngIf="activePane == 1" ></app-rooms>
+    </c-tab-pane>
+</c-tab-content>

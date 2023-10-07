@@ -8,7 +8,7 @@ namespace API.Repositories.Implementations
 {
     public class RoomRepository : IRoomRepository
     {
-        
+
         private readonly ApplicationDbContext _context;
         public RoomRepository(ApplicationDbContext context)
         {
@@ -24,9 +24,14 @@ namespace API.Repositories.Implementations
             _context.Remove(room);
         }
 
-        public async Task<PagedList<Room>> GetAllRoomsAsync(RoomParams roomParams)
+        public async Task<PagedList<Room>> GetAllRoomsWithUpComingAppointmentsAsync(RoomParams roomParams)
         {
-            var query = _context.Rooms.AsQueryable();
+            var query = _context.Rooms
+                .Include(r => r.Doctor)
+                    .ThenInclude(a => a.BookedWithAppointments
+                        .Where(a => a.DateOfVisit > DateTime.Now))
+                .AsQueryable();
+
             return await PagedList<Room>.CreateAsync(query, roomParams.PageNumber, roomParams.PageSize);
         }
 
