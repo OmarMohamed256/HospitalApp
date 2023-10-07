@@ -7,10 +7,10 @@ import { AppointmentService } from 'src/app/core/services/appointment.service';
 import { DoctorWorkingHoursService } from 'src/app/core/services/doctor-working-hours.service';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { UserService } from 'src/app/core/services/user.service';
-import { DoctorWorkingHours } from 'src/app/models/doctorWorkingHours';
+import { DoctorWorkingHours } from 'src/app/models/UserModels/doctorWorkingHours';
 import { Speciality } from 'src/app/models/speciality';
-import { UserData } from 'src/app/models/userData';
-import { UserParams } from 'src/app/models/userParams';
+import { UserData } from 'src/app/models/UserModels/userData';
+import { UserParams } from 'src/app/models/Params/userParams';
 import { Appointment } from 'src/app/models/appointment';
 import { DatePipe } from '@angular/common';
 

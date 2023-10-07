@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
-import { SupplyOrderParams } from 'src/app/models/supplyOrderParams';
+import { SupplyOrderParams } from 'src/app/models/Params/supplyOrderParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { SupplyOrder } from 'src/app/models/supplyOrder';

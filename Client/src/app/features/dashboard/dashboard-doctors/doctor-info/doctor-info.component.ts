@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UserData } from 'src/app/models/userData';
+import { UserData } from 'src/app/models/UserModels/userData';
 
 @Component({
   selector: 'app-doctor-info',

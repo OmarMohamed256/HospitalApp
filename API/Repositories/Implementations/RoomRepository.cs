@@ -26,11 +26,22 @@ namespace API.Repositories.Implementations
 
         public async Task<PagedList<Room>> GetAllRoomsWithUpComingAppointmentsAsync(RoomParams roomParams)
         {
-            var query = _context.Rooms
-                .Include(r => r.Doctor)
-                    .ThenInclude(a => a.BookedWithAppointments
-                        .Where(a => a.DateOfVisit > DateTime.Now))
-                .AsQueryable();
+            IQueryable<Room> query;
+
+            if (roomParams.IncludeUpcomingAppointments)
+            {
+                query = _context.Rooms
+                    .Include(r => r.Doctor)
+                        .ThenInclude(a => a.BookedWithAppointments
+                            .Where(a => a.DateOfVisit > DateTime.Now))
+                    .AsQueryable();
+            }
+            else
+            {
+                query = _context.Rooms
+                    .Include(r => r.Doctor)
+                    .AsQueryable();
+            }
 
             return await PagedList<Room>.CreateAsync(query, roomParams.PageNumber, roomParams.PageSize);
         }

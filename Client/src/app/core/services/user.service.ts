@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserData } from 'src/app/models/userData';
-import { UserParams } from 'src/app/models/userParams';
+import { UserData } from 'src/app/models/UserModels/userData';
+import { UserParams } from 'src/app/models/Params/userParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { map, of } from 'rxjs';

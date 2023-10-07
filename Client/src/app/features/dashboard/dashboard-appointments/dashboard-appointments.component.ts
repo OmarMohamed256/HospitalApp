@@ -3,7 +3,7 @@ import { AppointmentTypeList } from 'src/app/constants/appointmentTypes';
 import { AppointmentService } from 'src/app/core/services/appointment.service';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { Appointment } from 'src/app/models/appointment';
-import { AppointmentParams } from 'src/app/models/appointmentParams';
+import { AppointmentParams } from 'src/app/models/Params/appointmentParams';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
 

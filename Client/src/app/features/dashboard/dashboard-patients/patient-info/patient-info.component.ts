@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { GenderList } from 'src/app/constants/genders';
 import { UserService } from 'src/app/core/services/user.service';
-import { UserData } from 'src/app/models/userData';
+import { UserData } from 'src/app/models/UserModels/userData';
 
 @Component({
   selector: 'app-patient-info',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RoomParams } from 'src/app/models/roomParams';
+import { RoomParams } from 'src/app/models/Params/roomParams';
 import { environment } from 'src/environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { map, of } from 'rxjs';

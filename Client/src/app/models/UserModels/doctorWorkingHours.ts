@@ -1,4 +1,4 @@
-import { TimeSpan } from "./timeSpan";
+import { TimeSpan } from "../timeSpan";
 
 export interface DoctorWorkingHours {
     doctorId: number;

@@ -1,5 +1,5 @@
 import { Speciality } from "./speciality";
-import { UserData } from "./userData";
+import { UserData } from "./UserModels/userData";
 
 export interface Appointment {
     id?:                      number;

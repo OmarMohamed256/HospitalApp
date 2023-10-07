@@ -3,11 +3,11 @@ import { ToastrService } from 'ngx-toastr';
 import { ROLES } from 'src/app/constants/roles';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { UserService } from 'src/app/core/services/user.service';
-import { CreateUser } from 'src/app/models/createUser';
+import { CreateUser } from 'src/app/models/UserModels/createUser';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
-import { UserData } from 'src/app/models/userData';
-import { UserParams } from 'src/app/models/userParams';
+import { UserData } from 'src/app/models/UserModels/userData';
+import { UserParams } from 'src/app/models/Params/userParams';
 @Component({
   selector: 'app-dashboard-doctors',
   templateUrl: './dashboard-doctors.component.html',

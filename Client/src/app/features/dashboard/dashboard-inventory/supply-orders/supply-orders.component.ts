@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SupplyOrderService } from 'src/app/core/services/supply-order.service';
 import { Pagination } from 'src/app/models/pagination';
 import { SupplyOrder } from 'src/app/models/supplyOrder';
-import { SupplyOrderParams } from 'src/app/models/supplyOrderParams';
+import { SupplyOrderParams } from 'src/app/models/Params/supplyOrderParams';
 
 @Component({
   selector: 'app-supply-orders',

@@ -1,5 +1,5 @@
 import { ResolveFn } from "@angular/router";
-import { UserData } from "src/app/models/userData";
+import { UserData } from "src/app/models/UserModels/userData";
 import { UserService } from "../services/user.service";
 import { inject } from "@angular/core";
 

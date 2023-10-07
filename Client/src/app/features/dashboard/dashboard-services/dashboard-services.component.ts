@@ -6,7 +6,7 @@ import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { iconSubset } from 'src/app/icons/icon-subset';
 import { Pagination } from 'src/app/models/pagination';
 import { Service } from 'src/app/models/service';
-import { ServiceParams } from 'src/app/models/serviceParams';
+import { ServiceParams } from 'src/app/models/Params/serviceParams';
 import { Speciality } from 'src/app/models/speciality';
 import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
 import { FormArray } from '@angular/forms';

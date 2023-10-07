@@ -3,10 +3,10 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, V
 import { GenderList } from 'src/app/constants/genders';
 import { ROLES_ARRAY } from 'src/app/constants/roles';
 import { AdminService } from 'src/app/core/services/admin.service';
-import { CreateUser } from 'src/app/models/createUser';
+import { CreateUser } from 'src/app/models/UserModels/createUser';
 import { Speciality } from 'src/app/models/speciality';
 import { TimeSpan } from 'src/app/models/timeSpan';
-import { UserData } from 'src/app/models/userData';
+import { UserData } from 'src/app/models/UserModels/userData';
 interface Interval {
   displayValue: string;
   timeSpanValue: string;

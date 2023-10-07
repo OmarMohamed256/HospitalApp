@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ROLES_ARRAY } from 'src/app/constants/roles';
 import { UserService } from 'src/app/core/services/user.service';
 import { Pagination } from 'src/app/models/pagination';
-import { UserData } from 'src/app/models/userData';
-import { UserParams } from 'src/app/models/userParams';
+import { UserData } from 'src/app/models/UserModels/userData';
+import { UserParams } from 'src/app/models/Params/userParams';
 
 @Component({
   selector: 'app-dashboard-users',

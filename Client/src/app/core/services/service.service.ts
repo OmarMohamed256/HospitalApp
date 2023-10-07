@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
-import { ServiceParams } from 'src/app/models/serviceParams';
+import { ServiceParams } from 'src/app/models/Params/serviceParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { Service } from 'src/app/models/service';

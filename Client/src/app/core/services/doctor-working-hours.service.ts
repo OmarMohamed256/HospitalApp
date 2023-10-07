@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DoctorWorkingHours } from 'src/app/models/doctorWorkingHours';
+import { DoctorWorkingHours } from 'src/app/models/UserModels/doctorWorkingHours';
 import { environment } from 'src/environments/environment.development';
 
 @Injectable({

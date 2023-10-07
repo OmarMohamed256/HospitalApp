@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
-import { AppointmentParams } from 'src/app/models/appointmentParams';
+import { AppointmentParams } from 'src/app/models/Params/appointmentParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { Appointment } from 'src/app/models/appointment';
