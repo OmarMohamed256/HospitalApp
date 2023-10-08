@@ -4,8 +4,11 @@ using API.Models.DTOS;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
+using API.SignalR;
 using AutoMapper;
+using HospitalApp.SignalR;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Services.Implementations
 {
@@ -16,15 +19,18 @@ namespace API.Services.Implementations
         private readonly ISupplyOrderRepository _supplyOrderRepository;
         private readonly IAppoinmentRepository _appoinmentRepository;
         private readonly IMapper _mapper;
+        private readonly IHubContext<AppointmentHub, INotificationHub> _appointmentNotification;
+
         public InvoiceService(IInvoiceRepository invoiceRepository,
             IDoctorServiceRepository doctorServiceRepository, ISupplyOrderRepository supplyOrderRepository,
-            IMapper mapper, IAppoinmentRepository appoinmentRepository)
+            IMapper mapper, IAppoinmentRepository appoinmentRepository, IHubContext<AppointmentHub, INotificationHub> appointmentNotification)
         {
             _invoiceRepository = invoiceRepository;
             _doctorServiceRepository = doctorServiceRepository;
             _supplyOrderRepository = supplyOrderRepository;
             _appoinmentRepository = appoinmentRepository;
             _mapper = mapper;
+            _appointmentNotification = appointmentNotification;
         }
         public async Task<InvoiceDto> CreateInvoiceAsync(CreateInvoiceDto invoiceDto)
         {
@@ -46,7 +52,6 @@ namespace API.Services.Implementations
                     await UpdateInvoiceTotalsAsync(invoice);
 
                     FinalizeAppointment(invoiceDto.AppointmentId);
-
                     scope.Complete();
                     return _mapper.Map<InvoiceDto>(invoice);
                 }
@@ -173,16 +178,22 @@ namespace API.Services.Implementations
             var saveInvoiceResult = await _invoiceRepository.SaveAllAsync();
             if (!saveInvoiceResult) throw new Exception("Failed to save Invoice");
         }
-        private void FinalizeAppointment(int appointmentId)
+        private async void FinalizeAppointment(int appointmentId)
         {
             var updatedRecords = _appoinmentRepository.UpdateAppointmentStatus(appointmentId, "finalized");
             if (updatedRecords <= 0) throw new Exception("Failed to update Appointment status");
+            await SendAppointmentFinalized(appointmentId);
         }
 
         public async Task<InvoiceDto> GetInvoiceByIdAsync(int invoiceId)
         {
             var invoice = await _invoiceRepository.GetInvoiceByIdAsync(invoiceId) ?? throw new Exception("invoice does not exist");
             return _mapper.Map<InvoiceDto>(invoice);
+        }
+
+        public async Task SendAppointmentFinalized(int appointmentId)
+        {
+            await _appointmentNotification.Clients.All.SendAppointmentFinalized(appointmentId);
         }
     }
 }

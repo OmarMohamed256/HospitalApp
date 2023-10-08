@@ -11,7 +11,6 @@ namespace API.Controllers
     {
 
         private readonly ISpecialityService _specialityService;
-
         public SpecialityController(ISpecialityService specialityService)
         {
             _specialityService = specialityService;
@@ -19,7 +18,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SpecialityDto>>> GetSpecialitesAsync()
         {
-            var specialites = await _specialityService.GetAllSpecialitiesAsync();
+            var specialites = await _specialityService.GetAllSpecialitiesAsync();            
             return Ok(specialites);
         }
         [HttpPost]

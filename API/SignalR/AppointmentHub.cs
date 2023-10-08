@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace HospitalApp.SignalR
 {
-    public class AppointmentHub : Hub<IAppointmentHub>
+    public class AppointmentHub : Hub<INotificationHub>
     {
        
     }

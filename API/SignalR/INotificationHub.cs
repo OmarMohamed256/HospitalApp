@@ -1,7 +1,7 @@
 
 namespace API.SignalR
 {
-    public interface IAppointmentHub
+    public interface INotificationHub
     {
         public Task SendAppointmentFinalized(int appointmentId);
     }
