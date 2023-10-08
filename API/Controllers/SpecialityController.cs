@@ -11,18 +11,15 @@ namespace API.Controllers
     {
 
         private readonly ISpecialityService _specialityService;
-        private readonly IHubContext<AppointmentHub, IAppointmentHub> _appointmentNotification;
 
-        public SpecialityController(ISpecialityService specialityService, IHubContext<AppointmentHub, IAppointmentHub> appointmentNotification)
+        public SpecialityController(ISpecialityService specialityService)
         {
             _specialityService = specialityService;
-            _appointmentNotification = appointmentNotification;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SpecialityDto>>> GetSpecialitesAsync()
         {
             var specialites = await _specialityService.GetAllSpecialitiesAsync();
-            await _appointmentNotification.Clients.All.SendAppointmentFinalized(5);
             return Ok(specialites);
         }
         [HttpPost]

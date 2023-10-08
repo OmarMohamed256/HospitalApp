@@ -20,7 +20,8 @@ import {
   cilGroup,
   cilHospital,
   cilCalendar,
-  cilViewColumn
+  cilViewColumn,
+  cilDoor
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -45,7 +46,8 @@ export const iconSubset = {
   cilGroup,
   cilHospital,
   cilCalendar,
-  cilViewColumn
+  cilViewColumn,
+  cilDoor
 };
 
 export enum IconSubset {
@@ -70,5 +72,6 @@ export enum IconSubset {
   cilGroup = 'cilGroup',
   cilHospital = 'cilHospital',
   cilCalendar = 'cilCalendar',
-  cilViewColumn = 'cilViewColumn'
+  cilViewColumn = 'cilViewColumn',
+  cilDoor = 'cilDoor'
 }

@@ -1,19 +1,23 @@
-<c-nav variant="tabs">
-    <c-nav-item>
-        <a [active]="true" [cTabContent]="tabContent" [tabPaneIdx]="0" cNavLink>
-            Time Table
-        </a>
-    </c-nav-item>
-    <c-nav-item>
-        <a [cTabContent]="tabContent" [tabPaneIdx]="1" cNavLink>
-            Rooms
-        </a>
-    </c-nav-item>
-</c-nav>
-<c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
-    <c-tab-pane class="p-3">
-    </c-tab-pane>
-    <c-tab-pane class="p-3">
-        <app-rooms *ngIf="activePane == 1" ></app-rooms>
-    </c-tab-pane>
-</c-tab-content>
+<c-navbar colorScheme="dark" expand="lg" class="bg-dark">
+  <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+
+    <input type="date" class="form-control" (change)="filterByDate($event)">
+
+  </div>
+</c-navbar>
+
+<c-row>
+  <c-col [sm]="4" *ngFor="let room of rooms">
+    <c-card class="mb-4">
+      <c-card-body class="text-center">
+        <h5 cCardTitle>Room Number: {{room.roomNumber}}</h5>
+        <h5 cCardTitle>Doctor Name: {{room.doctor.fullName}}</h5>
+        <c-alert [color]="getColor(appointment.status)" class="text-start d-flex flex-row justify-content-between" *ngFor="let appointment of room.doctor.appointments">
+          <p>Code: {{appointment.id}}</p>
+          <p>{{appointment.dateOfVisit | date: 'short'}}</p>
+          <p>{{appointment.status | uppercase}}</p>
+        </c-alert>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RoomService } from 'src/app/core/services/room.service';
-import { Room } from 'src/app/models/room';
 import { RoomParams } from 'src/app/models/Params/roomParams';
+import { Room } from 'src/app/models/RoomModels/room';
 
 @Component({
-  selector: 'app-rooms',
-  templateUrl: './rooms.component.html',
-  styleUrls: ['./rooms.component.scss']
+  selector: 'app-dashboard-rooms',
+  templateUrl: './dashboard-rooms.component.html',
+  styleUrls: ['./dashboard-rooms.component.scss']
 })
-export class RoomsComponent implements OnInit{
+export class DashboardRoomsComponent {
   rooms: Room[] = [];
   roomParams: RoomParams = {
     pageNumber: 1,
-    pageSize: 15
+    pageSize: 15,
+    includeUpcomingAppointments: false
   }
   constructor(private roomService: RoomService) {
   }
@@ -24,5 +25,4 @@ export class RoomsComponent implements OnInit{
       this.rooms = response.result;
     })
   }
-
 }

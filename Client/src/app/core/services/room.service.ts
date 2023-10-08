@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { map, of } from 'rxjs';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
-import { Room } from 'src/app/models/room';
+import { Room } from 'src/app/models/RoomModels/room';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,7 @@ export class RoomService {
   roomParams: RoomParams = {
     pageNumber: 1,
     pageSize: 15,
+    includeUpcomingAppointments: false
   };
   roomCache = new Map();
 
@@ -25,6 +26,8 @@ export class RoomService {
       return of(response);
     }
     let params = getPaginationHeaders(roomParams.pageNumber, roomParams.pageSize);
+    params = params.append('includeUpcomingAppointments', roomParams.includeUpcomingAppointments);
+
     return getPaginatedResult<Room[]>(this.baseUrl + 'room/', params, this.http)
       .pipe(map(response => {
         this.roomCache.set(Object.values(roomParams).join("-"), response);

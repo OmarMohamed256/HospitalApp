@@ -55,6 +55,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/dashboard/dashboard-timetable/dashboard-timetable.module').then((m) => m.DashboardTimeTableModule)
       },
+      {
+        path: 'rooms',
+        loadChildren: () =>
+          import('./features/dashboard/dashboard-rooms/dashboard-rooms.module').then((m) => m.DashboardRoomsModule)
+      },
     ]
   },
   {

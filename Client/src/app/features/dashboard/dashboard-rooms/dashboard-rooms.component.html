@@ -1,0 +1,16 @@
+<table cTable *ngIf="rooms && rooms.length > 0">
+    <thead>
+        <tr>
+            <th scope="col">Room Number</th>
+            <th scope="col">Room Speciality Id</th>
+            <th scope="col">Doctor Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let room of rooms" class="user-table">
+            <td>{{room.roomNumber}}</td>
+            <td>{{room.roomSpecialityId}}</td>
+            <td>{{room.doctor.fullName }}</td>
+        </tr>
+    </tbody>
+</table>
