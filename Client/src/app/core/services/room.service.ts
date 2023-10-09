@@ -15,7 +15,8 @@ export class RoomService {
     pageNumber: 1,
     pageSize: 15,
     includeUpcomingAppointments: false,
-    AppointmentDateOfVisit: undefined
+    appointmentDateOfVisit: undefined,
+    roomSpecialityId: null
   };
   roomCache = new Map();
 
@@ -28,9 +29,10 @@ export class RoomService {
     }
     let params = getPaginationHeaders(roomParams.pageNumber, roomParams.pageSize);
     params = params.append('includeUpcomingAppointments', roomParams.includeUpcomingAppointments);
-    if(roomParams.AppointmentDateOfVisit)
-      params = params.append('AppointmentDateOfVisit', roomParams.AppointmentDateOfVisit);
-
+    if(roomParams.appointmentDateOfVisit)
+      params = params.append('appointmentDateOfVisit', roomParams.appointmentDateOfVisit);
+    if(roomParams.roomSpecialityId)
+      params = params.append('roomSpecialityId', roomParams.roomSpecialityId);
     return getPaginatedResult<Room[]>(this.baseUrl + 'room/', params, this.http)
       .pipe(map(response => {
         this.roomCache.set(Object.values(roomParams).join("-"), response);
@@ -41,5 +43,13 @@ export class RoomService {
   resetParams() {
     this.roomParams = new RoomParams();
     return this.roomParams;
+  }
+
+  createRoom(room: Room) {
+    return this.http.post<Room>(this.baseUrl + 'room', room);
+  }
+  
+  updateRoom(room: Room) {
+    return this.http.put<Room>(this.baseUrl + 'room', room);
   }
 }

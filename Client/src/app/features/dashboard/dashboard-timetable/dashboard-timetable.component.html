@@ -11,9 +11,9 @@
     <c-card class="mb-4">
       <c-card-body class="text-center">
         <h5 cCardTitle>Room Number: {{room.roomNumber}}</h5>
-        <h5 cCardTitle>Doctor Name: {{room.doctor.fullName}}</h5>
+        <h5 cCardTitle>Doctor Name: {{room.doctor?.fullName}}</h5>
         <c-alert [color]="getColor(appointment.status)" class="text-start d-flex flex-row justify-content-between"
-          *ngFor="let appointment of room.doctor.appointments">
+          *ngFor="let appointment of room.doctor?.appointments">
           <p>Code: {{appointment.id}}</p>
           <p>{{appointment.dateOfVisit | date: 'short'}}</p>
           <p>{{appointment.status | uppercase}}</p>

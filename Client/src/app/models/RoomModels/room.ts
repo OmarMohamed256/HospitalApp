@@ -5,5 +5,5 @@ export interface Room {
     roomNumber:       string;
     roomSpecialityId: number;
     doctorId:         number;
-    doctor:           RoomDoctor;
+    doctor?:           RoomDoctor;
 }

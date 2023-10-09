@@ -14,7 +14,8 @@ export class DashboardTimetableComponent {
   roomParams: RoomParams = {
     pageNumber: 1,
     pageSize: 15,
-    includeUpcomingAppointments: true
+    includeUpcomingAppointments: true,
+    roomSpecialityId: null
   }
   constructor(private roomService: RoomService, private signalr: SignalrService) {
   }
@@ -59,7 +60,7 @@ export class DashboardTimetableComponent {
   }
 
   filterByDate(event: any) {
-    this.roomParams.AppointmentDateOfVisit = event.target.value;
+    this.roomParams.appointmentDateOfVisit = event.target.value;
     this.getRooms();
   }
 

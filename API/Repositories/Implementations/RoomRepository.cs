@@ -46,6 +46,8 @@ namespace API.Repositories.Implementations
                     .Include(r => r.Doctor)
                     .AsQueryable();
             }
+            if(roomParams.RoomSpecialityId != null)
+                query = query.Where(u => u.RoomSpecialityId == roomParams.RoomSpecialityId);
 
             return await PagedList<Room>.CreateAsync(query, roomParams.PageNumber, roomParams.PageSize);
         }
