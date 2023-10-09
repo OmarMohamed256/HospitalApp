@@ -35,5 +35,12 @@ namespace API.Controllers
             var newRoom = await _roomService.CreateUpdateRoom(room);
             return Ok(newRoom);
         }
+        [HttpDelete("{roomId}")]
+        public async Task<ActionResult> DeleteRoomAsync(int roomId)
+        {
+            var result = await _roomService.DeleteRoom(roomId);
+            if (result) return Ok();
+            else return BadRequest("Failed deleting room");
+        }
     }
 }

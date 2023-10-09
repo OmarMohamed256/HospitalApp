@@ -52,4 +52,8 @@ export class RoomService {
   updateRoom(room: Room) {
     return this.http.put<Room>(this.baseUrl + 'room', room);
   }
+
+  deleteRoom(roomId: number) {
+    return this.http.delete(this.baseUrl + 'room/' + roomId);
+  }
 }

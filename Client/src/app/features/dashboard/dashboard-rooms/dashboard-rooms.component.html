@@ -20,6 +20,7 @@
             <th scope="col">Room Number</th>
             <th scope="col">Room Speciality</th>
             <th scope="col">Doctor Name</th>
+            <th scope="col">Remove</th>
         </tr>
     </thead>
     <tbody>
@@ -27,6 +28,8 @@
             <td>{{room.roomNumber}}</td>
             <td>{{getSpecialityNameById(room.roomSpecialityId)}}</td>
             <td>{{room.doctor?.fullName }}</td>
+            <td class="pt-1"><button cButton color="danger" class="btn-m" (click)="deleteRoom(room.id, $event)"><svg cIcon
+                name="cil-trash"></svg></button></td>
         </tr>
     </tbody>
 </table>

@@ -8,6 +8,7 @@ import { Speciality } from 'src/app/models/speciality';
 import { RoomsModalComponent } from './rooms-modal/rooms-modal.component';
 import { RoomDoctor } from 'src/app/models/RoomModels/roomDoctor';
 import { UserData } from 'src/app/models/UserModels/userData';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard-rooms',
@@ -27,7 +28,7 @@ export class DashboardRoomsComponent {
   pagination: Pagination | null = null;
   @ViewChild(RoomsModalComponent) roomsModal!: RoomsModalComponent;
 
-  constructor(private roomService: RoomService, private specialityService: SpecialityService) {
+  constructor(private roomService: RoomService, private specialityService: SpecialityService, private toastr: ToastrService) {
   }
   ngOnInit(): void {
     this.getRooms();
@@ -92,5 +93,18 @@ export class DashboardRoomsComponent {
     this.roomsModal.createUpdateRoomForm.get("doctorId")?.setValue(doctorId);
     this.roomsModal.createUpdateRoomForm.get("roomNumber")?.setValue(room.roomNumber);
     this.roomsModal.createUpdateRoomForm.get("roomSpecialityId")?.setValue(room.roomSpecialityId);
+  }
+  deleteRoom(roomId: number, event: Event) {
+    event.stopPropagation();
+    this.roomService.deleteRoom(roomId).subscribe({
+      next: (response) => {
+        this.rooms = this.rooms?.filter(room => room.id !== roomId)!;
+        this.toastr.success("Room deleted successfully")
+      },
+      error: (err) => {
+        console.error(err);
+        // Handle errors here
+      }
+    });
   }
 }
