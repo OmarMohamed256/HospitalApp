@@ -33,7 +33,7 @@ namespace API.Repositories.Implementations
                 query = _context.Rooms
                     .Include(r => r.Doctor)
                         .ThenInclude(a => a.BookedWithAppointments
-                            .Where(a => a.DateOfVisit > DateTime.Now
+                            .Where(a => a.DateOfVisit > DateTime.Today
                                 && (roomParams.AppointmentDateOfVisit == DateTime.MinValue
                                     || EF.Functions.DateDiffDay(a.DateOfVisit, roomParams.AppointmentDateOfVisit) == 0))
                             .OrderBy(a => a.DateOfVisit))

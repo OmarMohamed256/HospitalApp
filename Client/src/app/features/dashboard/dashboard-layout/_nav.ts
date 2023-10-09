@@ -18,8 +18,7 @@ export const navItems: IRoleNavData[] = [
   {
     name: 'Appointments',
     url: '/appointments',
-    iconComponent: { name: 'cil-calendar' },
-    roles: [ROLES.ADMIN, ROLES.RECEPTIONIST]
+    iconComponent: { name: 'cil-calendar' }
   },
   {
     name: 'Patients',

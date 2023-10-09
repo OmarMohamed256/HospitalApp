@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr"
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment.development';
@@ -9,14 +9,14 @@ import { environment } from 'src/environments/environment.development';
 export class SignalrService {
   private hubConnection!: signalR.HubConnection;
   baseUrl = environment.baseUrl;
+  appointmentFinalized = new EventEmitter<any>();
 
   constructor(private toastr: ToastrService) { }
   
   public startConnection = () => {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.baseUrl + 'hubs/appointment', {
-        skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets
+        transport: signalR.HttpTransportType.ServerSentEvents
       })
       .build();
     this.hubConnection
@@ -27,11 +27,13 @@ export class SignalrService {
 
   public addAppointmentListner = () => {
     this.hubConnection.on('SendAppointmentFinalized', (response: any) => {
-      this.showNotification(response);
+      this.appointmentFinalized.emit(response);
+      this.showAppointmentStatusChanged(response.appointmentId, response.status)
     });
   }
 
-  showNotification(response: any) {
-    this.toastr.warning(response);
+  showAppointmentStatusChanged(appointmentId: number, status: string) {
+    this.toastr.success(`Appointment with id ${appointmentId} changed status to ${status}`)
   }
+
 }

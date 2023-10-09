@@ -5,6 +5,5 @@ namespace HospitalApp.SignalR
 {
     public class AppointmentHub : Hub<INotificationHub>
     {
-       
     }
 }

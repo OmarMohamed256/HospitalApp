@@ -7,7 +7,6 @@ using API.Services.Interfaces;
 using API.SignalR;
 using AutoMapper;
 using HospitalApp.SignalR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.SignalR;
 
 namespace API.Services.Implementations
@@ -193,7 +192,7 @@ namespace API.Services.Implementations
 
         public async Task SendAppointmentFinalized(int appointmentId)
         {
-            await _appointmentNotification.Clients.All.SendAppointmentFinalized(appointmentId);
+            await _appointmentNotification.Clients.All.SendAppointmentFinalized(new AppointmentStatus{AppointmentId = appointmentId});
         }
     }
 }

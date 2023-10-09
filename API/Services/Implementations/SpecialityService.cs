@@ -12,8 +12,8 @@ namespace API.Services.Implementations
     {
         private readonly ISpecialityRepository _specialityRepository;
         private readonly IMapper _mapper;
-
-        public SpecialityService(ISpecialityRepository specialityRepository, IMapper mapper)
+        public SpecialityService(ISpecialityRepository specialityRepository,
+        IMapper mapper)
         {
             _specialityRepository = specialityRepository;
             _mapper = mapper;
