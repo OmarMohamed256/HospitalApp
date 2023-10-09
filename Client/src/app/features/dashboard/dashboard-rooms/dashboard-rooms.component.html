@@ -10,7 +10,7 @@
                 {{ speciality.name }}
             </option>
         </select>
-        <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+        <button cButton color="light" (click)="resetFiltersAndGetRooms()">Reset Filters</button>
 
     </div>
 </c-navbar>
@@ -23,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let room of rooms" class="user-table">
+        <tr *ngFor="let room of rooms" class="user-table" (click)="setRoomAndShowModal(room)">
             <td>{{room.roomNumber}}</td>
             <td>{{getSpecialityNameById(room.roomSpecialityId)}}</td>
             <td>{{room.doctor?.fullName }}</td>
@@ -34,4 +34,4 @@
     <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
         [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
 </div>
-<app-rooms-modal [(visible)]="modalVisibility"></app-rooms-modal>
+<app-rooms-modal (roomAddedUpdated)="roomAddedUpdated($event)" [specialityList]="specialityList" [(visible)]="modalVisibility"></app-rooms-modal>

@@ -52,10 +52,19 @@ namespace API.Repositories.Implementations
             return await PagedList<Room>.CreateAsync(query, roomParams.PageNumber, roomParams.PageSize);
         }
 
+        public async Task<Room> GetRoomByDoctorId(int doctorId)
+        {
+            return await _context.Rooms
+                .Where(r => r.DoctorId == doctorId)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<Room> GetRoomById(int roomId)
         {
             return await _context.Rooms
                 .Where(r => r.Id == roomId)
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
         }
 

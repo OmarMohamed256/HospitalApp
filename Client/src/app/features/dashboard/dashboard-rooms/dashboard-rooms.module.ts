@@ -6,6 +6,7 @@ import { CommonSharedModule } from "src/app/shared/common-shared.module";
 import { DashboardRoomsComponent } from "./dashboard-rooms.component";
 import { DashboardRoomsRoutingModule } from "./dashboard-rooms-routing.module";
 import { RoomsModalComponent } from './rooms-modal/rooms-modal.component';
+import { NgSelectModule } from "@ng-select/ng-select";
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { RoomsModalComponent } from './rooms-modal/rooms-modal.component';
     CommonSharedModule,
     SharedModule,
     ModalModule,
-    AlertModule
+    AlertModule,
+    NgSelectModule
     ],
   declarations: [DashboardRoomsComponent, RoomsModalComponent]
 })

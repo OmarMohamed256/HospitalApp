@@ -17,17 +17,28 @@ namespace API.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<CreateRoomDto> CreateUpdateRoom(CreateRoomDto room)
+        public async Task<RoomDto> CreateUpdateRoom(CreateRoomDto room)
         {
             var newRoom = _mapper.Map<Room>(room);
+            // catch if there is no duplicate records with same doctor id
+            if (newRoom.DoctorId.HasValue)
+            {
+                var existingRoom = await _roomRepository.GetRoomByDoctorId(newRoom.DoctorId.Value);
+                if (existingRoom != null && existingRoom.Id != newRoom.Id)
+                {
+                    throw new Exception("A room with the same doctor already exists!");
+                }
+            }
             var oldRoom = await _roomRepository.GetRoomById(room.Id);
+
             if (oldRoom == null)
                 _roomRepository.AddRoom(newRoom);
             else
                 _roomRepository.UpdateRoom(newRoom);
+
             var result = await _roomRepository.SaveAllAsync();
             if (!result) throw new Exception("Failed to add/update room");
-            return _mapper.Map<CreateRoomDto>(newRoom);
+            return _mapper.Map<RoomDto>(newRoom);
         }
 
         public async Task<bool> DeleteRoom(int roomId)

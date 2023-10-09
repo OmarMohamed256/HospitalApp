@@ -152,9 +152,9 @@ namespace Hospital.Data
                 .WithMany(s => s.InventoryItems)
                 .HasForeignKey(ii => ii.InventoryItemSpecialityId);
 
-            modelBuilder.Entity<AppUser>()
-                .HasOne(a => a.AssignedRoom)
-                .WithOne(r => r.Doctor)
+            modelBuilder.Entity<Room>()
+                .HasOne(r => r.Doctor)
+                .WithOne()
                 .HasForeignKey<Room>(r => r.DoctorId);
 
             modelBuilder.Entity<Room>()

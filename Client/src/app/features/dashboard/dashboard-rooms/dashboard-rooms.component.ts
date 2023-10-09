@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { RoomService } from 'src/app/core/services/room.service';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { RoomParams } from 'src/app/models/Params/roomParams';
 import { Room } from 'src/app/models/RoomModels/room';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
+import { RoomsModalComponent } from './rooms-modal/rooms-modal.component';
+import { RoomDoctor } from 'src/app/models/RoomModels/roomDoctor';
+import { UserData } from 'src/app/models/UserModels/userData';
 
 @Component({
   selector: 'app-dashboard-rooms',
@@ -22,6 +25,7 @@ export class DashboardRoomsComponent {
   modalVisibility: boolean = false;
   specialityList: Speciality[] = [];
   pagination: Pagination | null = null;
+  @ViewChild(RoomsModalComponent) roomsModal!: RoomsModalComponent;
 
   constructor(private roomService: RoomService, private specialityService: SpecialityService) {
   }
@@ -32,7 +36,8 @@ export class DashboardRoomsComponent {
   getRooms() {
     this.roomService.getRooms(this.roomParams).subscribe(response => {
       this.rooms = response.result;
-      this.pagination = response.pagination    })
+      this.pagination = response.pagination
+    })
   }
   toggleModal() {
     this.modalVisibility = !this.modalVisibility
@@ -42,9 +47,14 @@ export class DashboardRoomsComponent {
       this.specialityList = response;
     })
   }
+
+  resetFiltersAndGetRooms() {
+    this.resetFilters();
+    this.getRooms();
+  }
+
   resetFilters() {
     this.roomParams = this.roomService.resetParams();
-    this.getRooms();
   }
   getSpecialityNameById(id: number): string {
     const speciality = this.specialityList.find(item => item.id === id);
@@ -53,5 +63,34 @@ export class DashboardRoomsComponent {
   pageChanged(event: number) {
     this.roomParams.pageNumber = event;
     this.getRooms();
+  }
+
+  roomAddedUpdated(room: Room) {
+    this.resetFiltersAndGetRooms();
+  }
+
+  setRoomAndShowModal(room: Room) {
+    this.mapRoomDoctorToUserData(room);
+    this.mapRoomTocreateUpdateRoomForm(room);
+    this.toggleModal();
+  }
+
+  mapRoomDoctorToUserData(room: Room) {
+    const newUserData: Partial<UserData> = {
+      id: room.doctor?.id.toString(),
+      fullName: room.doctor?.fullName,
+    };
+    // Check if doctorList already contains the doctor
+    if (!this.roomsModal.doctorList.find(doctor => doctor.id === newUserData.id)) {
+      this.roomsModal.doctorList = [newUserData];
+    }
+  }
+
+  mapRoomTocreateUpdateRoomForm(room: Room) {
+    this.roomsModal.createUpdateRoomForm.get("id")?.setValue(room.id);
+    const doctorId = room.doctorId ? room.doctorId.toString() : "0";
+    this.roomsModal.createUpdateRoomForm.get("doctorId")?.setValue(doctorId);
+    this.roomsModal.createUpdateRoomForm.get("roomNumber")?.setValue(room.roomNumber);
+    this.roomsModal.createUpdateRoomForm.get("roomSpecialityId")?.setValue(room.roomSpecialityId);
   }
 }

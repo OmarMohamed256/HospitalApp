@@ -11,25 +11,40 @@
     <button [cModalToggle]="scrollableLongContentModal.id" cButton color="secondary">
       Close
     </button>
-    <button cButton color="primary">Save changes</button>
+    <button cButton (click)="createUpdateRoom()" color="primary">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
 <ng-template #longContent>
-    <form [formGroup]="createUpdateRoomForm" cForm (ngSubmit)="createUpdateRoomForm.valid" autocomplete="off">
-        <div class="row">
-            <div class="col">
-              <div class="mb-3">
-                <label cLabel>Room Number</label>
-                <app-text-input icon="cilUser" formControlName="roomNumber" [label]='"Room Number"'></app-text-input>
-              </div>
-            </div>
-            <div class="col">
-                <div class="mb-3">
-                  <label cLabel>Room Number</label>
-                  <app-text-input icon="cilUser" formControlName="roomNumber" [label]='"Room Number"'></app-text-input>
-                </div>
-              </div>
-          </div>
-    </form>
+  <form [formGroup]="createUpdateRoomForm" cForm (ngSubmit)="createUpdateRoomForm.valid" autocomplete="off">
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Room Number</label>
+          <app-text-input icon="cilUser" formControlName="roomNumber" [label]='"Room Number"'></app-text-input>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Speciality</label>
+          <select name="roomSpecialityId" aria-label="roomSpecialityId" cSelect formControlName="roomSpecialityId" (change)="resetDoctorList()">
+            <option [value]="0" disabled selected>Select speciality</option>
+            <option *ngFor="let service of specialityList" [value]="service.id">
+              {{service.name}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col" *ngIf="createUpdateRoomForm.get('roomSpecialityId')?.value != ''">
+        <div class="mb-3">
+          <label cLabel>Doctor</label>
+          <ng-select [items]="doctorList" (search)="searchDoctors($event)" [virtualScroll]="true"
+          [bindLabel]="'fullName'" [bindValue]="'id'"[multiple]="false" formControlName="doctorId">
+        </ng-select>
+        </div>
+      </div>
+    </div>
+  </form>
 </ng-template>
