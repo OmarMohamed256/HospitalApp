@@ -41,12 +41,11 @@ namespace API.Services.Implementations
             return _mapper.Map<RoomDto>(newRoom);
         }
 
-        public async Task<bool> DeleteRoom(int roomId)
+        public async Task DeleteRoom(int roomId)
         {
             var room = await _roomRepository.GetRoomById(roomId) ?? throw new Exception("Room not found");
             _roomRepository.DeleteRoom(room);
-            var deleteResult = await _roomRepository.SaveAllAsync();
-            return deleteResult;
+            if(!await _roomRepository.SaveAllAsync()) throw new Exception("Can not delete room");
         }
 
         public async Task<PagedList<RoomDto>> GetAllRoomsAsync(RoomParams roomParams)

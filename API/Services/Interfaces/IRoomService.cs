@@ -9,6 +9,6 @@ namespace API.Services.Interfaces
         Task<RoomDto> CreateUpdateRoom(CreateRoomDto room);
         Task<RoomDto> GetRoomByIdAsync(int roomId);
         Task<PagedList<RoomDto>> GetAllRoomsAsync(RoomParams roomParams);
-        Task<bool> DeleteRoom(int roomId);
+        Task DeleteRoom(int roomId);
     }
 }

@@ -38,9 +38,8 @@ namespace API.Controllers
         [HttpDelete("{roomId}")]
         public async Task<ActionResult> DeleteRoomAsync(int roomId)
         {
-            var result = await _roomService.DeleteRoom(roomId);
-            if (result) return Ok();
-            else return BadRequest("Failed deleting room");
+            await _roomService.DeleteRoom(roomId);
+            return NoContent();
         }
     }
 }

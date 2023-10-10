@@ -42,9 +42,18 @@ namespace API.Services.Implementations
             throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add/update appointment");
         }
 
+        public async Task DeleteAppointment(int appointmentId)
+        {
+            var appointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentId) ?? throw new Exception("Appointment not found");
+            if(appointment.Status == "finalized")
+                throw new Exception("Appointment is finalized cannot delete");
+            _appointmentRepository.DeleteAppointment(appointment);
+            if(!await _appointmentRepository.SaveAllAsync()) throw new Exception("Can not delete appointment");
+        }
+
         public async Task<AppointmentDto> GetAppointmentByIdAsync(int appointmentId)
         {
-            var appointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentId);
+            var appointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentId) ?? throw new Exception("Appointment not found");
             return _mapper.Map<AppointmentDto>(appointment);
         }
 

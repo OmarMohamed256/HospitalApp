@@ -47,7 +47,7 @@ namespace API.Controllers
             (int appointmentId)
         {
             var appointment = await _appoinmentService.GetAppointmentByIdAsync(appointmentId);
-            if(appointment == null) return BadRequest("Appointment does not exist");
+            if (appointment == null) return BadRequest("Appointment does not exist");
             return Ok(appointment);
         }
 
@@ -61,6 +61,11 @@ namespace API.Controllers
         {
             return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto);
         }
-
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAppointmentAsync(int appointmentId)
+        {
+            await _appoinmentService.DeleteAppointment(appointmentId);
+            return NoContent();
+        }
     }
 }

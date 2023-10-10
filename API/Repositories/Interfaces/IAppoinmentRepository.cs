@@ -7,6 +7,7 @@ namespace API.Repositories.Interfaces
     {
         void AddAppointment(Appointment appointment);
         void UpdateAppointment(Appointment appointment);
+        void DeleteAppointment(Appointment appointment);
         Task<PagedList<Appointment>> GetAppointmentsByPatientIdAsync(AppointmentParams appointmentParams, int patientId);
         Task<Appointment> GetAppointmentByIdAsync(int appointmentId);
         Task<List<DateTime>> GetUpcomingAppointmentsDatesByDoctorIdAsync(int doctorId);

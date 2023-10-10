@@ -23,6 +23,10 @@ namespace API.Repositories.Implementations
         {
             _context.Appointments.Update(appointment);
         }
+        public void DeleteAppointment(Appointment appointment)
+        {
+            _context.Appointments.Remove(appointment);
+        }
         public async Task<PagedList<Appointment>> GetAppointmentsAsync(AppointmentParams appointmentParams)
         {
             var query = _context.Appointments
@@ -33,7 +37,7 @@ namespace API.Repositories.Implementations
             if (appointmentParams.SpecialityId != null)
                 query = query.Where(u => u.AppointmentSpecialityId == appointmentParams.SpecialityId);
 
-            if(appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
+            if (appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
                 query = query.Where(a => EF.Functions.DateDiffDay(a.DateOfVisit, appointmentParams.AppointmentDateOfVisit) == 0);
 
             if (!string.IsNullOrEmpty(appointmentParams.Type)) query = query.Where(u => u.Type == appointmentParams.Type);
@@ -61,9 +65,9 @@ namespace API.Repositories.Implementations
             if (appointmentParams.SpecialityId != null)
                 query = query.Where(u => u.AppointmentSpecialityId == appointmentParams.SpecialityId);
 
-            if(appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
+            if (appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
                 query = query.Where(a => EF.Functions.DateDiffDay(a.DateOfVisit, appointmentParams.AppointmentDateOfVisit) == 0);
-                
+
             if (!string.IsNullOrEmpty(appointmentParams.Type)) query = query.Where(u => u.Type == appointmentParams.Type);
 
             query = (appointmentParams.OrderBy, appointmentParams.Order) switch
@@ -118,5 +122,6 @@ namespace API.Repositories.Implementations
                    b.SetProperty(u => u.Status, status)
                );
         }
+
     }
 }
