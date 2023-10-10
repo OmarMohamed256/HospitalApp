@@ -6,6 +6,6 @@ namespace API.Helpers
         public string Order { get; set; } = "desc";
         public int? SpecialityId { get; set; } = null;
         public string? Type { get; set; } = "";
-
+        public DateTime AppointmentDateOfVisit { get; set; } = DateTime.MinValue;
     }
 }

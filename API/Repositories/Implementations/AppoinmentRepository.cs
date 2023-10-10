@@ -33,6 +33,9 @@ namespace API.Repositories.Implementations
             if (appointmentParams.SpecialityId != null)
                 query = query.Where(u => u.AppointmentSpecialityId == appointmentParams.SpecialityId);
 
+            if(appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
+                query = query.Where(a => EF.Functions.DateDiffDay(a.DateOfVisit, appointmentParams.AppointmentDateOfVisit) == 0);
+
             if (!string.IsNullOrEmpty(appointmentParams.Type)) query = query.Where(u => u.Type == appointmentParams.Type);
 
             query = (appointmentParams.OrderBy, appointmentParams.Order) switch
