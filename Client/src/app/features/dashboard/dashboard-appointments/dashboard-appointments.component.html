@@ -10,6 +10,9 @@
         {{ speciality.name }}
       </option>
     </select>
+    
+    <input type="date" class="form-control" (change)="getAppointments()" [(ngModel)]="appointmentParams.appointmentDateOfVisit">
+
 
     <select name="type" *ngIf="typeList" class="w-25" aria-label="type" [(ngModel)]="appointmentParams.type" cSelect
       (change)="getAppointments()">

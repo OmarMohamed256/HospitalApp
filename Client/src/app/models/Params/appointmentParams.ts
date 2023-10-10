@@ -5,5 +5,6 @@ export class AppointmentParams extends PaginationParams {
     order = 'asc';
     specialityId = null;
     type = '';
+    appointmentDateOfVisit? = '';
   }
   

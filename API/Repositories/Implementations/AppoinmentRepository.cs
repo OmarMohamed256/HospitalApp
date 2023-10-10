@@ -61,6 +61,9 @@ namespace API.Repositories.Implementations
             if (appointmentParams.SpecialityId != null)
                 query = query.Where(u => u.AppointmentSpecialityId == appointmentParams.SpecialityId);
 
+            if(appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
+                query = query.Where(a => EF.Functions.DateDiffDay(a.DateOfVisit, appointmentParams.AppointmentDateOfVisit) == 0);
+                
             if (!string.IsNullOrEmpty(appointmentParams.Type)) query = query.Where(u => u.Type == appointmentParams.Type);
 
             query = (appointmentParams.OrderBy, appointmentParams.Order) switch
@@ -80,6 +83,7 @@ namespace API.Repositories.Implementations
         public async Task<List<DateTime>> GetUpcomingAppointmentsDatesByDoctorIdAsync(int doctorId)
         {
             var upcomingDates = await _context.Appointments
+                .AsNoTracking()
                 .Where(a => a.DoctorId == doctorId && a.DateOfVisit >= DateTime.Now)
                 .Select(a => a.DateOfVisit) // Selecting only DateOfVisit
                 .ToListAsync();
@@ -93,7 +97,9 @@ namespace API.Repositories.Implementations
 
         public async Task<Appointment> GetAppointmentsForUserByDateOfVisit(DateTime dateOfVisit)
         {
-            return await _context.Appointments.SingleOrDefaultAsync(a => a.DateOfVisit == dateOfVisit);
+            return await _context.Appointments
+            .AsNoTracking()
+            .SingleOrDefaultAsync(a => a.DateOfVisit == dateOfVisit);
         }
 
         public async Task<Appointment> GetAppointmentByIdAsync(int appointmentId)

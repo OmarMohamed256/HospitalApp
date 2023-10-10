@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AppointmentTypeList } from 'src/app/constants/appointmentTypes';
 import { ROLES } from 'src/app/constants/roles';
 import { AppointmentService } from 'src/app/core/services/appointment.service';
@@ -14,6 +14,7 @@ import { UserData } from 'src/app/models/UserModels/userData';
 import { UserParams } from 'src/app/models/Params/userParams';
 import { firstValueFrom } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-update-appointment',
@@ -57,8 +58,7 @@ export class UpdateAppointmentComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private specialityService: SpecialityService,
     private userService: UserService, private doctorWorkingHoursService: DoctorWorkingHoursService,
-    private appointmentService: AppointmentService, private route: ActivatedRoute, private datePipe: DatePipe,
-    private router: Router) {
+    private appointmentService: AppointmentService, private route: ActivatedRoute, private datePipe: DatePipe, private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -269,6 +269,7 @@ export class UpdateAppointmentComponent implements OnInit {
     this.appointmentService.updateAppointment(appointment).subscribe({
       next: (response) => {
         this.appointmentService.clearCache();
+        this.toastr.success("Appointment Updated Successfully");
       },
       error: (error) => {
         this.validationErrors = error;

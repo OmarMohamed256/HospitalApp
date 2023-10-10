@@ -41,6 +41,7 @@ export class AppointmentService {
 
     if (appointmentParams.specialityId !== null) params = params.append('specialityId', appointmentParams.specialityId);
     if (appointmentParams.type.trim() !== '') params = params.append('type', appointmentParams.type.trim());
+    if(appointmentParams.appointmentDateOfVisit) params = params.append('appointmentDateOfVisit', appointmentParams.appointmentDateOfVisit);
 
     return getPaginatedResult<Appointment[]>(this.baseUrl + 'appointment/' + userId, params, this.http)
       .pipe(map(response => {
@@ -62,6 +63,7 @@ export class AppointmentService {
 
     if (appointmentParams.specialityId !== null) params = params.append('specialityId', appointmentParams.specialityId);
     if (appointmentParams.type.trim() !== '') params = params.append('type', appointmentParams.type.trim());
+    if(appointmentParams.appointmentDateOfVisit) params = params.append('appointmentDateOfVisit', appointmentParams.appointmentDateOfVisit);
 
     return getPaginatedResult<Appointment[]>(this.baseUrl + 'appointment/all/', params, this.http)
     .pipe(map(response => {
@@ -97,6 +99,6 @@ export class AppointmentService {
   }
 
   clearCache() {
-    this.appointmentCache.clear
+    this.appointmentCache.clear();
   }
 }

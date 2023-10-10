@@ -13,6 +13,8 @@ import { UserData } from 'src/app/models/UserModels/userData';
 import { UserParams } from 'src/app/models/Params/userParams';
 import { Appointment } from 'src/app/models/appointment';
 import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-appointment',
@@ -54,7 +56,8 @@ export class AddAppointmentComponent implements OnInit  {
 
   constructor(private fb: FormBuilder, private specialityService: SpecialityService,
     private userService: UserService, private doctorWorkingHoursService: DoctorWorkingHoursService,
-    private appointmentService: AppointmentService, private datePipe: DatePipe) {
+    private appointmentService: AppointmentService, private datePipe: DatePipe, private toastr: ToastrService,
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -218,6 +221,8 @@ export class AddAppointmentComponent implements OnInit  {
     this.appointmentService.createAppointment(appointment).subscribe({
       next: (response) => {
         this.appointmentService.clearCache();
+        this.toastr.success("Appointment Added Successfully");
+        this.router.navigateByUrl("/appointments");
       },
       error: (error) => {
         this.validationErrors = error;
