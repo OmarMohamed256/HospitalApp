@@ -6,15 +6,8 @@ export const navItems: IRoleNavData[] = [
     name: 'Dashboard',
     url: '/',
     iconComponent: { name: 'cil-speedometer' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    },
   },
-  {
-    name: 'Components',
-    title: true
-  },
+
   {
     name: 'Appointments',
     url: '/appointments',

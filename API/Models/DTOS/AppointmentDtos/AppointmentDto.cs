@@ -16,6 +16,7 @@ namespace API.Models.DTOS
         public int DoctorId { get; set; }
         public int PatientId { get; set; }
         public int AppointmentSpecialityId { get; set; } // Added property for SpecialityId
+        public int? InvoiceId { get; set; }
 
         // Navigation Properties
         public UserInfoDto? Doctor { get; set; }

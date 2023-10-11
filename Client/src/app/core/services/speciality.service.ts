@@ -13,4 +13,11 @@ export class SpecialityService {
   getSpecialities() {
     return this.http.get<Speciality[]>(this.baseUrl + 'speciality/');
   }
+
+  createSpeciality(speciality: Speciality) {
+    return this.http.post<Speciality>(this.baseUrl + 'speciality/', speciality);
+  }
+  updateSpeciality(speciality: Speciality) {
+    return this.http.put<Speciality>(this.baseUrl + 'speciality/', speciality);
+  }
 }

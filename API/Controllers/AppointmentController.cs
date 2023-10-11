@@ -61,7 +61,7 @@ namespace API.Controllers
         {
             return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto);
         }
-        [HttpDelete]
+        [HttpDelete("{appointmentId}")]
         public async Task<ActionResult> DeleteAppointmentAsync(int appointmentId)
         {
             await _appoinmentService.DeleteAppointment(appointmentId);

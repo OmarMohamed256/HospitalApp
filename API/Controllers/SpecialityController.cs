@@ -27,7 +27,14 @@ namespace API.Controllers
         public async Task<ActionResult<SpecialityDto>> AddSpecialityAsync(SpecialityDto specialityDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            return await _specialityService.AddSpeciality(specialityDto);
+            return await _specialityService.AddUpdateSpeciality(specialityDto);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<SpecialityDto>> UpdateSpecialityAsync(SpecialityDto specialityDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            return await _specialityService.AddUpdateSpeciality(specialityDto);
         }
 
     }

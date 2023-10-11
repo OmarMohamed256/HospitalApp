@@ -6,6 +6,7 @@ import { Appointment } from 'src/app/models/appointment';
 import { AppointmentParams } from 'src/app/models/Params/appointmentParams';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-appointments',
@@ -27,7 +28,7 @@ export class DashboardAppointmentsComponent implements OnInit{
   typeList = AppointmentTypeList;
 
   constructor(private appointmentService: AppointmentService,
-    private specialityService: SpecialityService) {
+    private specialityService: SpecialityService, private router: Router) {
   }
   ngOnInit(): void {
     this.getAppointments();
@@ -37,6 +38,7 @@ export class DashboardAppointmentsComponent implements OnInit{
     this.appointmentService.getAppointments(this.appointmentParams).subscribe(response => {
       this.appointments = response.result;
       this.pagination = response.pagination;
+      console.log(response)
     })
   }
   pageChanged(event: number) {
@@ -65,6 +67,11 @@ export class DashboardAppointmentsComponent implements OnInit{
   resetFilters() {
     this.appointmentParams = this.appointmentService.resetParams();
     this.getAppointments();
+  }
+
+  routeAppointment(appointment: Appointment) {
+    if(appointment.status != "finalized") this.router.navigateByUrl("appointments/update/" + appointment.id);
+    else this.router.navigateByUrl("appointments/view-invoice/" + appointment.invoiceId)
   }
 
 }

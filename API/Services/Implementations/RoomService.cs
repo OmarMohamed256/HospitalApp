@@ -36,9 +36,8 @@ namespace API.Services.Implementations
             else
                 _roomRepository.UpdateRoom(newRoom);
 
-            var result = await _roomRepository.SaveAllAsync();
-            if (!result) throw new Exception("Failed to add/update room");
-            return _mapper.Map<RoomDto>(newRoom);
+            if (await _roomRepository.SaveAllAsync()) return _mapper.Map<RoomDto>(newRoom);
+            throw new Exception("Failed to add/update room");
         }
 
         public async Task DeleteRoom(int roomId)

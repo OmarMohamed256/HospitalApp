@@ -19,12 +19,17 @@ namespace API.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<SpecialityDto> AddSpeciality(SpecialityDto specialityDto)
+        public async Task<SpecialityDto> AddUpdateSpeciality(SpecialityDto specialityDto)
         {
             var speciality = _mapper.Map<Speciality>(specialityDto);
-            _specialityRepository.AddSpeciality(speciality);
-            bool addSpecialityResult = await _specialityRepository.SaveAllAsync();
-            if (addSpecialityResult) return _mapper.Map<SpecialityDto>(speciality);
+            var oldSpeciality = await _specialityRepository.GetSpecialityByIdAsync(speciality.Id);
+
+            if(oldSpeciality == null)
+                _specialityRepository.AddSpeciality(speciality);
+            else
+                _specialityRepository.UpdateSpeciality(speciality);
+            
+            if (await _specialityRepository.SaveAllAsync()) return _mapper.Map<SpecialityDto>(speciality);
             
             throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add speciality");
         }

@@ -12,6 +12,7 @@ export interface Appointment {
     doctorId:                number;
     patientId:               number;
     appointmentSpecialityId: number;
+    invoiceId?:               number;
     doctor?:                  UserData;
     patient?:                  UserData;
     speciality?:              Speciality;

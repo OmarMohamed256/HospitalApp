@@ -6,7 +6,7 @@ namespace API.Services.Interfaces
     public interface ISpecialityService
     {
         Task<IEnumerable<SpecialityDto>> GetAllSpecialitiesAsync();
-        Task<SpecialityDto> AddSpeciality(SpecialityDto specialityDto);
+        Task<SpecialityDto> AddUpdateSpeciality(SpecialityDto specialityDto);
 
     }
 }

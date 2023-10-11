@@ -114,12 +114,13 @@ namespace API.Repositories.Implementations
             .FirstOrDefaultAsync(a => a.Id == appointmentId);
         }
 
-        public int UpdateAppointmentStatus(int appointmentId, string status)
+        public int UpdateAppointmentInvoiced(int appointmentId, string status, int invoiceId)
         {
             return _context.Appointments
                .Where(u => u.Id == appointmentId)
                .ExecuteUpdate(b =>
                    b.SetProperty(u => u.Status, status)
+                   .SetProperty(u => u.InvoiceId, invoiceId)
                );
         }
 

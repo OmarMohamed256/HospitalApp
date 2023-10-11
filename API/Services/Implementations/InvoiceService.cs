@@ -50,7 +50,7 @@ namespace API.Services.Implementations
                     // Update invoice total
                     await UpdateInvoiceTotalsAsync(invoice);
 
-                    FinalizeAppointment(invoiceDto.AppointmentId);
+                    FinalizeAppointment(invoiceDto.AppointmentId, invoice.Id);
                     scope.Complete();
                     return _mapper.Map<InvoiceDto>(invoice);
                 }
@@ -177,9 +177,9 @@ namespace API.Services.Implementations
             var saveInvoiceResult = await _invoiceRepository.SaveAllAsync();
             if (!saveInvoiceResult) throw new Exception("Failed to save Invoice");
         }
-        private async void FinalizeAppointment(int appointmentId)
+        private async void FinalizeAppointment(int appointmentId, int invoiceId)
         {
-            var updatedRecords = _appoinmentRepository.UpdateAppointmentStatus(appointmentId, "finalized");
+            var updatedRecords = _appoinmentRepository.UpdateAppointmentInvoiced(appointmentId, "finalized", invoiceId);
             if (updatedRecords <= 0) throw new Exception("Failed to update Appointment status");
             await SendAppointmentFinalized(appointmentId);
         }

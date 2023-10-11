@@ -23,7 +23,6 @@ import { NgSelectModule } from "@ng-select/ng-select";
     CommonSharedModule,
     SharedModule,
     ModalModule,
-    AlertModule,
     NgSelectModule
     ],
   declarations: [DashboardRoomsComponent, RoomsModalComponent]

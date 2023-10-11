@@ -7,6 +7,7 @@ import { AppointmentDetailedResolver } from 'src/app/core/resolvers/appointment-
 import { FinalizeAppointmentComponent } from './finalize-appointment/finalize-appointment.component';
 import { InvoiceAppointmentComponent } from './invoice-appointment/invoice-appointment.component';
 import { InvoiceDetailedResolver } from 'src/app/core/resolvers/invoice-detailed.resolver';
+import { AppointmentInfoComponent } from './appointment-info/appointment-info.component';
 
 
 const routes: Routes = [
@@ -18,14 +19,21 @@ const routes: Routes = [
     }
   },
   {
-    path:'add',
+    path: 'add',
     component: AddAppointmentComponent,
     data: {
       title: `Add Appointment`
     }
   },
   {
-    path:'update/:id',
+    path: 'info/:id',
+    component: AppointmentInfoComponent,
+    data: {
+      title: `Appointment Info`
+    }
+  },
+  {
+    path: 'update/:id',
     component: UpdateAppointmentComponent,
     resolve: { appointment: AppointmentDetailedResolver },
     data: {
@@ -33,7 +41,7 @@ const routes: Routes = [
     }
   },
   {
-    path:'finalize/:id',
+    path: 'finalize/:id',
     component: FinalizeAppointmentComponent,
     resolve: { appointment: AppointmentDetailedResolver },
     data: {
@@ -41,7 +49,7 @@ const routes: Routes = [
     }
   },
   {
-    path:'view-invoice/:id',
+    path: 'view-invoice/:id',
     component: InvoiceAppointmentComponent,
     resolve: { invoice: InvoiceDetailedResolver },
     data: {

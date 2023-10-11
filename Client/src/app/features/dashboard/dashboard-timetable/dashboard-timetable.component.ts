@@ -3,6 +3,7 @@ import { RoomService } from 'src/app/core/services/room.service';
 import { Room } from 'src/app/models/RoomModels/room';
 import { RoomParams } from 'src/app/models/Params/roomParams';
 import { SignalrService } from 'src/app/core/services/signalr.service';
+import { Pagination } from 'src/app/models/pagination';
 
 @Component({
   selector: 'app-dashboard-timetable',
@@ -13,10 +14,12 @@ export class DashboardTimetableComponent {
   rooms: Room[] = [];
   roomParams: RoomParams = {
     pageNumber: 1,
-    pageSize: 15,
+    pageSize: 6,
     includeUpcomingAppointments: true,
     roomSpecialityId: null
   }
+  pagination: Pagination | null = null;
+
   constructor(private roomService: RoomService, private signalr: SignalrService) {
   }
   ngOnInit(): void {
@@ -47,6 +50,7 @@ export class DashboardTimetableComponent {
   getRooms() {
     this.roomService.getRooms(this.roomParams).subscribe(response => {
       this.rooms = response.result;
+      this.pagination = response.pagination
     })
   }
   activePane = 0;
@@ -67,6 +71,10 @@ export class DashboardTimetableComponent {
   resetFilters() {
     this.roomParams = this.roomService.resetParams();
     this.roomParams.includeUpcomingAppointments = true;
+    this.getRooms();
+  }
+  pageChanged(event: number) {
+    this.roomParams.pageNumber = event;
     this.getRooms();
   }
 }

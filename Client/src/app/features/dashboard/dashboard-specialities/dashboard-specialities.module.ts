@@ -5,6 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { CommonSharedModule } from "src/app/shared/common-shared.module";
 import { DashboardSpecialitiesRoutingModule } from "./dashboard-specialities-routing.module";
 import { DashboardSpecialitiesComponent } from "./dashboard-specialities.component";
+import { SpecialitiesModelComponent } from './specialities-model/specialities-model.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,7 @@ import { DashboardSpecialitiesComponent } from "./dashboard-specialities.compone
     ModalModule,
     AlertModule
     ],
-  declarations: [DashboardSpecialitiesComponent]
+  declarations: [DashboardSpecialitiesComponent, SpecialitiesModelComponent]
 })
 export class DashboardSpecialitiesModule {
 }

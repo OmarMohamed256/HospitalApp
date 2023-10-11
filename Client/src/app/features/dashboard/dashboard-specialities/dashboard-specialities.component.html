@@ -1,18 +1,22 @@
-<c-alert class="text-center" color="dark" role="button"><button cButton color="ligh" class="btn-m">Add New Speciality</button></c-alert>
+<c-alert class="text-center" color="dark" role="button"(click)="openModal()">
+  <button cButton color="ligh" class="btn-m">Add New Speciality</button>
+</c-alert>
 
-<table cTable *ngIf="speciality && speciality.length > 0">
-    <thead>
-      <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Speciality Name</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let service of speciality" class="user-table">
-        <td>{{service.id}}</td>
-        <td>{{service.name}}</td>
-        <td class="pt-1"><button cButton color="primary" class="btn-m">Edit</button></td>
-      </tr>
-    </tbody>
-  </table>
+<table cTable *ngIf="specialityList && specialityList.length > 0">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Speciality Name</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let speciality of specialityList" class="user-table" (click)="openModalAndSetService(speciality)">
+      <td>{{speciality.id}}</td>
+      <td>{{speciality.name}}</td>
+      <td class="pt-1"><button cButton color="primary" class="btn-m">Edit</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<app-specialities-model (specialityCreated)="specialityCreated($event)" [(visible)]="modalVisibility"></app-specialities-model>

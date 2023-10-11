@@ -1,0 +1,33 @@
+<c-nav variant="tabs">
+    <c-nav-item>
+        <a [active]="true" [cTabContent]="tabContent" [tabPaneIdx]="0" cNavLink>
+            Appointment Info
+        </a>
+    </c-nav-item>
+    <c-nav-item>
+        <a [cTabContent]="tabContent" [tabPaneIdx]="2" cNavLink>
+            Update Appoinment
+        </a>
+    </c-nav-item>
+    <c-nav-item>
+        <a [cTabContent]="tabContent" [tabPaneIdx]="3" cNavLink>
+            Finalize Appoinment
+        </a>
+    </c-nav-item>
+    <c-nav-item>
+        <a [cTabContent]="tabContent" [tabPaneIdx]="1" cNavLink>
+            Invoice
+        </a>
+    </c-nav-item>
+</c-nav>
+<c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
+    <c-tab-pane class="p-3">
+    </c-tab-pane>
+    <c-tab-pane class="p-3">
+    </c-tab-pane>
+    <c-tab-pane class="p-3">
+    </c-tab-pane>
+    <c-tab-pane class="p-3">
+        <app-invoice-appointment *ngIf="activePane === 1"></app-invoice-appointment>
+    </c-tab-pane>
+</c-tab-content>

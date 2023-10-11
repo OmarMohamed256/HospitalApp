@@ -11,11 +11,6 @@
   </c-nav-item>
   <c-nav-item>
     <a [cTabContent]="tabContent" [tabPaneIdx]="2" cNavLink>
-      Invoices
-    </a>
-  </c-nav-item>
-  <c-nav-item>
-    <a [cTabContent]="tabContent" [tabPaneIdx]="3" cNavLink>
       Packages
     </a>
   </c-nav-item>
@@ -87,9 +82,6 @@
   </c-tab-pane>
   <c-tab-pane class="p-3">
     <app-patient-appointments [user]="user" *ngIf="activePane === 1"></app-patient-appointments>
-  </c-tab-pane>
-  <c-tab-pane class="p-3">
-
   </c-tab-pane>
 
   <c-tab-pane class="p-3">

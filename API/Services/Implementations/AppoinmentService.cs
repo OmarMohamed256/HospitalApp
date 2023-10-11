@@ -29,6 +29,7 @@ namespace API.Services.Implementations
             var appointment = _mapper.Map<Appointment>(appointmentDto);
             if (await IsAppointmentValid(appointment))
             {
+                if(appointment.Status == "finalized") throw new Exception("Appointment is already finalized cannot update or add");
                 if (appointment.Id != 0) _appointmentRepository.UpdateAppointment(appointment);
                 else
                 {

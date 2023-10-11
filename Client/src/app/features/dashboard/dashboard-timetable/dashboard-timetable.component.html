@@ -22,3 +22,7 @@
     </c-card>
   </c-col>
 </c-row>
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+</div>

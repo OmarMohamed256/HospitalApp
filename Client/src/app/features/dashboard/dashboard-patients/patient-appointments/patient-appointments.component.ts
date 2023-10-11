@@ -17,7 +17,6 @@ export class PatientAppointmentsComponent implements OnInit {
   appointments: Appointment[] | null = [];
   @Input() user: UserData | undefined;
   specialityList: Speciality[] = [];
-
   appointmentParams: AppointmentParams = {
     pageNumber: 1,
     pageSize: 15,
@@ -31,40 +30,46 @@ export class PatientAppointmentsComponent implements OnInit {
 
   constructor(private appointmentService: AppointmentService, private specialityService: SpecialityService) {
   }
+
   ngOnInit(): void {
     this.getAppointments();
     this.getSpecialities();
   }
+
   toggleOrder(orderBy: string) {
     if (this.appointmentParams.orderBy === orderBy) {
       this.appointmentParams.order = (this.appointmentParams.order === 'asc') ? 'desc' : 'asc';
     } else {
       this.appointmentParams.orderBy = orderBy;
-      this.appointmentParams.order = 'desc'; // Set default order to descending when changing orderBy field
+      this.appointmentParams.order = 'desc';
     }
-    
-    this.getAppointments(); // Assuming you have a function to fetch appointments
+
+    this.getAppointments();
   }
-  
+
   getAppointments() {
     this.appointmentService.getAppointmentsByUserId(this.appointmentParams, this.user?.id!).subscribe(response => {
       this.appointments = response.result;
       this.pagination = response.pagination;
     })
   }
+
   pageChanged(event: number) {
     this.appointmentParams.pageNumber = event;
     this.getAppointments();
   }
+
   getSpecialities() {
     this.specialityService.getSpecialities().subscribe(response => {
       this.specialityList = response;
     })
   }
+
   getSpecialityNameById(id: number): string {
     const speciality = this.specialityList.find(item => item.id === id);
     return speciality ? speciality.name : '';
   }
+
   resetFilters() {
     this.appointmentParams = this.appointmentService.resetParams();
     this.getAppointments();

@@ -86,7 +86,9 @@ export class AppointmentService {
   updateAppointment(appointment: Appointment) {
     return this.http.put<Appointment>(this.baseUrl + 'appointment', appointment)
   }
-
+  deleteAppointment(appointmentId: number) {
+    return this.http.delete(this.baseUrl + 'appointment/' + appointmentId)
+  }
   getAppointmentById(appointmentId: string) {
     const appointment = [... this.appointmentCache.values()]
     .reduce((arr, elem) => arr.concat(elem.result), [])
