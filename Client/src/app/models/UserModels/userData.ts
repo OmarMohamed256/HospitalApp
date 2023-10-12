@@ -12,5 +12,6 @@ export interface UserData {
     dateCreated: string;
     dateUpdated: string;
     doctorSpecialityId?: number;
+    lockoutEnabled: boolean;
     userRoles?: Role[];
 }

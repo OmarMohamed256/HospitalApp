@@ -14,4 +14,9 @@ export class AdminService {
   createUser(createUser: CreateUser) {
     return this.http.post(this.baseUrl + 'admin/createUser/', createUser);
   }
+
+  toggleLockout(userId: string) {
+    return this.http.put(this.baseUrl + 'admin/toggleLockUser/' + userId, {});
+
+  }
 }

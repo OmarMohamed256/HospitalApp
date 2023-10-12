@@ -31,6 +31,7 @@ namespace API.Repositories.Implementations
                         FullName = u.FullName,
                         PhoneNumber = u.PhoneNumber,
                         Gender = u.Gender,
+                        LockoutEnabled = u.LockoutEnabled,
                         UserRoles = u.UserRoles.Select(ur => new AppUserRole
                         {
                             UserId = ur.UserId,

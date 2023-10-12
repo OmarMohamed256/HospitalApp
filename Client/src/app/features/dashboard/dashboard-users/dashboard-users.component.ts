@@ -4,6 +4,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { Pagination } from 'src/app/models/pagination';
 import { UserData } from 'src/app/models/UserModels/userData';
 import { UserParams } from 'src/app/models/Params/userParams';
+import { AdminService } from 'src/app/core/services/admin.service';
 
 @Component({
   selector: 'app-dashboard-users',
@@ -20,7 +21,7 @@ export class DashboardUsersComponent implements OnInit {
   roles = ROLES_ARRAY;
   modalVisibility: boolean = false;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private adminService: AdminService) {
   }
   ngOnInit(): void {
     this.getUsers();
@@ -30,7 +31,6 @@ export class DashboardUsersComponent implements OnInit {
     this.userService.getUsers(this.userParams).subscribe(response => {
       this.users = response.result;
       this.pagination = response.pagination
-      console.log(this.users)
     })
   }
 
@@ -53,5 +53,13 @@ export class DashboardUsersComponent implements OnInit {
 
   handleUserCreated(createdUser: UserData) {
     this.users?.push(createdUser);
+  }
+
+  toggleLockout(userId: string , event: Event) {
+    event.stopPropagation();
+    return this.adminService.toggleLockout(userId).subscribe(response => {
+      let index = this.users!.findIndex( u => u.id == userId);
+      this.users![index].lockoutEnabled = !this.users![index].lockoutEnabled;
+    })
   }
 }
