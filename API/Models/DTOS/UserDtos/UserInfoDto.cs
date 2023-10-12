@@ -13,6 +13,7 @@ namespace API.Models.DTOS
         public int? Age { get; set; }
         public int? DoctorSpecialityId { get; set; }
         public DateTime DateCreated { get; set; }
+        public bool LockoutEnabled { get; set; }
         public ICollection<UserRoleDto>? UserRoles { get; set; }
     }
 }

@@ -27,6 +27,7 @@ builder.Services.AddIdentityCore<AppUser>(options =>
 {
     options.Password.RequireNonAlphanumeric = true;
     options.User.RequireUniqueEmail = true;
+    options.Lockout.AllowedForNewUsers = false;
 })
 .AddRoles<AppRole>()
 .AddRoleManager<RoleManager<AppRole>>()
@@ -60,8 +61,6 @@ builder.Services.AddAuthorization(opt =>
     {
         policy.RequireRole(Roles.Admin, Roles.Receptionist, Roles.Doctor);
     });
-
-    opt.AddPolicy("IsUserDisabled", policy => policy.RequireClaim("IsUserDisabled", "false"));
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

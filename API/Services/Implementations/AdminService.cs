@@ -57,9 +57,7 @@ namespace API.Services.Implementations
                 if (!Roles.IsValidRole(createUserDto.Role)) throw new ApiException(HttpStatusCode.NotFound, "Invalid role specified");
                 var roleResults = await _userManager.AddToRoleAsync(user, createUserDto.Role);
                 if (!roleResults.Succeeded) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add role");
-                // Add Claims
-                await _userManager.AddClaimAsync(user, new Claim("IsUserDisabled", "false"));
-
+                
                 if (createUserDto.Role == Roles.Doctor)
                 {
                     if (createUserDto.DoctorWorkingHours != null)
@@ -106,18 +104,24 @@ namespace API.Services.Implementations
                 throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add user"); // Re-throw the exception for further handling
             }
         }
-
-        public async Task ToggleIsUserDisabled(string userId)
+        public async Task ToggleLockUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception("User not found");
-            var existingClaim = await _userManager.GetClaimsAsync(user);
-            var IsUserDisabled = existingClaim.FirstOrDefault(c => c.Type == "IsUserDisabled");
-            if (IsUserDisabled == null) await _userManager.AddClaimAsync(user, new Claim("IsUserDisabled", "true"));
+            if (!user.LockoutEnabled)
+            {
+                // lock user
+                var lockUserResult = await _userManager.SetLockoutEnabledAsync(user, true);
+                if (!lockUserResult.Succeeded) throw new Exception("Failed to lock user");
+                var lockDateResult = await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.Now.AddYears(200));
+                if (!lockDateResult.Succeeded) throw new Exception("Failed to set lockout end date");
+            }
             else
             {
-                // If the user has an IsUserDisabled claim, replace it with a new one that has the opposite value
-                var newClaim = new Claim("IsUserDisabled", IsUserDisabled.Value == "true" ? "false" : "true");
-                await _userManager.ReplaceClaimAsync(user, IsUserDisabled, newClaim);
+                // unlock user
+                var setLockoutEndDateResult = await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(1)));
+                if (!setLockoutEndDateResult.Succeeded) throw new Exception("Failed to set lockout end date");
+                var unLockUserResult = await _userManager.SetLockoutEnabledAsync(user, false);
+                if (!unLockUserResult.Succeeded) throw new Exception("Failed to unlock user");
             }
         }
     }

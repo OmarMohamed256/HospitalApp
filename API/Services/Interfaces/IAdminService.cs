@@ -5,6 +5,6 @@ namespace API.Services.Interfaces
     public interface IAdminService
     {
         Task<UserInfoDto> CreateUser(CreateUserDto createUserDto);
-        Task ToggleIsUserDisabled(string userId);
+        Task ToggleLockUser(string userId);
     }
 }

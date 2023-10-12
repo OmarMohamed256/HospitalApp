@@ -29,6 +29,10 @@ namespace API.Services.Implementations
         public async Task<UserDto> Login(LoginDto loginDto)
         {
             var user = await _userManager.FindByNameAsync(loginDto.Username);
+            // Check if user exists and is not locked out
+            if (user == null || user.LockoutEnabled && await _userManager.IsLockedOutAsync(user))
+                throw new UnauthorizedAccessException("User is locked out");
+
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 throw new UnauthorizedAccessException("Invalid credentials");
 
