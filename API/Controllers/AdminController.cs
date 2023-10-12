@@ -1,4 +1,5 @@
 using API.Models.DTOS;
+using API.Models.DTOS.UserDtos;
 using API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,12 @@ namespace API.Controllers
         public async Task<ActionResult> ToggleLockUser(string userId)
         {
             await _adminService.ToggleLockUser(userId);
+            return NoContent();
+        }
+        [HttpPut("changeUserRole/{userId}")]
+        public async Task<ActionResult> ChangeRole(string userId, [FromBody]ChangeRoleDto changeRoleDto)
+        {
+            await _adminService.ChangeUserRole(userId, changeRoleDto);
             return NoContent();
         }
     }

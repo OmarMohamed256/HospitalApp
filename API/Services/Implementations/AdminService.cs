@@ -1,8 +1,8 @@
-using System.Security.Claims;
 using System.Transactions;
 using API.Constants;
 using API.Errors;
 using API.Models.DTOS;
+using API.Models.DTOS.UserDtos;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
@@ -30,6 +30,17 @@ namespace API.Services.Implementations
             _mapper = mapper;
             _serviceRepository = serviceRepository;
             _doctorServiceRepository = doctorServiceRepository;
+        }
+
+        public async Task ChangeUserRole(string userId, ChangeRoleDto changeRoleDto)
+        {
+            var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception("User not found");
+            var isInCurrentRole = await _userManager.IsInRoleAsync(user, changeRoleDto.CurrentRole);
+            if(!isInCurrentRole) throw new Exception("User is not in " + changeRoleDto.CurrentRole + "role");
+            await _userManager.RemoveFromRoleAsync(user, changeRoleDto.CurrentRole);
+            await _userManager.AddToRoleAsync(user, changeRoleDto.NewRole);
+            var result = await _userManager.UpdateAsync(user);
+            if(!result.Succeeded) throw new Exception("Failed to change user role to " + changeRoleDto.NewRole);
         }
 
         public async Task<UserInfoDto> CreateUser(CreateUserDto createUserDto)
