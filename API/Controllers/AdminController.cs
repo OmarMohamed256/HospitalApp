@@ -17,5 +17,11 @@ namespace API.Controllers
         {
             return await _adminService.CreateUser(createUserDto);
         }
+        [HttpPut("toggleDisabled/{userId}")]
+        public async Task<ActionResult> ToggleIsUserDisabled(string userId)
+        {
+            await _adminService.ToggleIsUserDisabled(userId);
+            return NoContent();
+        }
     }
 }
