@@ -1,0 +1,7 @@
+/* Add this CSS to your styles */
+.btn-m {
+    width: 100%; /* Set the button width to 100% */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide any overflow */
+    text-overflow: ellipsis; /* Show ellipsis (...) for overflowed text */
+  }

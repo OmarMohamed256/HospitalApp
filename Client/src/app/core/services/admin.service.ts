@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ChangeRole } from 'src/app/models/UserModels/changeRole';
 import { CreateUser } from 'src/app/models/UserModels/createUser';
 import { environment } from 'src/environments/environment.development';
 
@@ -17,6 +18,9 @@ export class AdminService {
 
   toggleLockout(userId: string) {
     return this.http.put(this.baseUrl + 'admin/toggleLockUser/' + userId, {});
+  }
 
+  changeRole(userId: string, changeRole: ChangeRole) {
+    return this.http.put(this.baseUrl + 'admin/changeUserRole/' + userId, changeRole);
   }
 }

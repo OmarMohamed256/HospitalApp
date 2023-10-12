@@ -5,6 +5,7 @@ import { Pagination } from 'src/app/models/pagination';
 import { UserData } from 'src/app/models/UserModels/userData';
 import { UserParams } from 'src/app/models/Params/userParams';
 import { AdminService } from 'src/app/core/services/admin.service';
+import { ChangeRole } from 'src/app/models/UserModels/changeRole';
 
 @Component({
   selector: 'app-dashboard-users',
@@ -60,6 +61,19 @@ export class DashboardUsersComponent implements OnInit {
     return this.adminService.toggleLockout(userId).subscribe(response => {
       let index = this.users!.findIndex( u => u.id == userId);
       this.users![index].lockoutEnabled = !this.users![index].lockoutEnabled;
+    })
+  }
+
+  changeUserRole(user: UserData, newRole: string , event: Event) {
+    event.stopPropagation();
+    const changeRole: ChangeRole = {
+      currentRole: user.userRoles![0].roleName,
+      newRole: newRole
+    }
+    return this.adminService.changeRole(user.id, changeRole).subscribe(response => {
+      let index = this.users!.findIndex( u => u.id == user.id);
+      this.users![index].userRoles![0].roleName = newRole;
+
     })
   }
 }

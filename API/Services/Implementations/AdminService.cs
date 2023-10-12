@@ -36,11 +36,13 @@ namespace API.Services.Implementations
         {
             var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception("User not found");
             var isInCurrentRole = await _userManager.IsInRoleAsync(user, changeRoleDto.CurrentRole);
-            if(!isInCurrentRole) throw new Exception("User is not in " + changeRoleDto.CurrentRole + "role");
+            if (!isInCurrentRole) throw new Exception("User is not in " + changeRoleDto.CurrentRole + "role");
             await _userManager.RemoveFromRoleAsync(user, changeRoleDto.CurrentRole);
             await _userManager.AddToRoleAsync(user, changeRoleDto.NewRole);
             var result = await _userManager.UpdateAsync(user);
-            if(!result.Succeeded) throw new Exception("Failed to change user role to " + changeRoleDto.NewRole);
+            if (!result.Succeeded) throw new Exception("Failed to change user role to " + changeRoleDto.NewRole);
+            var invalidateToken = await _userManager.UpdateSecurityStampAsync(user);
+            if (!invalidateToken.Succeeded) throw new Exception("failed to invalidate token");
         }
 
         public async Task<UserInfoDto> CreateUser(CreateUserDto createUserDto)
@@ -68,7 +70,7 @@ namespace API.Services.Implementations
                 if (!Roles.IsValidRole(createUserDto.Role)) throw new ApiException(HttpStatusCode.NotFound, "Invalid role specified");
                 var roleResults = await _userManager.AddToRoleAsync(user, createUserDto.Role);
                 if (!roleResults.Succeeded) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add role");
-                
+
                 if (createUserDto.Role == Roles.Doctor)
                 {
                     if (createUserDto.DoctorWorkingHours != null)
@@ -134,6 +136,8 @@ namespace API.Services.Implementations
                 var unLockUserResult = await _userManager.SetLockoutEnabledAsync(user, false);
                 if (!unLockUserResult.Succeeded) throw new Exception("Failed to unlock user");
             }
+            var invalidateToken = await _userManager.UpdateSecurityStampAsync(user);
+            if (!invalidateToken.Succeeded) throw new Exception("failed to invalidate token");
         }
     }
 }

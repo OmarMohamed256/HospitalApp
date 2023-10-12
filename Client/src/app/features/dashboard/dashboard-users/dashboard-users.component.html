@@ -35,6 +35,7 @@
         <svg cIcon [name]="userParams.order === 'desc' ? 'cil-arrow-bottom' : 'cil-arrow-top'"></svg>
       </th>
       <th scope="col"></th>
+      <th scope="col">Change Role To</th>
     </tr>
   </thead>
   <tbody>
@@ -48,6 +49,13 @@
       <td class="pt-1">
         <button cButton color="{{ user.lockoutEnabled ? 'primary' : 'danger' }}" class="btn-m" (click)="toggleLockout(user.id, $event)">
           {{ user.lockoutEnabled ? 'Enable' : 'Disable' }}
+        </button>
+      </td>
+      <td class="pt-1">
+        <button (click)="changeUserRole(user, user.userRoles![0].roleName == 'Admin' ? 'Receptionist' : 'Admin', $event)"
+        *ngIf="user.userRoles![0].roleName == 'Admin' || user.userRoles![0].roleName == 'Receptionist'" 
+        cButton color="primary" class=" btn-m">
+          {{ user.userRoles![0].roleName == 'Admin' ? 'Receptionist' : 'Admin' }}
         </button>
       </td>
     </tr>
