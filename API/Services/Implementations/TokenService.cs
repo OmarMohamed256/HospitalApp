@@ -22,10 +22,17 @@ namespace API.Services.Implementations
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString())
+                new(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new(JwtRegisteredClaimNames.NameId, user.Id.ToString())
             };
 
+            var userDisabledClaim = await _userManager.GetClaimsAsync(user);
+            var isUserDisabledClaim = userDisabledClaim.FirstOrDefault(c => c.Type == "IsUserDisabled");
+            if (isUserDisabledClaim != null)
+            {
+                claims.Add(new Claim("IsUserDisabled", isUserDisabledClaim.Value));
+            }
+            
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 

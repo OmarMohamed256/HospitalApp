@@ -14,16 +14,15 @@ namespace API.Services.Implementations
     {
         private readonly IUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<AppRole> _roleManager;
         private readonly IMapper _mapper;
         public UserService(IUserRepository userRepository, UserManager<AppUser> userManager,
-         ITokenService tokenService, IMapper mapper, RoleManager<AppRole> roleManager)
+         ITokenService tokenService, IMapper mapper)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _mapper = mapper;
-            _roleManager = roleManager;
         }
+
 
         public async Task<PagedList<UserInfoDto>> GetAllUsersAsync(UserParams userParams)
         {

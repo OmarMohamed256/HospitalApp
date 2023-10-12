@@ -50,14 +50,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(opt =>
 {
     opt.AddPolicy(Polices.RequireAdminRole, policy => policy.RequireRole(Roles.Admin));
+    
     opt.AddPolicy(Polices.RequireReceptionistRole, policy =>
     {
         policy.RequireRole(Roles.Admin, Roles.Receptionist);
     });
+
     opt.AddPolicy(Polices.RequireDoctorRole, policy =>
     {
         policy.RequireRole(Roles.Admin, Roles.Receptionist, Roles.Doctor);
     });
+
+    opt.AddPolicy("IsUserDisabled", policy => policy.RequireClaim("IsUserDisabled", "false"));
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -14,16 +14,13 @@ namespace API.Services.Implementations
     {
 
         private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public AuthenticationService(UserManager<AppUser> userManager,
-         SignInManager<AppUser> signInManager, ITokenService tokenService,
+        public AuthenticationService(UserManager<AppUser> userManager, ITokenService tokenService,
          IMapper mapper)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _tokenService = tokenService;
             _mapper = mapper;
 

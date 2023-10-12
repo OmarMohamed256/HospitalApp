@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Transactions;
 using API.Constants;
 using API.Errors;
@@ -52,12 +53,13 @@ namespace API.Services.Implementations
                 var result = await _userManager.CreateAsync(user, createUserDto.Password);
                 if (!result.Succeeded) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to create user");
 
+                // Add Roles
                 if (!Roles.IsValidRole(createUserDto.Role)) throw new ApiException(HttpStatusCode.NotFound, "Invalid role specified");
-                // Add roles to user
                 var roleResults = await _userManager.AddToRoleAsync(user, createUserDto.Role);
-
                 if (!roleResults.Succeeded) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add role");
-
+                // Add Claims
+                await _userManager.AddClaimAsync(user, new Claim("IsUserDisabled", "false"));
+                
                 if (createUserDto.Role == Roles.Doctor)
                 {
                     if (createUserDto.DoctorWorkingHours != null)

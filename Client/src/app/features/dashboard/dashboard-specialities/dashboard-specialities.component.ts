@@ -41,6 +41,7 @@ export class DashboardSpecialitiesComponent implements OnInit {
       }
     }
   }
+  
   openModalAndSetService(speciality: Speciality) {
     this.specialityModal.speciality = speciality;
     this.specialityModal.intializeForm();
