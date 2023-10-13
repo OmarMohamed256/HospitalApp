@@ -29,9 +29,18 @@ namespace API.Services.Implementations
                 supplyOrderDto.ItemName = item.Name;
             }
             var supplyOrder = _mapper.Map<SupplyOrder>(supplyOrderDto);
+            if (supplyOrder.Id == 0) _supplyOrderRepository.AddSupplyOrder(supplyOrder);
 
-            if (supplyOrder.Id != 0) _supplyOrderRepository.AddSupplyOrder(supplyOrder);
-            else _supplyOrderRepository.UpdateSupplyOrder(supplyOrder);
+            if (supplyOrder.Id != 0)
+            {
+                var existingOrder = await _supplyOrderRepository.GetSupplyOrderByIdAsync(supplyOrder.Id) ??
+                    throw new ApiException(HttpStatusCode.NotFound, "Supply order with the specified Id does not exist.");
+
+                // ItemName and InventoryItemId cannot be updated
+                supplyOrder.ItemName = existingOrder.ItemName;
+                supplyOrder.InventoryItemId = existingOrder.InventoryItemId;
+                _supplyOrderRepository.UpdateSupplyOrder(supplyOrder);
+            }
 
             var result = await _supplyOrderRepository.SaveAllAsync();
             if (result) return _mapper.Map<SupplyOrderDto>(supplyOrder);

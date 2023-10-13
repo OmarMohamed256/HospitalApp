@@ -60,5 +60,13 @@ namespace API.Repositories.Implementations
         {
             _context.SupplyOrders.UpdateRange(supplyOrders);
         }
+
+        public async Task<SupplyOrder> GetSupplyOrderByIdAsync(int supplyOrderId)
+        {
+            return await _context.SupplyOrders
+            .AsNoTracking()
+            .Where(so => so.Id == supplyOrderId)
+            .FirstOrDefaultAsync();
+        }
     }
 }
