@@ -15,8 +15,11 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { CommonSharedModule } from './shared/common-shared.module';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
-import { DashboardRoomsComponent } from './features/dashboard/dashboard-rooms/dashboard-rooms.component';
-
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { SupplyOrderEffects } from './core/state/supplyOrder/supply-order.effects';
+import { PaginatedSupplyOrderReducer } from './core/state/supplyOrder/supply-order.reducer';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 const APP_CONTAINERS = [
   DefaultHeaderComponent,
   DashboardLayoutComponent
@@ -31,7 +34,12 @@ const APP_CONTAINERS = [
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
     }),
-    CommonSharedModule
+    CommonSharedModule,
+    EffectsModule.forRoot([SupplyOrderEffects]),
+    StoreModule.forRoot({ paginatedSupplyOrders: PaginatedSupplyOrderReducer}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+    })
   ],
   providers: [
     IconSetService,

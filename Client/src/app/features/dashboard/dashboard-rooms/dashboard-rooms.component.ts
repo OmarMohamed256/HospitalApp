@@ -94,6 +94,7 @@ export class DashboardRoomsComponent {
     this.roomsModal.createUpdateRoomForm.get("roomNumber")?.setValue(room.roomNumber);
     this.roomsModal.createUpdateRoomForm.get("roomSpecialityId")?.setValue(room.roomSpecialityId);
   }
+  
   deleteRoom(roomId: number, event: Event) {
     event.stopPropagation();
     this.roomService.deleteRoom(roomId).subscribe({

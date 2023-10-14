@@ -6,6 +6,8 @@ import { CommonSharedModule } from "src/app/shared/common-shared.module";
 import { DashboardInventoryRoutingModule } from "./dashboard-inventory-routing.module";
 import { DashboardInventoryComponent } from "./dashboard-inventory.component";
 import { SupplyOrdersComponent } from './supply-orders/supply-orders.component';
+import { SupplyOrderModelComponent } from './supply-orders/supply-order-model/supply-order-model.component';
+import { NgSelectModule } from "@ng-select/ng-select";
 
 @NgModule({
   imports: [
@@ -20,9 +22,10 @@ import { SupplyOrdersComponent } from './supply-orders/supply-orders.component';
     InputGroupTextDirective,
     CommonSharedModule,
     SharedModule,
-    ModalModule
+    ModalModule,
+    NgSelectModule
     ],
-  declarations: [DashboardInventoryComponent, SupplyOrdersComponent]
+  declarations: [DashboardInventoryComponent, SupplyOrdersComponent, SupplyOrderModelComponent]
 })
 export class DashboardInventoryModule {
 }
