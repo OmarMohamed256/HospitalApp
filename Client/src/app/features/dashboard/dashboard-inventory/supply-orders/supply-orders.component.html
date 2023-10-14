@@ -25,7 +25,7 @@
                     class="me-2" [(ngModel)]="supplyOrderParams.searchTerm">
                 <button cButton color="light" variant="outline" type="submit">Search</button>
             </form>
-            <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+            <button cButton color="light" (click)="resetFiltersAndGetSupplyOrders()">Reset Filters</button>
         </div>
 
     </div>
@@ -40,7 +40,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let supplyOrder of supplyOrders" class="user-table">
+        <tr *ngFor="let supplyOrder of supplyOrders" class="user-table"  (click)="setSupplyOrderAndShowModal(supplyOrder)">
             <td>{{supplyOrder.itemName}}</td>
             <td>{{supplyOrder.quantity}}</td>
             <td>{{supplyOrder.itemPrice}}</td>
@@ -48,11 +48,9 @@
         </tr>
     </tbody>
 </table>
-<div class="d-flex justify-content-center">
-    <app-pagination [boundaryLinks]="true" [totalItems]="pagination!.totalItems"
-        [itemsPerPage]="pagination!.itemsPerPage" [(ngModel)]="pagination!.currentPage"
-        (pageChanged)="pageChanged($event)">
-    </app-pagination>
-</div>
+<div class="d-flex justify-content-center" *ngIf="pagination">
+    <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+  </div>
 
-<app-supply-order-model [(visible)]="modalVisibility"></app-supply-order-model>
+<app-supply-order-model (supplyOrderAddedUpdated)="supplyOrderAddedUpdated($event)" [(visible)]="modalVisibility"></app-supply-order-model>

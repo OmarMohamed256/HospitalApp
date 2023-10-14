@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { SupplyOrderService } from 'src/app/core/services/supply-order.service';
 import { Pagination } from 'src/app/models/pagination';
 import { SupplyOrder } from 'src/app/models/supplyOrder';
 import { SupplyOrderParams } from 'src/app/models/Params/supplyOrderParams';
+import { SupplyOrderModelComponent } from './supply-order-model/supply-order-model.component';
+import { InventoryItem } from 'src/app/models/inventoryItems';
 
 @Component({
   selector: 'app-supply-orders',
@@ -20,10 +22,11 @@ export class SupplyOrdersComponent {
     order: 'desc'
   };
   pagination: Pagination | null = null;
-  orderByList = [{ value: 'dateOfExpiry', display: 'Expiry Date' }, 
+  orderByList = [{ value: 'dateOfExpiry', display: 'Expiry Date' },
   { value: 'dateCreated', display: 'Date Created' }, { value: 'dateUpdated', display: 'Date Updated' }];
   orderList = [{ value: 'asc', display: 'Ascending' }, { value: 'desc', display: 'Descending' }];
   modalVisibility: boolean = false;
+  @ViewChild(SupplyOrderModelComponent) supplyOrderModal!: SupplyOrderModelComponent;
 
   constructor(private supplyOrderService: SupplyOrderService) {
     this.getSupplyOrders();
@@ -41,11 +44,46 @@ export class SupplyOrdersComponent {
   }
   resetFilters() {
     this.supplyOrderParams = this.supplyOrderService.resetParams();
-    this.getSupplyOrders()
   }
   pageChanged(event: number) {
     this.supplyOrderParams.pageNumber = event;
     this.getSupplyOrders();
+  }
+
+  supplyOrderAddedUpdated(supplyOrder: SupplyOrder) {
+    this.resetFiltersAndGetSupplyOrders();
+  }
+  resetFiltersAndGetSupplyOrders() {
+    this.resetFilters()
+    this.getSupplyOrders()
+  }
+  setSupplyOrderAndShowModal(supplyOrder: SupplyOrder) {
+    this.mapInventoryItemToList(supplyOrder);
+    this.mapSupplyOrderTocreateUpdateSupplyOrderForm(supplyOrder);
+    this.toggleModal();
+  }
+
+  mapInventoryItemToList(supplyOrder: SupplyOrder) {
+    let inventoryItem: Partial<InventoryItem> = {
+      id: supplyOrder.inventoryItemId,
+      name: supplyOrder.itemName
+    }
+    this.supplyOrderModal.inventoryItems = [inventoryItem]
+  }
+
+
+  mapSupplyOrderTocreateUpdateSupplyOrderForm(supplyOrder: SupplyOrder) {
+    this.supplyOrderModal.supplyOrderForm.get("id")?.setValue(supplyOrder.id);
+    this.supplyOrderModal.supplyOrderForm.get("quantity")?.setValue(supplyOrder.quantity);
+    this.supplyOrderModal.supplyOrderForm.get("itemPrice")?.setValue(supplyOrder.itemPrice);
+    this.supplyOrderModal.supplyOrderForm.get("note")?.setValue(supplyOrder.note);
+    this.supplyOrderModal.supplyOrderForm.get("inventoryItemId")?.setValue(supplyOrder.inventoryItemId);
+    // Convert ISO 8601 date string to Date object
+    const expiryDate = new Date(supplyOrder.expiryDate);
+
+    // Get the date portion
+    const formattedDate = expiryDate.toISOString().split('T')[0];
+    this.supplyOrderModal.supplyOrderForm.get("expiryDate")?.setValue(formattedDate);
   }
 
 }

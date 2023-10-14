@@ -15,14 +15,13 @@ export class SupplyOrderModelComponent implements OnInit {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() supplyOrderAddedUpdated = new EventEmitter<SupplyOrder>();
-  inventoryItemList: InventoryItem[] = [];
   inventoryItemParams: InventoryItemParams = {
     pageNumber: 1,
     pageSize: 15,
     searchTerm: '',
     specialityId: null
   };
-  inventoryItems: InventoryItem[] = [];
+  inventoryItems: Partial<InventoryItem>[] = [];
   supplyOrderForm!: FormGroup;
 
 
@@ -60,6 +59,11 @@ export class SupplyOrderModelComponent implements OnInit {
     }else {
       this.updateSupplyOrder();
     }
+    this.modelToggeled(false);
+  }
+  modelToggeled(e: any) {
+    this.visible = e;
+    this.visibleChange.emit(this.visible);
   }
 
   createSupplyOrder() {
