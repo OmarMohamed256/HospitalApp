@@ -30,30 +30,29 @@
 
     </div>
 </c-navbar>
-<ng-container *ngIf="(supplyOrdersWithPagination$ | async) as data">
-    <table cTable>
-        <thead>
-            <tr>
-                <th scope="col">Item Name</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Item Price</th>
-                <th scope="col">Expiry Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let supplyOrder of data.supplyOrders" class="user-table">
-                <td>{{supplyOrder.itemName}}</td>
-                <td>{{supplyOrder.quantity}}</td>
-                <td>{{supplyOrder.itemPrice}}</td>
-                <td>{{supplyOrder.expiryDate | date}}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-center" *ngIf="data.pagination != null">
-        <app-pagination [boundaryLinks]="true" [totalItems]="data.pagination.totalItems"
-            [itemsPerPage]="data.pagination!.itemsPerPage" [ngModel]="data.pagination.currentPage"
-            (pageChanged)="pageChanged($event)">
-        </app-pagination>
-    </div>
-</ng-container>
+<table cTable *ngIf="supplyOrders">
+    <thead>
+        <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Item Price</th>
+            <th scope="col">Expiry Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let supplyOrder of supplyOrders" class="user-table">
+            <td>{{supplyOrder.itemName}}</td>
+            <td>{{supplyOrder.quantity}}</td>
+            <td>{{supplyOrder.itemPrice}}</td>
+            <td>{{supplyOrder.expiryDate | date}}</td>
+        </tr>
+    </tbody>
+</table>
+<div class="d-flex justify-content-center">
+    <app-pagination [boundaryLinks]="true" [totalItems]="pagination!.totalItems"
+        [itemsPerPage]="pagination!.itemsPerPage" [(ngModel)]="pagination!.currentPage"
+        (pageChanged)="pageChanged($event)">
+    </app-pagination>
+</div>
+
 <app-supply-order-model [(visible)]="modalVisibility"></app-supply-order-model>

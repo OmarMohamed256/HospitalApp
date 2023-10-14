@@ -11,34 +11,44 @@ import { SupplyOrder } from 'src/app/models/supplyOrder';
 })
 export class SupplyOrderService {
   baseUrl = environment.apiUrl;
+  supplyOrderParams: SupplyOrderParams = {
+    pageNumber: 1,
+    pageSize: 15,
+    searchTerm: '',
+    inventoryItemId: null,
+    orderBy: 'dateCreated',
+    order: 'desc'
+  };
+
+  supplyOrderCache = new Map();
 
   constructor(private http: HttpClient) { }
 
-  // getSupplyOrders(supplyOrderParams: SupplyOrderParams) {
-  //   var response = this.supplyOrderCache.get(Object.values(supplyOrderParams).join("-"));
-  //   if (response) {
-  //     return of(response);
-  //   }
-  //   let params = getPaginationHeaders(supplyOrderParams.pageNumber, supplyOrderParams.pageSize);
-  //   params = params.append('orderBy', supplyOrderParams.orderBy);
-  //   params = params.append('order', supplyOrderParams.order);
-  //   if (supplyOrderParams.searchTerm.trim() !== '') params = params.append('searchTerm', supplyOrderParams.searchTerm.trim());
-  //   if (supplyOrderParams.inventoryItemId !== null) params = params.append('inventoryItemId', supplyOrderParams.inventoryItemId);
-  //   return getPaginatedResult<SupplyOrder[]>(this.baseUrl + 'supplyOrder/', params, this.http)
-  //     .pipe(map(response => {
-  //       this.supplyOrderCache.set(Object.values(supplyOrderParams).join("-"), response);
-  //       return response;
-  //     }));
-  // }
-
   getSupplyOrders(supplyOrderParams: SupplyOrderParams) {
+    var response = this.supplyOrderCache.get(Object.values(supplyOrderParams).join("-"));
+    if (response) {
+      return of(response);
+    }
     let params = getPaginationHeaders(supplyOrderParams.pageNumber, supplyOrderParams.pageSize);
     params = params.append('orderBy', supplyOrderParams.orderBy);
     params = params.append('order', supplyOrderParams.order);
     if (supplyOrderParams.searchTerm.trim() !== '') params = params.append('searchTerm', supplyOrderParams.searchTerm.trim());
     if (supplyOrderParams.inventoryItemId !== null) params = params.append('inventoryItemId', supplyOrderParams.inventoryItemId);
-    return getPaginatedResult<SupplyOrder[]>(this.baseUrl + 'supplyOrder/', params, this.http);
+    return getPaginatedResult<SupplyOrder[]>(this.baseUrl + 'supplyOrder/', params, this.http)
+      .pipe(map(response => {
+        this.supplyOrderCache.set(Object.values(supplyOrderParams).join("-"), response);
+        return response;
+      }));
   }
+
+  // getSupplyOrders(supplyOrderParams: SupplyOrderParams) {
+  //   let params = getPaginationHeaders(supplyOrderParams.pageNumber, supplyOrderParams.pageSize);
+  //   params = params.append('orderBy', supplyOrderParams.orderBy);
+  //   params = params.append('order', supplyOrderParams.order);
+  //   if (supplyOrderParams.searchTerm.trim() !== '') params = params.append('searchTerm', supplyOrderParams.searchTerm.trim());
+  //   if (supplyOrderParams.inventoryItemId !== null) params = params.append('inventoryItemId', supplyOrderParams.inventoryItemId);
+  //   return getPaginatedResult<SupplyOrder[]>(this.baseUrl + 'supplyOrder/', params, this.http);
+  // }
 
   createSupplyOrder(supplyOrder: SupplyOrder) {
     return this.http.post<SupplyOrder>(this.baseUrl + 'supplyOrder/', supplyOrder)
@@ -48,4 +58,8 @@ export class SupplyOrderService {
     return this.http.put<SupplyOrder>(this.baseUrl + 'supplyOrder/', supplyOrder)
   }
   
+  resetParams() {
+    this.supplyOrderParams = new SupplyOrderParams();
+    return this.supplyOrderParams;
+  }
 }

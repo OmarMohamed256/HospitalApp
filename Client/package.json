@@ -26,7 +26,6 @@
     "@microsoft/signalr": "^7.0.11",
     "@ng-select/ng-select": "^11.1.1",
     "@ngrx/effects": "^16.3.0",
-    "@ngrx/store": "^16.3.0",
     "@ngrx/store-devtools": "^16.3.0",
     "ngx-scrollbar": "^13.0.3",
     "ngx-toastr": "^17.0.2",
