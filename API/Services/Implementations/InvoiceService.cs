@@ -50,7 +50,7 @@ namespace API.Services.Implementations
                     // Update invoice total
                     await UpdateInvoiceTotalsAsync(invoice);
 
-                    FinalizeAppointment(invoiceDto.AppointmentId, invoice.Id);
+                    await FinalizeAppointment(invoiceDto.AppointmentId, invoice.Id);
                     scope.Complete();
                     return _mapper.Map<InvoiceDto>(invoice);
                 }
@@ -66,14 +66,24 @@ namespace API.Services.Implementations
         }
         private async Task<Invoice> AddInvoiceAsync(CreateInvoiceDto invoiceDto)
         {
+            var (type, priceVisitTemp, priceRevisitTemp) =
+                await _appoinmentRepository.GetAppointmentTypeAndDoctorPricesAsync(invoiceDto.AppointmentId);
+            if (type == null) throw new Exception("Invalid AppointmentId or missing type");
+
+            decimal appointmentTypePrice;
+            if (type == "visit") appointmentTypePrice = priceVisitTemp ?? 0;
+            else if (type == "revisit") appointmentTypePrice = priceRevisitTemp ?? 0;
+            else  throw new Exception("Invalid appointment type");
+
             var invoice = new Invoice
             {
                 AppointmentId = invoiceDto.AppointmentId,
                 DiscountPercentage = invoiceDto.DiscountPercentage,
                 PaymentMethod = invoiceDto.PaymentMethod,
                 TotalPaid = invoiceDto.TotalPaid,
-                TotalDue = 0,
-                FinalizationDate = DateTime.Now
+                TotalDue = appointmentTypePrice,
+                FinalizationDate = DateTime.Now,
+                AppointmentTypePrice = appointmentTypePrice
             };
             // Add custom items
             if (invoiceDto.CustomItems != null)
@@ -131,7 +141,7 @@ namespace API.Services.Implementations
                 int quantityNeeded = item.QuantityNeeded * invoiceDoctorService.ServiceQuantity;
                 int totalQuantity = consumableSupplyOrders.Sum(order => order.Quantity);
                 if (totalQuantity < quantityNeeded) throw new Exception("Not enough supply orders to fulfill quantity needed for an item in: " + doctorService.Service.Name + " Service");
-                
+
                 foreach (var supplyOrder in consumableSupplyOrders)
                 {
                     if (quantityNeeded > 0)
@@ -177,9 +187,9 @@ namespace API.Services.Implementations
             var saveInvoiceResult = await _invoiceRepository.SaveAllAsync();
             if (!saveInvoiceResult) throw new Exception("Failed to save Invoice");
         }
-        private async void FinalizeAppointment(int appointmentId, int invoiceId)
+        private async Task FinalizeAppointment(int appointmentId, int invoiceId)
         {
-            var updatedRecords = _appoinmentRepository.UpdateAppointmentInvoiced(appointmentId, "finalized", invoiceId);
+            var updatedRecords = await _appoinmentRepository.UpdateAppointmentInvoicedAsync(appointmentId, "finalized", invoiceId);
             if (updatedRecords <= 0) throw new Exception("Failed to update Appointment status");
             await SendAppointmentFinalized(appointmentId);
         }
@@ -192,7 +202,7 @@ namespace API.Services.Implementations
 
         public async Task SendAppointmentFinalized(int appointmentId)
         {
-            await _appointmentNotification.Clients.All.SendAppointmentFinalized(new AppointmentStatus{AppointmentId = appointmentId});
+            await _appointmentNotification.Clients.All.SendAppointmentFinalized(new AppointmentStatus { AppointmentId = appointmentId });
         }
     }
 }

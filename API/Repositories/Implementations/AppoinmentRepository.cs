@@ -114,14 +114,34 @@ namespace API.Repositories.Implementations
             .FirstOrDefaultAsync(a => a.Id == appointmentId);
         }
 
-        public int UpdateAppointmentInvoiced(int appointmentId, string status, int invoiceId)
+        public async Task<int> UpdateAppointmentInvoicedAsync(int appointmentId, string status, int invoiceId)
         {
-            return _context.Appointments
-               .Where(u => u.Id == appointmentId)
-               .ExecuteUpdate(b =>
-                   b.SetProperty(u => u.Status, status)
-                   .SetProperty(u => u.InvoiceId, invoiceId)
-               );
+            return await _context.Appointments
+                .Where(u => u.Id == appointmentId)
+                .ExecuteUpdateAsync(b =>
+                    b.SetProperty(u => u.Status, status)
+                     .SetProperty(u => u.InvoiceId, invoiceId)
+                );
+        }
+
+        public async Task<(string Type, decimal? PriceVisit, decimal? PriceRevisit)> GetAppointmentTypeAndDoctorPricesAsync(int appointmentId)
+        {
+            var appointment = await _context.Appointments
+                .Where(a => a.Id == appointmentId)
+                .Select(a => new
+                {
+                    Type = a.Type,
+                    PriceVisit = a.Doctor.PriceVisit,
+                    PriceRevisit = a.Doctor.PriceRevisit
+                })
+                .FirstOrDefaultAsync();
+
+            if (appointment == null)
+            {
+                return (null, null, null); // or handle this case as appropriate
+            }
+
+            return (appointment.Type, appointment.PriceVisit, appointment.PriceRevisit);
         }
 
     }

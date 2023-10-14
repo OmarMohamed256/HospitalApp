@@ -49,6 +49,8 @@ namespace API.Services.Implementations
             user.Gender = userUpdateDto.Gender ?? user.Gender;
             user.PhoneNumber = userUpdateDto.PhoneNumber ?? user.PhoneNumber;
             user.SecurityStamp = Guid.NewGuid().ToString();
+            user.PriceVisit = userUpdateDto.PriceVisit ?? user.PriceVisit;
+            user.PriceRevisit = userUpdateDto.PriceRevisit ?? user.PriceRevisit;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded) return false;

@@ -12,6 +12,8 @@ namespace API.Models.DTOS
         public string Gender { get; set; }
         public int? Age { get; set; }
         public int? DoctorSpecialityId { get; set; }
+        public decimal? PriceVisit { get; set; }
+        public decimal? PriceRevisit { get; set; }
         public DateTime DateCreated { get; set; }
         public bool LockoutEnabled { get; set; }
         public ICollection<UserRoleDto>? UserRoles { get; set; }

@@ -58,6 +58,8 @@ namespace API.Services.Implementations
                 FullName = createUserDto.FullName,
                 PhoneNumber = createUserDto.PhoneNumber,
                 DoctorSpecialityId = createUserDto.DoctorSpecialityId,
+                PriceRevisit = createUserDto.PriceRevisit,
+                PriceVisit = createUserDto.PriceVisit
             };
             using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             try

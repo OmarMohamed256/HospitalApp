@@ -15,7 +15,8 @@ namespace webapi.Entities
         [RegularExpression("^(female|male)$", ErrorMessage = "Gender must be 'female' or 'male'.")]
         public string Gender { get; set; }
         public int? Age { get; set; }
-
+        public decimal? PriceVisit { get; set; } = 0;
+        public decimal? PriceRevisit { get; set; } = 0;
         // Navigation property for the doctor
         public int? DoctorSpecialityId { get; set; }
         public virtual Speciality? DoctorSpeciality { get; set; } // Added navigation property for Speciality

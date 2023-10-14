@@ -13,20 +13,22 @@ import { UserParams } from 'src/app/models/Params/userParams';
 export class DashboardPatientsComponent implements OnInit {
   patients: UserData[] | null = [];
   roleName = ROLES.PATIENT;
+  pagination: Pagination | null = null;
+  genderList = GenderList;
+  modalVisibility: boolean = false;
   userParams: UserParams = new UserParams({
     pageNumber: 1,
     pageSize: 15,
     roleName: this.roleName
   });
-  pagination: Pagination | null = null;
-  genderList = GenderList;
-  modalVisibility: boolean = false;
 
   constructor(private userService: UserService) {
   }
+
   ngOnInit(): void {
     this.getPatients();
   }
+  
   getPatients() {
     this.userService.getUsers(this.userParams).subscribe(response => {
       this.patients = response.result;

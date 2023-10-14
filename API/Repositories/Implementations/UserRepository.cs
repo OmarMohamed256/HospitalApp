@@ -32,6 +32,8 @@ namespace API.Repositories.Implementations
                         PhoneNumber = u.PhoneNumber,
                         Gender = u.Gender,
                         LockoutEnabled = u.LockoutEnabled,
+                        PriceVisit = u.PriceVisit,
+                        PriceRevisit = u.PriceRevisit,
                         UserRoles = u.UserRoles.Select(ur => new AppUserRole
                         {
                             UserId = ur.UserId,

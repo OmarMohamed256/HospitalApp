@@ -22,6 +22,8 @@ namespace API.Models.DTOS
         public string Role { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
+        public decimal? PriceVisit { get; set; }
+        public decimal? PriceRevisit { get; set; }
 
     }
 }

@@ -14,4 +14,6 @@ export interface UserData {
     doctorSpecialityId?: number;
     lockoutEnabled: boolean;
     userRoles?: Role[];
+    priceVisit?: number;
+    priceRevisit?: number;
 }

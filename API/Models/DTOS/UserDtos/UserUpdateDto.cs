@@ -7,5 +7,7 @@ namespace API.Models.DTOS
         public int? Age { get; set; }
         public string Gender { get; set; }
         public string PhoneNumber { get; set; }
+        public decimal? PriceVisit { get; set; }
+        public decimal? PriceRevisit { get; set; }
     }
 }
