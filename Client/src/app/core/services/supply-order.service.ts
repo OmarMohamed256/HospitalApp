@@ -41,15 +41,6 @@ export class SupplyOrderService {
       }));
   }
 
-  // getSupplyOrders(supplyOrderParams: SupplyOrderParams) {
-  //   let params = getPaginationHeaders(supplyOrderParams.pageNumber, supplyOrderParams.pageSize);
-  //   params = params.append('orderBy', supplyOrderParams.orderBy);
-  //   params = params.append('order', supplyOrderParams.order);
-  //   if (supplyOrderParams.searchTerm.trim() !== '') params = params.append('searchTerm', supplyOrderParams.searchTerm.trim());
-  //   if (supplyOrderParams.inventoryItemId !== null) params = params.append('inventoryItemId', supplyOrderParams.inventoryItemId);
-  //   return getPaginatedResult<SupplyOrder[]>(this.baseUrl + 'supplyOrder/', params, this.http);
-  // }
-
   createSupplyOrder(supplyOrder: SupplyOrder) {
     return this.http.post<SupplyOrder>(this.baseUrl + 'supplyOrder/', supplyOrder)
   }
@@ -60,6 +51,7 @@ export class SupplyOrderService {
   
   resetParams() {
     this.supplyOrderParams = new SupplyOrderParams();
+    this.supplyOrderCache.clear();
     return this.supplyOrderParams;
   }
 }

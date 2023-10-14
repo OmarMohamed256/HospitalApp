@@ -26,9 +26,16 @@ namespace API.Services.Implementations
         {
             var inventoryItem = _mapper.Map<InventoryItem>(inventoryItemDto);
 
-            if (inventoryItem.Id != 0) _inventoryItemRepository.UpdateInventoryItem(inventoryItem);
-            else _inventoryItemRepository.AddInventoryItem(inventoryItem);
-            
+            if (inventoryItem.Id == 0) _inventoryItemRepository.AddInventoryItem(inventoryItem);
+            if (inventoryItem.Id != 0)
+            {
+                var existingOrder = await _inventoryItemRepository.GetInventoryItemAsync(inventoryItem.Id) ??
+                    throw new Exception("Inventory Item with the specified Id does not exist.");
+
+                inventoryItem.InventoryItemSpecialityId = existingOrder.InventoryItemSpecialityId;
+                _inventoryItemRepository.UpdateInventoryItem(inventoryItem);
+            }
+
             var result = await _inventoryItemRepository.SaveAllAsync();
             if (result) return _mapper.Map<InventoryItemDto>(inventoryItem);
 

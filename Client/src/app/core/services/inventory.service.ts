@@ -23,6 +23,7 @@ export class InventoryService {
 
   resetParams() {
     this.inventoryItemParams = new InventoryItemParams();
+    this.itemsCache.clear();
     return this.inventoryItemParams;
   }
 
@@ -41,5 +42,12 @@ export class InventoryService {
         this.itemsCache.set(Object.values(inventoryItemParams).join("-"), response);
         return response;
       }))
+  }
+
+  createInventoryItem(inventoryItem: InventoryItem) {
+    return this.http.post<InventoryItem>(this.baseUrl + 'inventoryItem/', inventoryItem);
+  }
+  updateInventoryItem(inventoryItem: InventoryItem) {
+    return this.http.put<InventoryItem>(this.baseUrl + 'inventoryItem/', inventoryItem);
   }
 }

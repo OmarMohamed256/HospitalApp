@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { InventoryItemParams } from 'src/app/models/Params/inventoryItemParams';
 import { InventoryItem } from 'src/app/models/inventoryItems';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
+import { InventoryItemModalComponent } from './inventory-item-modal/inventory-item-modal.component';
 
 @Component({
   selector: 'app-dashboard-inventory',
@@ -22,15 +23,19 @@ export class DashboardInventoryComponent implements OnInit {
   pagination: Pagination | null = null;
   specialityList: Speciality[] = [];
   activePane = 0;
+  modalVisibility: boolean = false;
+  @ViewChild(InventoryItemModalComponent) IInventoryModal!: InventoryItemModalComponent;
 
   constructor(private inventoryService: InventoryService, private specialityService: SpecialityService) {
   }
-
+  openModal() {
+    this.modalVisibility = !this.modalVisibility
+  }
   ngOnInit(): void {
     this.getInventoryItems();
     this.getSpecialities();
   }
-  
+
   getInventoryItems() {
     this.inventoryService.getInventoryItems(this.inventoryItemParams).subscribe(response => {
       this.inventoryItems = response.result;
@@ -51,11 +56,37 @@ export class DashboardInventoryComponent implements OnInit {
     this.getInventoryItems();
   }
 
-  resetFilters() {
-    this.inventoryItemParams = this.inventoryService.resetParams();
-    this.getInventoryItems()
-  }
   onTabChange($event: number) {
     this.activePane = $event;
+  }
+
+  resetFiltersAndGetIItems() {
+    this.resetFilters();
+    this.getInventoryItems();
+  }
+
+  resetFilters() {
+    this.inventoryItemParams = this.inventoryService.resetParams();
+  }
+
+  IItemAddedUpdated(inventoryItem: InventoryItem) {
+    this.resetFiltersAndGetIItems();
+  }
+
+  setIItemAndShowModal(inventoryItem: InventoryItem) {
+    this.mapIItemToForm(inventoryItem);
+    this.openModal();
+  }
+
+  mapIItemToForm(inventoryItem: InventoryItem) {
+    this.IInventoryModal.createUpdateInventoryItemForm.get("id")?.setValue(inventoryItem.id);
+    this.IInventoryModal.createUpdateInventoryItemForm.get("name")?.setValue(inventoryItem.name);
+    this.IInventoryModal.createUpdateInventoryItemForm.get("inventoryItemSpecialityId")?.setValue(inventoryItem.inventoryItemSpecialityId);
+    this.IInventoryModal.createUpdateInventoryItemForm.get('inventoryItemSpecialityId')?.disable();
+  }
+
+  initFormAndToggleModel() {
+    this.IInventoryModal.intializeForm();
+    this.openModal();
   }
 }

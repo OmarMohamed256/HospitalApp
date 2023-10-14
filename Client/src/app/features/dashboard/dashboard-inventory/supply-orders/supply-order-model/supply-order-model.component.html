@@ -1,4 +1,4 @@
-<c-modal #scrollableLongContentModal id="scrollableLongContentModal" size="xl" [visible]="visible" scrollable>
+<c-modal #scrollableLongContentModal id="scrollableLongContentModal" (visibleChange)="modelToggeled($event)" size="xl" [visible]="visible" scrollable>
   <c-modal-header>
     <h5 cModalTitle>Service</h5>
     <button [cModalToggle]="scrollableLongContentModal.id" cButtonClose></button>

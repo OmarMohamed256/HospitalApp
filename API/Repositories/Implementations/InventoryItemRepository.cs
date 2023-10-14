@@ -20,7 +20,9 @@ namespace API.Repositories.Implementations
 
         public async Task<InventoryItem> GetInventoryItemAsync(int inventoryItemId)
         {
-            return await _context.InventoryItems.FirstOrDefaultAsync(ii => ii.Id == inventoryItemId);
+            return await _context.InventoryItems
+                .AsNoTracking()
+                .FirstOrDefaultAsync(ii => ii.Id == inventoryItemId);
         }
 
         public async Task<PagedList<InventoryItem>> GetInventoryItemsAsync(InventoryItemParams inventoryItemParams)

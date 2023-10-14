@@ -25,6 +25,7 @@ export class ServiceService {
 
   resetServiceParams() {
     this.serviceParams = new ServiceParams();
+    this.serviceCache.clear();
     return this.serviceParams;
   }
 

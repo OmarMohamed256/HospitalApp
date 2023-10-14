@@ -1,0 +1,40 @@
+<c-modal #scrollableLongContentModal id="scrollableLongContentModal" size="xl" (visibleChange)="modelToggeled($event)"
+  [visible]="visible" scrollable>
+  <c-modal-header>
+    <h5 cModalTitle>Service</h5>
+    <button [cModalToggle]="scrollableLongContentModal.id" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <ng-container *ngTemplateOutlet="longContent"></ng-container>
+  </c-modal-body>
+  <c-modal-footer>
+    <button [cModalToggle]="scrollableLongContentModal.id" cButton color="secondary">
+      Close
+    </button>
+    <button [disabled]="!createUpdateInventoryItemForm.valid" cButton color="primary" (click)="createUpdateInventoryItemForm.valid && createUpdateSpeciality()">Save changes</button>
+  </c-modal-footer>
+</c-modal>
+
+<ng-template #longContent>
+<form [formGroup]="createUpdateInventoryItemForm" cForm (ngSubmit)="createUpdateInventoryItemForm.valid" autocomplete="off">
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Item Name</label>
+                <app-text-input icon="" formControlName="name" [label]='"Name"'></app-text-input>
+            </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+              <label cLabel>Speciality</label>
+              <select name="speciality" aria-label="speciality" cSelect formControlName="inventoryItemSpecialityId" >
+                <option value="" disabled selected>Select speciality</option>
+                <option *ngFor="let speciality of specialityList" [value]="speciality.id">
+                  {{speciality.name}}
+                </option>
+              </select>
+          </div>
+      </div>
+    </div>
+</form>
+</ng-template>

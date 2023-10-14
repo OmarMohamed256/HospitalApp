@@ -42,6 +42,7 @@ export class RoomService {
 
   resetParams() {
     this.roomParams = new RoomParams();
+    this.roomCache.clear();
     return this.roomParams;
   }
 
