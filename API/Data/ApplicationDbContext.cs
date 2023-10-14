@@ -27,6 +27,8 @@ namespace Hospital.Data
         public DbSet<InvoiceDoctorService> InvoiceDoctorService { get; set; }
         public DbSet<InvoiceDoctorServiceSupplyOrders> InvoiceDoctorServiceSupplyOrders { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Medicine> Medicines { get; set; }
+        public DbSet<AppointmentMedicine> AppointmentMedicine { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -112,6 +114,9 @@ namespace Hospital.Data
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<ServiceInventoryItem>()
+                .HasKey(sm => new { sm.ServiceId, sm.InventoryItemId });
+
+            modelBuilder.Entity<ServiceInventoryItem>()
                 .HasOne(sii => sii.InventoryItem)
                 .WithMany(ii => ii.ServiceInventoryItems)
                 .HasForeignKey(sii => sii.InventoryItemId)
@@ -161,6 +166,19 @@ namespace Hospital.Data
                 .HasOne(r => r.Speciality)
                 .WithMany(s => s.Rooms)
                 .HasForeignKey(r => r.RoomSpecialityId);
+
+            modelBuilder.Entity<AppointmentMedicine>()
+                .HasKey(am => new { am.AppointmentId, am.MedicineId });
+
+            modelBuilder.Entity<AppointmentMedicine>()
+                .HasOne(am => am.Appointment)
+                .WithMany(a => a.AppointmentMedicines)
+                .HasForeignKey(am => am.AppointmentId);
+
+            modelBuilder.Entity<AppointmentMedicine>()
+                .HasOne(am => am.Medicine)
+                .WithMany(m => m.AppointmentMedicines)
+                .HasForeignKey(am => am.MedicineId);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

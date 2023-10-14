@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace API.Models.Entities
 {
-    public class    InvoiceDoctorServiceSupplyOrders
+    public class InvoiceDoctorServiceSupplyOrders
     {
         public int Id { get; set; }
         public int? InvoiceDoctorServiceId { get; set; }

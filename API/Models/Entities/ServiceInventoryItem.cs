@@ -2,7 +2,6 @@ namespace API.Models.Entities
 {
     public class ServiceInventoryItem
     {
-        public int Id { get; set; }
         public int ServiceId { get; set; }
         public int InventoryItemId { get; set; }
         public int QuantityNeeded { get; set; }

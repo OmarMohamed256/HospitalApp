@@ -41,7 +41,7 @@ namespace webapi.Data
                 await roleManager.CreateAsync(role);
             }
 
-            // add user
+          //  add user
             var admin = new AppUser
             {
                 UserName = "admin",
@@ -55,56 +55,56 @@ namespace webapi.Data
             await userManager.AddToRolesAsync(admin, new[] { Roles.Admin });
             await context.SaveChangesAsync();
 
-            var Doctor = new AppUser
-            {
-                UserName = "doctor",
-                Email = "doctor@gmail.com",
-                FullName = "doctor",
-                Gender = "male",
-                Age = 50
-            };
-            await userManager.CreateAsync(Doctor, "Pa$$w0rd");
-            await userManager.AddToRolesAsync(Doctor, new[] { Roles.Doctor });
-            await context.SaveChangesAsync();
+            // var Doctor = new AppUser
+            // {
+            //     UserName = "doctor",
+            //     Email = "doctor@gmail.com",
+            //     FullName = "doctor",
+            //     Gender = "male",
+            //     Age = 50
+            // };
+            // await userManager.CreateAsync(Doctor, "Pa$$w0rd");
+            // await userManager.AddToRolesAsync(Doctor, new[] { Roles.Doctor });
+            // await context.SaveChangesAsync();
 
-            var Patient = new AppUser
-            {
-                UserName = "patient",
-                Email = "patient@gmail.com",
-                FullName = "patient",
-                Gender = "male",
-                Age = 40
+            // var Patient = new AppUser
+            // {
+            //     UserName = "patient",
+            //     Email = "patient@gmail.com",
+            //     FullName = "patient",
+            //     Gender = "male",
+            //     Age = 40
 
-            };
-            await userManager.CreateAsync(Patient, "Pa$$w0rd");
-            await userManager.AddToRolesAsync(Patient, new[] { Roles.Patient });
-            await context.SaveChangesAsync();
+            // };
+            // await userManager.CreateAsync(Patient, "Pa$$w0rd");
+            // await userManager.AddToRolesAsync(Patient, new[] { Roles.Patient });
+            // await context.SaveChangesAsync();
 
-            var Patient1 = new AppUser
-            {
-                UserName = "patient1",
-                Email = "patient1@gmail.com",
-                FullName = "patient1",
-                Gender = "female",
-                Age = 20
-            };
-            await userManager.CreateAsync(Patient1, "Pa$$w0rd");
-            await userManager.AddToRolesAsync(Patient1, new[] { Roles.Patient });
-            await context.SaveChangesAsync();
+            // var Patient1 = new AppUser
+            // {
+            //     UserName = "patient1",
+            //     Email = "patient1@gmail.com",
+            //     FullName = "patient1",
+            //     Gender = "female",
+            //     Age = 20
+            // };
+            // await userManager.CreateAsync(Patient1, "Pa$$w0rd");
+            // await userManager.AddToRolesAsync(Patient1, new[] { Roles.Patient });
+            // await context.SaveChangesAsync();
 
-            var Receptionist = new AppUser
-            {
-                UserName = "receptionist",
-                Email = "receptionist@gmail.com",
-                FullName = "receptionist",
-                Gender = "male",
-                Age = 40
+            // var Receptionist = new AppUser
+            // {
+            //     UserName = "receptionist",
+            //     Email = "receptionist@gmail.com",
+            //     FullName = "receptionist",
+            //     Gender = "male",
+            //     Age = 40
 
-            };
-            await userManager.CreateAsync(Receptionist, "Pa$$w0rd");
-            await userManager.AddToRolesAsync(Receptionist, new[] { Roles.Receptionist });
+            // };
+            // await userManager.CreateAsync(Receptionist, "Pa$$w0rd");
+            // await userManager.AddToRolesAsync(Receptionist, new[] { Roles.Receptionist });
 
-            await context.SaveChangesAsync();
+            // await context.SaveChangesAsync();
         }
     }
 }
