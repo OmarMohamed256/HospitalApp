@@ -13,5 +13,7 @@ export interface CreateUser {
     role:                  string;
     dateCreated:           string;
     dateUpdated:           string;
+    priceVisit:            number;
+    priceRevisit:          number;
 }
 

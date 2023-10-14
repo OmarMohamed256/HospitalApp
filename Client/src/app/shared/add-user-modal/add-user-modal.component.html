@@ -11,7 +11,8 @@
     <button [cModalToggle]="scrollableLongContentModal.id" cButton color="secondary">
       Close
     </button>
-    <button cButton color="primary" (click)="submitCreateUserForm()">Save changes</button>
+    <button [disabled]="!createUser.valid" cButton color="primary"
+      (click)="createUser.valid && submitCreateUserForm()">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
@@ -21,15 +22,14 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>User Name</label>
-          <app-text-input icon="cilUser" [formControl]='$any(createUser.controls["username"])'
+          <app-text-input icon="" [formControl]='$any(createUser.controls["username"])'
             [label]='"User Name"'></app-text-input>
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Email</label>
-          <app-text-input icon="cilEnvelopeClosed" [formControl]='$any(createUser.controls["email"])'
-            [label]='"Email"'></app-text-input>
+          <app-text-input icon="" [formControl]='$any(createUser.controls["email"])' [label]='"Email"'></app-text-input>
         </div>
       </div>
     </div>
@@ -37,15 +37,14 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Age</label>
-          <app-text-input icon="cilUser" [formControl]='$any(createUser.controls["age"])'
-            [label]='"Age"'></app-text-input>
+          <app-text-input icon="" [formControl]='$any(createUser.controls["age"])' [label]='"Age"'></app-text-input>
 
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Full Name</label>
-          <app-text-input icon="cilEnvelopeClosed" [formControl]='$any(createUser.controls["fullName"])'
+          <app-text-input icon="" [formControl]='$any(createUser.controls["fullName"])'
             [label]='"Full Name"'></app-text-input>
         </div>
       </div>
@@ -54,14 +53,14 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Password</label>
-          <app-text-input icon="cilUser" [formControl]='$any(createUser.controls["password"])'
+          <app-text-input icon="" [formControl]='$any(createUser.controls["password"])'
             [label]='"Password"'></app-text-input>
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Confirm Password</label>
-          <app-text-input icon="cilEnvelopeClosed" [formControl]='$any(createUser.controls["confirmPassword"])'
+          <app-text-input icon="" [formControl]='$any(createUser.controls["confirmPassword"])'
             [label]='"Confirm Password"'></app-text-input>
         </div>
       </div>
@@ -70,7 +69,7 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Phone Number</label>
-          <app-text-input icon="cilUser" [formControl]='$any(createUser.controls["phoneNumber"])'
+          <app-text-input icon="" [formControl]='$any(createUser.controls["phoneNumber"])'
             [label]='"Phone Number"'></app-text-input>
         </div>
       </div>
@@ -87,6 +86,15 @@
       </div>
     </div>
     <div class="row">
+      <div class="col">
+        <label cLabel>Role</label>
+        <select name="role" aria-label="role" cSelect [formControl]="$any(createUser.controls['role'])">
+          <option disabled value="" selected>Role</option>
+          <option *ngFor="let role of roles" [value]="role">
+            {{role}}
+          </option>
+        </select>
+      </div>
       <div class="col mb-3" *ngIf="createUser.value.role == 'Doctor'">
         <label cLabel>Speciality</label>
         <select name="doctorSpecialityId" aria-label="doctorSpecialityId" cSelect
@@ -97,14 +105,19 @@
           </option>
         </select>
       </div>
+    </div>
+    <div class="row" *ngIf="createUser.value.role == 'Doctor'">
       <div class="col">
-        <label cLabel>Role</label>
-        <select name="role" aria-label="role" cSelect [formControl]="$any(createUser.controls['role'])">
-          <option disabled value="" selected>Role</option>
-          <option *ngFor="let role of roles" [value]="role">
-            {{role}}
-          </option>
-        </select>
+        <div class="mb-3">
+          <label cLabel>Price Visit</label>
+          <app-text-input type="number" icon="" formControlName="priceVisit" [label]='"Price Visit"'></app-text-input>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Price Revisit</label>
+          <app-text-input type="number" icon="" formControlName="priceRevisit" [label]='"Price Visit"'></app-text-input>
+        </div>
       </div>
     </div>
     <div class="row" *ngIf="createUser.value.role == 'Doctor'">

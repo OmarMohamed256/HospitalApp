@@ -41,7 +41,7 @@ export class AddUserModalComponent {
   }
 
   intializeForm() {
-    
+
     this.createUser = this.fb.group({
       username: ['', Validators.required],
       email: ['', Validators.required],
@@ -53,6 +53,8 @@ export class AddUserModalComponent {
       gender: ['', Validators.required],
       role: [this.selectedRole, Validators.required],
       doctorSpecialityId: [''],
+      priceVisit: [0],
+      priceRevisit: [0],
       doctorWorkingHours: this.fb.array([]),
     });
 
@@ -128,18 +130,16 @@ export class AddUserModalComponent {
   }
 
   submitCreateUserForm() {
-    if (this.createUser.valid) {
-      this.createUserModel = this.mapFormToCreateUser();
-      this.adminService.createUser(this.createUserModel).subscribe({
-        next: (response) => {
-          this.modelToggeled(false);
-          this.userCreated.emit(response as UserData);
-        },
-        error: (error) => {
-          this.validationErrors = error;
-        }
-      });
-    }
+    this.createUserModel = this.mapFormToCreateUser();
+    this.adminService.createUser(this.createUserModel).subscribe({
+      next: (response) => {
+        this.modelToggeled(false);
+        this.userCreated.emit(response as UserData);
+      },
+      error: (error) => {
+        this.validationErrors = error;
+      }
+    });
   }
 
   mapFormToCreateUser(): CreateUser {
@@ -165,8 +165,15 @@ export class AddUserModalComponent {
     const selectedRole = this.createUser.get('role')?.value;
     if (selectedRole === 'Doctor') {
       const doctorSpecialityId = +this.createUser.get('doctorSpecialityId')?.value;
-      if (doctorSpecialityId) {
+      const priceVisit = +this.createUser.get('priceVisit')?.value;
+      const priceRevisit = +this.createUser.get('priceRevisit')?.value;
+
+      if (doctorSpecialityId && priceVisit && priceRevisit) {
         user.doctorSpecialityId = doctorSpecialityId;
+        user.priceVisit = priceVisit;
+        user.priceRevisit = priceRevisit;
+      }else {
+        // show error
       }
     }
     return user as CreateUser;
