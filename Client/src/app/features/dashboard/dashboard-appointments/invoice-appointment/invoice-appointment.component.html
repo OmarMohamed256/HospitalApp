@@ -71,6 +71,12 @@
     <div class="row">
         <div class="col">
             <div class="mb-3">
+                <label>Appointment Type Price</label>
+                <input class="form-control" disabled value="{{invoice.appointmentTypePrice}}" />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
                 <label>Total Due</label>
                 <input class="form-control" disabled value="{{invoice.totalDue}}" />
             </div>
@@ -81,14 +87,14 @@
                 <input class="form-control" disabled value="{{invoice.discountPercentage}}%" />
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col">
             <div class="mb-3">
                 <label>Total After Discount</label>
                 <input class="form-control" disabled value="{{invoice.totalAfterDiscount}}" />
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col">
             <div class="mb-3">
                 <label>Total Paid</label>
@@ -101,14 +107,14 @@
                 <input class="form-control" disabled value="{{invoice.totalRemaining}}" />
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col">
             <div class="mb-3">
                 <label>Finalization Date</label>
                 <input class="form-control" disabled value="{{invoice.finalizationDate | date:'short'}}" />
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col">
             <div class="mb-3">
                 <label>Payment Method</label>

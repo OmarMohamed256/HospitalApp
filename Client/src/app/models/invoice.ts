@@ -15,6 +15,7 @@ export interface Invoice {
     appointmentId:         number;
     customItems:           CustomItem[];
     invoiceDoctorServices: InvoiceDoctorService[];
+    appointmentTypePrice:  number;
 }
 
 export interface CustomItem {

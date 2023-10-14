@@ -76,6 +76,16 @@
     <div class="row">
       <div class="col">
         <div class="mb-3">
+          <label cLabel>{{appointment?.type == "visit" ? "Visit" : "Revisit"}} Price</label>
+          <input class="form-control" disabled 
+            [value]="appointment?.type === 'visit' ? appointment?.doctor?.priceVisit || 0 : appointment?.doctor?.priceRevisit || 0" />
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
           <label cLabel>Total Price</label>
           <app-text-input type="number" formControlName="totalPrice"></app-text-input>
         </div>

@@ -34,6 +34,7 @@ export class FinalizeAppointmentComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.appointment = data['appointment'];
+      console.log(this.appointment)
       this.getDoctorServicesByDoctorId();
       this.initializeForm();
     })
@@ -147,9 +148,16 @@ export class FinalizeAppointmentComponent implements OnInit {
       this.validationErrors.push("Please Add Services Or Items To Appointment Before Calculating Totals")
     }
     else {
+      this.appendTypePriceToTotal();
       if (selectedServicesFormArray.length > 0) this.calculateServiceTotals(selectedServicesFormArray);
       if (selectedCustomItemsFormArray.length > 0) this.calculateCustomItemsTotals(selectedCustomItemsFormArray);
     }
+  }
+
+  appendTypePriceToTotal() {
+    var price = this.appointment?.type === 'visit' ? this.appointment?.doctor?.priceVisit || 0 : this.appointment?.doctor?.priceRevisit || 0;
+    var total = this.createInvoiceForm.get('totalPrice')?.value + price;
+    this.setTotalPrice(total);
   }
 
   resetTotals() {
