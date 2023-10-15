@@ -27,6 +27,5 @@ namespace HospitalApp.Models.Entities
         public virtual Speciality AppointmentSpeciality { get; set; } // Added navigation property for Speciality
         public virtual Invoice? Invoice { get; set; }
         public virtual ICollection<AppointmentMedicine>? AppointmentMedicines { get; set; }
-
     }
 }

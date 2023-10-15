@@ -23,33 +23,54 @@ namespace API.Services.Implementations
 
         public async Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto)
         {
-            // before creating/updating an appointment make sure that doctor doesnt have an appointment booked at dateOfVisit
-            // and make sure that patient doesnt already have an appointment at same time
-
             var appointment = _mapper.Map<Appointment>(appointmentDto);
             if (await IsAppointmentValid(appointment))
             {
-                if(appointment.Status == "finalized") throw new Exception("Appointment is already finalized cannot update or add");
-                if (appointment.Id != 0) _appointmentRepository.UpdateAppointment(appointment);
+                var oldAppointment = await _appointmentRepository.GetAppointmentByIdAsync(appointment.Id);
+                if (oldAppointment == null)
+                {
+                    appointment.Status = "booked";
+                    _appointmentRepository.AddAppointment(appointment);
+                }
                 else
                 {
-                    appointment.Status = string.IsNullOrEmpty(appointment.Status) ? "booked" : appointment.Status;
-                    _appointmentRepository.AddAppointment(appointment);
+                    if (oldAppointment.Status == "finalized")
+                        throw new BadRequestException("Appointment is already finalized cannot update or add");
+                    // Add ability to add medicines on update only
+                    _appointmentRepository.UpdateAppointment(appointment);
                 }
 
                 var result = await _appointmentRepository.SaveAllAsync();
                 if (result) return _mapper.Map<AppointmentDto>(appointment);
             }
-            throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add/update appointment");
+            throw new Exception("Failed to add/update appointment");
+        }
+        private async Task<bool> IsAppointmentValid(Appointment appointment)
+        {
+            // Check DateOfVisit is in the future
+            if (appointment.DateOfVisit <= DateTime.Now)
+                throw new BadRequestException("Date of visit must be in the future.");
+            // Check patient's availability etc.
+            var patientAppointmentExist =
+                await _appointmentRepository.GetAppointmentsForUserByDateOfVisit(appointment.DateOfVisit);
+            if (patientAppointmentExist != null && patientAppointmentExist.Id != appointment.Id)
+                throw new BadRequestException("Patient already has an appointment at same time.");
+            // Check doctor's availability,
+            var doctorAppointmentList =
+                await _appointmentRepository.GetUpcomingAppointmentsDatesByDoctorIdAsync(appointment.DoctorId);
+            if (doctorAppointmentList.Any(date => date.Equals(appointment.DateOfVisit.Date)))
+                throw new BadRequestException("Doctor already has an appointment at the specified date.");
+
+            return true;
         }
 
         public async Task DeleteAppointment(int appointmentId)
         {
             var appointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentId) ?? throw new Exception("Appointment not found");
-            if(appointment.Status == "finalized")
+            if (appointment.Status == "finalized")
                 throw new Exception("Appointment is finalized cannot delete");
             _appointmentRepository.DeleteAppointment(appointment);
-            if(!await _appointmentRepository.SaveAllAsync()) throw new Exception("Can not delete appointment");
+            if (!await _appointmentRepository.SaveAllAsync()) throw new Exception("Can not delete appointment");
         }
 
         public async Task<AppointmentDto> GetAppointmentByIdAsync(int appointmentId)
@@ -76,16 +97,6 @@ namespace API.Services.Implementations
         {
             var upcomingAppointments = await _appointmentRepository.GetUpcomingAppointmentsDatesByDoctorIdAsync(doctorId);
             return upcomingAppointments;
-        }
-
-        private async Task<bool> IsAppointmentValid(Appointment appointment)
-        {
-            // Check doctor's availability, patient's availability, date of visit, etc.
-            var patientAppointmentExist = await _appointmentRepository.GetAppointmentsForUserByDateOfVisit(appointment.DateOfVisit);
-            if (patientAppointmentExist != null && patientAppointmentExist.Id != appointment.Id) throw new ApiException(HttpStatusCode.BadRequest, "Patient already has an appointment at same time");
-            var doctorAppointmentList = await _appointmentRepository.GetUpcomingAppointmentsDatesByDoctorIdAsync(appointment.DoctorId);
-            if (doctorAppointmentList.Any(date => date.Equals(appointment.DateOfVisit.Date) )) throw new ApiException(HttpStatusCode.BadRequest, "Doctor already has an appointment at the specified date.");
-            return true;
         }
     }
 }
