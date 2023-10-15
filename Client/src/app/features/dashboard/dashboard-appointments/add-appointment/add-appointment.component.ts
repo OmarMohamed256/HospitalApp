@@ -70,7 +70,6 @@ export class AddAppointmentComponent implements OnInit  {
   initializeForm() {
     this.CreateAppointmentForm = this.fb.group({
       type: ['', Validators.required],
-      status: ['booked', Validators.required],
       dateOfVisit: ['', Validators.required],
       creationNote: [''],
       doctorId: ['', Validators.required],
@@ -236,7 +235,6 @@ export class AddAppointmentComponent implements OnInit  {
       dateOfVisit: this.CreateAppointmentForm.get('dateOfVisit')?.value,
       doctorId: this.CreateAppointmentForm.get('doctorId')?.value,
       patientId: this.CreateAppointmentForm.get('patientId')?.value,
-      status: this.CreateAppointmentForm.get('status')?.value,
       type: this.CreateAppointmentForm.get('type')?.value,
     }
     return appointment;

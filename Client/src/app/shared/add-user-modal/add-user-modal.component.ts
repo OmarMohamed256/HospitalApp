@@ -41,7 +41,6 @@ export class AddUserModalComponent {
   }
 
   intializeForm() {
-
     this.createUser = this.fb.group({
       username: ['', Validators.required],
       email: ['', Validators.required],
@@ -72,6 +71,17 @@ export class AddUserModalComponent {
         const endTime = endTimeControl?.value;
         if (startTime && !endTime) {
           endTimeControl?.setErrors({ endTimeRequired: true });
+        } else if(startTime && endTime && startTime >= endTime) {
+          startTimeControl?.setErrors({ startTimeInvalid: true });
+        }
+        else {
+          endTimeControl?.setErrors(null);
+        }
+      });
+      endTimeControl?.valueChanges.subscribe((endTime) => {
+        const startTime = startTimeControl?.value;
+        if (startTime && endTime && startTime >= endTime) {
+          endTimeControl?.setErrors({ endTimeInvalid: true });
         } else {
           endTimeControl?.setErrors(null);
         }
@@ -80,21 +90,6 @@ export class AddUserModalComponent {
       (this.createUser.controls["doctorWorkingHours"] as FormArray).push(dayControl);
     }
   }
-
-  startTimeAndEndTimeValidator(endTime: string): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const startTime = control?.value;
-      const endTimeValue = control?.parent?.get(endTime)?.value;
-      if (startTime != '' && endTimeValue == '') {
-        console.log(endTimeValue)
-        return { startTimeWithoutEndTime: true };
-      }
-      return null;
-    };
-  }
-
-
-
   getDayOfWeekLabel(dayOfWeek: number): string {
     switch (dayOfWeek) {
       case 0: return 'Sunday';
@@ -107,8 +102,6 @@ export class AddUserModalComponent {
       default: return '';
     }
   }
-
-
   getHalfHourIntervals(): Interval[] {
     const intervals: Interval[] = [];
     for (let hours = 0; hours < 24; hours++) {
@@ -172,7 +165,7 @@ export class AddUserModalComponent {
         user.doctorSpecialityId = doctorSpecialityId;
         user.priceVisit = priceVisit;
         user.priceRevisit = priceRevisit;
-      }else {
+      } else {
         // show error
       }
     }

@@ -34,8 +34,9 @@ namespace API.Middleware
 
                 response.StatusCode = ex switch
                 {
-                    UnauthorizedAccessException e => (int)HttpStatusCode.Unauthorized,
-                    BadRequestException e => (int)HttpStatusCode.BadRequest,
+                    UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
+                    BadRequestException => (int)HttpStatusCode.BadRequest,
+                    NotFoundException   => (int)HttpStatusCode.NotFound,
                     _ => (int)HttpStatusCode.InternalServerError
                 };
                 

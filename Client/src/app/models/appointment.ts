@@ -3,7 +3,7 @@ import { UserData } from "./UserModels/userData";
 
 export interface Appointment {
     id?:                      number;
-    status:                  string;
+    status?:                  string;
     type:                    string;
     dateCreated?:             Date;
     dateUpdated?:             Date;

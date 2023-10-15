@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard-appointments.component.html',
   styleUrls: ['./dashboard-appointments.component.scss']
 })
-export class DashboardAppointmentsComponent implements OnInit{
+export class DashboardAppointmentsComponent implements OnInit {
   appointments: Appointment[] | null = [];
   appointmentParams: AppointmentParams = {
     pageNumber: 1,
@@ -30,21 +30,24 @@ export class DashboardAppointmentsComponent implements OnInit{
   constructor(private appointmentService: AppointmentService,
     private specialityService: SpecialityService, private router: Router) {
   }
+
   ngOnInit(): void {
     this.getAppointments();
     this.getSpecialities();
   }
+
   getAppointments() {
     this.appointmentService.getAppointments(this.appointmentParams).subscribe(response => {
       this.appointments = response.result;
       this.pagination = response.pagination;
-      console.log(response)
     })
   }
+
   pageChanged(event: number) {
     this.appointmentParams.pageNumber = event;
     this.getAppointments();
   }
+  
   getSpecialities() {
     this.specialityService.getSpecialities().subscribe(response => {
       this.specialityList = response;
@@ -61,7 +64,7 @@ export class DashboardAppointmentsComponent implements OnInit{
       this.appointmentParams.orderBy = orderBy;
       this.appointmentParams.order = 'desc'; // Set default order to descending when changing orderBy field
     }
-    
+
     this.getAppointments(); // Assuming you have a function to fetch appointments
   }
   resetFilters() {
@@ -70,7 +73,7 @@ export class DashboardAppointmentsComponent implements OnInit{
   }
 
   routeAppointment(appointment: Appointment) {
-    if(appointment.status != "finalized") this.router.navigateByUrl("appointments/update/" + appointment.id);
+    if (appointment.status != "finalized") this.router.navigateByUrl("appointments/update/" + appointment.id);
     else this.router.navigateByUrl("appointments/view-invoice/" + appointment.invoiceId)
   }
 

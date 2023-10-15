@@ -48,7 +48,7 @@ namespace API.Services.Implementations
         public async Task<UserInfoDto> CreateUser(CreateUserDto createUserDto)
         {
             bool userExists = await _authenticationService.UserExists(createUserDto.Username);
-            if (userExists) throw new ApiException(HttpStatusCode.BadRequest, "Username is already taken");
+            if (userExists) throw new BadRequestException("Username is already taken");
             var user = new AppUser
             {
                 UserName = createUserDto.Username.ToLower(),
@@ -65,51 +65,20 @@ namespace API.Services.Implementations
             try
             {
                 // Create User
-                var result = await _userManager.CreateAsync(user, createUserDto.Password);
-                if (!result.Succeeded) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to create user");
-
+                await CreateUser(user, createUserDto.Password);
                 // Add Roles
-                if (!Roles.IsValidRole(createUserDto.Role)) throw new ApiException(HttpStatusCode.NotFound, "Invalid role specified");
-                var roleResults = await _userManager.AddToRoleAsync(user, createUserDto.Role);
-                if (!roleResults.Succeeded) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add role");
-
+                await AddUserRoles(user, createUserDto.Role);
                 if (createUserDto.Role == Roles.Doctor)
                 {
+                    // Add doctor Working Hours
                     if (createUserDto.DoctorWorkingHours != null)
-                    {
-                        foreach (var workingHour in createUserDto.DoctorWorkingHours)
-                        {
-                            workingHour.DoctorId = user.Id;
-                        }
-                        // Add woking hours to doctor
-                        var workingHours = _mapper.Map<IEnumerable<DoctorWorkingHours>>(createUserDto.DoctorWorkingHours);
-                        await _adminRepository.AddDoctorWorkingHours(workingHours);
-                        var adminResult = await _adminRepository.SaveAllAsync();
-                        if (!adminResult) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add working hours");
-                    }
-
+                        await AddDoctorWorkingHours(user.Id, createUserDto.DoctorWorkingHours);
                     // Add Doctor service
                     if (user.DoctorSpecialityId.HasValue)
                     {
-                        var servicesWithSpecialityId = await _serviceRepository.GetServicesIdsBySpecialityId(user.DoctorSpecialityId.Value);
-                        if (!servicesWithSpecialityId.Any())
-                        {
-                            scope.Complete();
-                            return _mapper.Map<UserInfoDto>(user);
-                        }
-
-                        await _doctorServiceRepository.CreateDoctorServicesForDoctor(user.Id, servicesWithSpecialityId);
-                        bool saveDoctorService = await _serviceRepository.SaveAllAsync();
-                        if (saveDoctorService)
-                        {
-                            scope.Complete();
-                            return _mapper.Map<UserInfoDto>(user);
-                        }
-                        else throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add doctor services");
+                        await AddDoctorservices(user);
                     }
-
                 }
-
                 scope.Complete(); // Mark the transaction as complete, to be committed
                 return _mapper.Map<UserInfoDto>(user);
             }
@@ -119,6 +88,45 @@ namespace API.Services.Implementations
                 throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add user"); // Re-throw the exception for further handling
             }
         }
+        private async Task AddDoctorservices(AppUser user)
+        {
+            var servicesWithSpecialityId =
+                await _serviceRepository.GetServicesIdsBySpecialityId(user.DoctorSpecialityId.Value);
+            if (servicesWithSpecialityId.Any())
+            {
+                await _doctorServiceRepository.CreateDoctorServicesForDoctor(user.Id, servicesWithSpecialityId);
+                bool saveDoctorService = await _serviceRepository.SaveAllAsync();
+                if (!saveDoctorService) throw new Exception("Failed to add doctor services");
+            }
+        }
+        private async Task CreateUser(AppUser user, string password)
+        {
+            var result = await _userManager.CreateAsync(user, password);
+            if (!result.Succeeded) throw new Exception("Failed to create user");
+        }
+
+        private async Task AddUserRoles(AppUser user, string role)
+        {
+            if (!Roles.IsValidRole(role)) throw new NotFoundException("Invalid role specified");
+            var roleResults = await _userManager.AddToRoleAsync(user, role);
+            if (!roleResults.Succeeded) throw new Exception("Failed to add role");
+        }
+
+        private async Task AddDoctorWorkingHours(int id, ICollection<DoctorWorkingHoursDto> doctorWorkingHours)
+        {
+            foreach (var workingHour in doctorWorkingHours)
+            {
+                workingHour.DoctorId = id;
+                if (workingHour.StartTime >= workingHour.EndTime) 
+                    throw new BadRequestException("End time must be greater than start time.");
+            }
+            // Add woking hours to doctor
+            var workingHours = _mapper.Map<IEnumerable<DoctorWorkingHours>>(doctorWorkingHours);
+            await _adminRepository.AddDoctorWorkingHours(workingHours);
+            var adminResult = await _adminRepository.SaveAllAsync();
+            if (!adminResult) throw new Exception("Failed to add working hours");
+        }
+
         public async Task ToggleLockUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception("User not found");

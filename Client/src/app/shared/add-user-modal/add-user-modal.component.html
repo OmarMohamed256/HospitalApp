@@ -22,14 +22,14 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>User Name</label>
-          <app-text-input icon="" [formControl]='$any(createUser.controls["username"])'
+          <app-text-input icon="" formControlName="username"
             [label]='"User Name"'></app-text-input>
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Email</label>
-          <app-text-input icon="" [formControl]='$any(createUser.controls["email"])' [label]='"Email"'></app-text-input>
+          <app-text-input icon="" formControlName="email" [label]='"Email"'></app-text-input>
         </div>
       </div>
     </div>
@@ -37,14 +37,14 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Age</label>
-          <app-text-input icon="" [formControl]='$any(createUser.controls["age"])' [label]='"Age"'></app-text-input>
+          <app-text-input icon="" formControlName="age" [label]='"Age"'></app-text-input>
 
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Full Name</label>
-          <app-text-input icon="" [formControl]='$any(createUser.controls["fullName"])'
+          <app-text-input icon="" formControlName="fullName"
             [label]='"Full Name"'></app-text-input>
         </div>
       </div>
@@ -53,14 +53,14 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Password</label>
-          <app-text-input icon="" [formControl]='$any(createUser.controls["password"])'
+          <app-text-input type="password" icon="" formControlName="password"
             [label]='"Password"'></app-text-input>
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Confirm Password</label>
-          <app-text-input icon="" [formControl]='$any(createUser.controls["confirmPassword"])'
+          <app-text-input type="password" icon="" formControlName="confirmPassword"
             [label]='"Confirm Password"'></app-text-input>
         </div>
       </div>
@@ -69,14 +69,14 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Phone Number</label>
-          <app-text-input icon="" [formControl]='$any(createUser.controls["phoneNumber"])'
+          <app-text-input icon="" formControlName="phoneNumber"
             [label]='"Phone Number"'></app-text-input>
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Gender</label>
-          <select name="gender" aria-label="gender" [formControl]="$any(createUser.controls['gender'])" cSelect>
+          <select name="gender" aria-label="gender" formControlName="gender" cSelect>
             <option value="" disabled>Gender</option>
             <option *ngFor="let gender of genderList" [value]="gender.value">
               {{gender.display}}
@@ -88,7 +88,7 @@
     <div class="row">
       <div class="col">
         <label cLabel>Role</label>
-        <select name="role" aria-label="role" cSelect [formControl]="$any(createUser.controls['role'])">
+        <select name="role" aria-label="role" cSelect formControlName="role">
           <option disabled value="" selected>Role</option>
           <option *ngFor="let role of roles" [value]="role">
             {{role}}
@@ -97,8 +97,7 @@
       </div>
       <div class="col mb-3" *ngIf="createUser.value.role == 'Doctor'">
         <label cLabel>Speciality</label>
-        <select name="doctorSpecialityId" aria-label="doctorSpecialityId" cSelect
-          [formControl]="$any(createUser.controls['doctorSpecialityId'])">
+        <select name="doctorSpecialityId" cSelect formControlName="doctorSpecialityId">
           <option disabled value="" selected>Speciality</option>
           <option *ngFor="let speciality of specialityList" [value]="speciality.id">
             {{speciality.name}}
@@ -137,6 +136,9 @@
                     <option *ngFor="let time of getHalfHourIntervals(); trackBy: trackByFn"
                       [value]="time.timeSpanValue">{{ time.displayValue }}</option>
                   </select>
+                  <div class="col" *ngIf="control.get('startTime').hasError('startTimeInvalid')">
+                    <div class="text-danger">start time must be less than End time</div>
+                  </div>
                 </div>
                 <div class="col">
                   <select formControlName="endTime" class="form-select">
@@ -146,6 +148,9 @@
                   </select>
                   <div class="col" *ngIf="control.get('endTime').hasError('endTimeRequired')">
                     <div class="text-danger">End time is required when start time is selected.</div>
+                  </div>
+                  <div class="col" *ngIf="control.get('endTime').hasError('endTimeInvalid')">
+                    <div class="text-danger">End time must be greater than start time</div>
                   </div>
                 </div>
               </div>
