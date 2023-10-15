@@ -53,6 +53,7 @@ namespace API.Helpers
                 .ReverseMap();
 
             CreateMap<DoctorServiceDto, DoctorService>().ReverseMap();
+            CreateMap<MedicineDto, Medicine>().ReverseMap();
             CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();
             CreateMap<InventoryItemDto, InventoryItem>().ReverseMap();
             CreateMap<SupplyOrderDto, SupplyOrder>().ReverseMap();

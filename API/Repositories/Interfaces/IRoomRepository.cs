@@ -10,7 +10,6 @@ namespace API.Repositories.Interfaces
         void DeleteRoom(Room room);
         Task <Room> GetRoomById(int roomId);
         Task <Room> GetRoomByDoctorId(int doctorId);
-
         Task <PagedList<Room>> GetAllRoomsWithUpComingAppointmentsAsync(RoomParams roomParams);
         Task<bool> SaveAllAsync();
     }

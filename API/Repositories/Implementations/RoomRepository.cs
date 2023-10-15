@@ -16,12 +16,12 @@ namespace API.Repositories.Implementations
         }
         public void AddRoom(Room room)
         {
-            _context.Add(room);
+            _context.Rooms.Add(room);
         }
 
         public void DeleteRoom(Room room)
         {
-            _context.Remove(room);
+            _context.Rooms.Remove(room);
         }
 
         public async Task<PagedList<Room>> GetAllRoomsWithUpComingAppointmentsAsync(RoomParams roomParams)
@@ -75,7 +75,7 @@ namespace API.Repositories.Implementations
 
         public void UpdateRoom(Room room)
         {
-            _context.Update(room);
+            _context.Rooms.Update(room);
         }
     }
 }

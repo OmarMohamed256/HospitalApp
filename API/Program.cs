@@ -101,6 +101,7 @@ builder.Services.AddScoped<ISupplyOrderRepository, SupplyOrderRepository>();
 builder.Services.AddScoped<IDoctorWorkingHoursRepository, DoctorWorkingHoursRepository>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -116,6 +117,7 @@ builder.Services.AddScoped<ISupplyOrderService, SupplyOrderService>();
 builder.Services.AddScoped<IDoctorWorkingHoursService, DoctorWorkingHoursService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IMedicineService, MedicineService>();
 
 builder.Services.AddSignalR();
 
