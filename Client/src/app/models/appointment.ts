@@ -1,3 +1,4 @@
+import { AppointmentMedicine } from "./appointmentMedicine";
 import { Speciality } from "./speciality";
 import { UserData } from "./UserModels/userData";
 
@@ -16,6 +17,7 @@ export interface Appointment {
     doctor?:                  UserData;
     patient?:                  UserData;
     speciality?:              Speciality;
+    appointmentMedicines?:    AppointmentMedicine[];
 }
 
 

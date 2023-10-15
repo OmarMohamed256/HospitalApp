@@ -68,6 +68,23 @@
     <div class="row">
         <div class="col">
             <div class="mb-3">
+                <label cLabel>Medicine</label>
+                <ng-select 
+                [items]="medicineList" 
+                [virtualScroll]="true" 
+                [bindLabel]="'name'" 
+                [bindValue]="'id'" 
+                (search)="searchMedicines($event)"
+                [multiple]="true"
+                (change)="onMedicineSelect($event)"
+                >
+              </ng-select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
                 <label cLabel>Note</label>
                 <textarea class="form-control" formControlName="creationNote" rows="3"></textarea>
             </div>

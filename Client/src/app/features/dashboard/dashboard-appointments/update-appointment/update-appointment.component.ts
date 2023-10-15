@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AppointmentTypeList } from 'src/app/constants/appointmentTypes';
 import { ROLES } from 'src/app/constants/roles';
@@ -15,6 +15,9 @@ import { UserParams } from 'src/app/models/Params/userParams';
 import { firstValueFrom } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { Medicine } from 'src/app/models/medicine';
+import { MedicineService } from 'src/app/core/services/medicine.service';
+import { MedicineParams } from 'src/app/models/Params/medicineParams';
 
 @Component({
   selector: 'app-update-appointment',
@@ -37,12 +40,18 @@ export class UpdateAppointmentComponent implements OnInit {
   appointment?: Appointment;
   selectedPatient: UserData | null = null;
   selectedDoctor: UserData | null = null;
+  medicineList: Medicine[] = [];
 
   rolePatient = ROLES.PATIENT;
   roleDoctor = ROLES.DOCTOR;
 
   selectedDay: string | null = null;
   selectedTime: Date | null = null;
+
+  medicineParams: MedicineParams = {
+    pageNumber: 1,
+    pageSize: 5,
+  };
 
   patientParams: UserParams = new UserParams({
     pageNumber: 1,
@@ -58,7 +67,8 @@ export class UpdateAppointmentComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private specialityService: SpecialityService,
     private userService: UserService, private doctorWorkingHoursService: DoctorWorkingHoursService,
-    private appointmentService: AppointmentService, private route: ActivatedRoute, private datePipe: DatePipe, private toastr: ToastrService) {
+    private appointmentService: AppointmentService, private route: ActivatedRoute, private datePipe: DatePipe,
+    private toastr: ToastrService, private medicineService: MedicineService) {
   }
 
   ngOnInit(): void {
@@ -106,6 +116,31 @@ export class UpdateAppointmentComponent implements OnInit {
       doctorId: [this.appointment?.doctorId, Validators.required],
       patientId: [this.appointment?.patientId, Validators.required],
       appointmentSpecialityId: [this.appointment?.appointmentSpecialityId, Validators.required],
+      appointmentMedicines: this.fb.array([])
+    });
+  }
+
+  searchMedicines(event: any) {
+    if (event.term.trim().length > 1) {
+      this.medicineParams.searchTerm = event.term;
+      this.medicineService.getMedicines(this.medicineParams).subscribe(response => {
+        this.medicineList = response.result;
+      });
+    }
+  }
+
+  onMedicineSelect(medicines: Medicine[]) {
+    this.updateSelectedMedicineItems(medicines);
+  }
+
+  updateSelectedMedicineItems(medicines: any) {
+    const selectedMedicineItemsFormArray = this.UpdateAppointmentForm.get('appointmentMedicines') as FormArray;
+    selectedMedicineItemsFormArray.clear();
+
+    medicines.forEach((medicine: any) => {
+      selectedMedicineItemsFormArray.push(this.fb.group({
+        medicineId: [medicine.id],
+      }));
     });
   }
 
@@ -259,7 +294,8 @@ export class UpdateAppointmentComponent implements OnInit {
       patientId: this.UpdateAppointmentForm.get('patientId')?.value,
       status: this.UpdateAppointmentForm.get('status')?.value,
       type: this.UpdateAppointmentForm.get('type')?.value,
-      dateCreated: this.appointment?.dateCreated
+      dateCreated: this.appointment?.dateCreated,
+      appointmentMedicines: this.UpdateAppointmentForm.get('appointmentMedicines')?.value
     }
     return appointment;
   }
