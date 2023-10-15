@@ -10,8 +10,6 @@ export interface Invoice {
     totalPaid:             number;
     totalRemaining:        number;
     finalizationDate:      string;
-    dateCreated:           string;
-    dateUpdated:           string;
     appointmentId:         number;
     customItems:           CustomItem[];
     invoiceDoctorServices: InvoiceDoctorService[];

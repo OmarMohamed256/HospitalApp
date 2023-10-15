@@ -1,20 +1,20 @@
-<c-modal #scrollableLongContentModal id="scrollableLongContentModal" (visibleChange)="modelToggeled($event)" size="xl" [visible]="visible" scrollable>
+<c-modal #supplyOrdersModal id="supplyOrdersModal" (visibleChange)="modelToggeled($event)" size="xl" [visible]="visible" scrollable>
   <c-modal-header>
     <h5 cModalTitle>Service</h5>
-    <button [cModalToggle]="scrollableLongContentModal.id" cButtonClose></button>
+    <button [cModalToggle]="supplyOrdersModal.id" cButtonClose></button>
   </c-modal-header>
   <c-modal-body>
-    <ng-container *ngTemplateOutlet="longContent"></ng-container>
+    <ng-container *ngTemplateOutlet="supplyOrderContent"></ng-container>
   </c-modal-body>
   <c-modal-footer>
-    <button [cModalToggle]="scrollableLongContentModal.id" cButton color="secondary">
+    <button [cModalToggle]="supplyOrdersModal.id" cButton color="secondary">
       Close
     </button>
     <button [disabled]="!supplyOrderForm.valid" cButton color="primary" (click)="supplyOrderForm.valid && createUpdateSupplyOrder()">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
-<ng-template #longContent>
+<ng-template #supplyOrderContent>
   <form [formGroup]="supplyOrderForm" autocomplete="off">
     <div class="row">
       <div class="col">

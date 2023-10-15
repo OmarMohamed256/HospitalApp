@@ -6,8 +6,6 @@ namespace API.Models.DTOS
         public int Id { get; set; }
         public string? Status { get; set; }
         public string Type { get; set; }
-        public DateTime DateCreated { get; set; }
-        public DateTime DateUpdated { get; set; }
         public DateTime DateOfVisit { get; set; }
         public int DoctorId { get; set; }
         public int PatientId { get; set; }

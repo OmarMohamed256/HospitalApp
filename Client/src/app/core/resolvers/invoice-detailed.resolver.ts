@@ -12,5 +12,5 @@ export const InvoiceDetailedResolver: ResolveFn<Invoice> = (route, state) => {
             return of(invoice);
         }
     }
-    return invoiceService.getInvoice(parseInt(route.paramMap.get('id')!));
+    return invoiceService.getInvoice(parseInt(route.paramMap.get('invoiceId')!));
 };

@@ -1,21 +1,21 @@
-<c-modal #scrollableLongContentModal id="scrollableLongContentModal" size="xl" (visibleChange)="modelToggeled($event)"
+<c-modal #roomModal id="roomModal" size="xl" (visibleChange)="modelToggeled($event)"
   [visible]="visible" scrollable>
   <c-modal-header>
     <h5 cModalTitle>Room</h5>
-    <button [cModalToggle]="scrollableLongContentModal.id" cButtonClose></button>
+    <button [cModalToggle]="roomModal.id" cButtonClose></button>
   </c-modal-header>
   <c-modal-body>
-    <ng-container *ngTemplateOutlet="longContent"></ng-container>
+    <ng-container *ngTemplateOutlet="roomContent"></ng-container>
   </c-modal-body>
   <c-modal-footer>
-    <button [cModalToggle]="scrollableLongContentModal.id" cButton color="secondary">
+    <button [cModalToggle]="roomModal.id" cButton color="secondary">
       Close
     </button>
     <button cButton (click)="createUpdateRoom()" color="primary">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
-<ng-template #longContent>
+<ng-template #roomContent>
   <form [formGroup]="createUpdateRoomForm" cForm (ngSubmit)="createUpdateRoomForm.valid" autocomplete="off">
     <div class="row">
       <div class="col">

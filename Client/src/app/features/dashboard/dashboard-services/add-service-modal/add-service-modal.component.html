@@ -1,33 +1,33 @@
-<c-modal #scrollableLongContentModal id="scrollableLongContentModal" size="xl" (visibleChange)="modelToggeled($event)"
+<c-modal #serviceModal id="serviceModal" size="xl" (visibleChange)="modelToggeled($event)"
   [visible]="visible" scrollable>
   <c-modal-header>
     <h5 cModalTitle>Service</h5>
-    <button [cModalToggle]="scrollableLongContentModal.id" cButtonClose></button>
+    <button [cModalToggle]="serviceModal.id" cButtonClose></button>
   </c-modal-header>
   <c-modal-body>
-    <ng-container *ngTemplateOutlet="longContent"></ng-container>
+    <ng-container *ngTemplateOutlet="serviceContent"></ng-container>
   </c-modal-body>
   <c-modal-footer>
-    <button [cModalToggle]="scrollableLongContentModal.id" cButton color="secondary">
+    <button [cModalToggle]="serviceModal.id" cButton color="secondary">
       Close
     </button>
     <button cButton color="primary" (click)="createUpdateService()">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
-<ng-template #longContent>
+<ng-template #serviceContent>
   <form [formGroup]="createServiceForm" cForm (ngSubmit)="createServiceForm.valid" autocomplete="off">
     <div class="row">
       <div class="col">
         <div class="mb-3">
           <label cLabel>Name</label>
-          <app-text-input icon="cilUser" formControlName="name" [label]='"Name"'></app-text-input>
+          <app-text-input icon="" formControlName="name" [label]='"Name"'></app-text-input>
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Total Price</label>
-          <app-text-input icon="cilUser" formControlName="totalPrice" [label]='"Total Price"'></app-text-input>
+          <app-text-input icon="" formControlName="totalPrice" [label]='"Total Price"'></app-text-input>
         </div>
       </div>
     </div>

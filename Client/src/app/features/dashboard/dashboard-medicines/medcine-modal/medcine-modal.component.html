@@ -1,21 +1,21 @@
-<c-modal #scrollableLongContentModal id="scrollableLongContentModal" size="xl" (visibleChange)="modelToggeled($event)"
+<c-modal #medicineModal id="medicineModal" size="xl" (visibleChange)="modelToggeled($event)"
   [visible]="visible" scrollable>
   <c-modal-header>
     <h5 cModalTitle>Medicine</h5>
-    <button [cModalToggle]="scrollableLongContentModal.id" cButtonClose></button>
+    <button [cModalToggle]="medicineModal.id" cButtonClose></button>
   </c-modal-header>
   <c-modal-body>
-    <ng-container *ngTemplateOutlet="longContent"></ng-container>
+    <ng-container *ngTemplateOutlet="medicineCotent"></ng-container>
   </c-modal-body>
   <c-modal-footer>
-    <button [cModalToggle]="scrollableLongContentModal.id" cButton color="secondary">
+    <button [cModalToggle]="medicineModal.id" cButton color="secondary">
       Close
     </button>
     <button [disabled]="!createUpdateMedicineForm.valid" cButton color="primary" (click)="createUpdateMedicineForm.valid && createUpdateMedicine()">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
-<ng-template #longContent>
+<ng-template #medicineCotent>
 <form [formGroup]="createUpdateMedicineForm" cForm (ngSubmit)="createUpdateMedicineForm.valid" autocomplete="off">
     <div class="row">
         <div class="col">

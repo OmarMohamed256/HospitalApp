@@ -1,4 +1,20 @@
 <form *ngIf="invoice">
+    <div class="text-center mb-3"><h1>Dates</h1></div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label>Finalization Date</label>
+                <input class="form-control" disabled value="{{invoice.finalizationDate | date:'short'}}" />
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label>Payment Method</label>
+                <input class="form-control" disabled value="{{invoice.paymentMethod}}" />
+            </div>
+        </div>
+    </div>
+
     <div class="text-center mb-3"><h1>Services</h1></div>
     <div class="row" *ngFor="let service of invoice.invoiceDoctorServices">
         <div class="col">

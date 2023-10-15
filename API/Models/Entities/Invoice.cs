@@ -2,7 +2,7 @@ using HospitalApp.Models.Entities;
 
 namespace API.Models.Entities
 {
-    public class Invoice : ITrackableEntity
+    public class Invoice
     {
         public int Id { get; set; }
         public string PaymentMethod { get; set; }
@@ -14,8 +14,6 @@ namespace API.Models.Entities
         public decimal TotalRemaining { get; set; }
         public decimal AppointmentTypePrice { get; set; }
         public DateTime FinalizationDate { get; set; }
-        public DateTime DateCreated { get; set; }
-        public DateTime DateUpdated { get; set; }
         public int AppointmentId { get; set; }
         public virtual Appointment Appointment { get; set; }
         public virtual ICollection<CustomItem>? CustomItems { get; set; }

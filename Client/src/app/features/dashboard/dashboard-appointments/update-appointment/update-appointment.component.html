@@ -80,5 +80,5 @@
             </li>
         </ul>
     </div>
-    <button type="submit" class="btn btn-primary">Update Appointment</button>
+    <button type="submit" *ngIf="appointment?.status != 'finalized'" class="btn btn-primary">Update Appointment</button>
 </form>

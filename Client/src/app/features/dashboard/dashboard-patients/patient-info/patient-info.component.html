@@ -5,13 +5,8 @@
     </a>
   </c-nav-item>
   <c-nav-item>
-    <a [cTabContent]="tabContent"  [tabPaneIdx]="1" cNavLink>
+    <a [cTabContent]="tabContent" [tabPaneIdx]="1" cNavLink>
       Appointments
-    </a>
-  </c-nav-item>
-  <c-nav-item>
-    <a [cTabContent]="tabContent" [tabPaneIdx]="2" cNavLink>
-      Packages
     </a>
   </c-nav-item>
 </c-nav>
@@ -22,16 +17,16 @@
         <div class="col">
           <div class="mb-3">
             <label cLabel>Username</label>
-            <app-text-input icon="cilUser"
-              [formControl]='$any(updateUserForm.controls["username"])' [label]='"username"'></app-text-input>
-              
+            <app-text-input icon="" [formControl]='$any(updateUserForm.controls["username"])'
+              [label]='"username"'></app-text-input>
+
           </div>
         </div>
         <div class="col">
           <div class="mb-3">
             <label cLabel>Email</label>
-            <app-text-input icon="cilEnvelopeClosed"
-              [formControl]='$any(updateUserForm.controls["email"])'  [label]='"email"'></app-text-input>
+            <app-text-input icon="" [formControl]='$any(updateUserForm.controls["email"])'
+              [label]='"email"'></app-text-input>
           </div>
         </div>
       </div>
@@ -39,15 +34,15 @@
         <div class="col">
           <div class="mb-3">
             <label cLabel>Fullname</label>
-            <app-text-input icon="cilUser" 
-              [formControl]='$any(updateUserForm.controls["fullname"])'  [label]='"Fullname"'></app-text-input>
+            <app-text-input icon="" [formControl]='$any(updateUserForm.controls["fullname"])'
+              [label]='"Fullname"'></app-text-input>
           </div>
         </div>
         <div class="col">
           <div class="mb-3">
             <label cLabel>Age</label>
-            <app-text-input icon="cilPeople" 
-              [formControl]='$any(updateUserForm.controls["age"])'  [label]='"Age"'></app-text-input>
+            <app-text-input icon="" [formControl]='$any(updateUserForm.controls["age"])'
+              [label]='"Age"'></app-text-input>
           </div>
         </div>
       </div>
@@ -55,14 +50,14 @@
         <div class="col">
           <div class="mb-3">
             <label cLabel>Phone Number</label>
-            <app-text-input icon="cilPhone" 
-              [formControl]='$any(updateUserForm.controls["phoneNumber"])' [label]='"Phone Number"'></app-text-input>
+            <app-text-input icon="" [formControl]='$any(updateUserForm.controls["phoneNumber"])'
+              [label]='"Phone Number"'></app-text-input>
           </div>
         </div>
         <div class="col">
           <div class="mb-3">
             <label cLabel>Gender</label>
-            <select name="gender"  aria-label="gender" cSelect [formControl]="$any(updateUserForm.controls['gender'])">
+            <select name="gender" aria-label="gender" cSelect [formControl]="$any(updateUserForm.controls['gender'])">
               <option *ngFor="let gender of genderList" [value]="gender.value">
                 {{gender.display}}
               </option>
@@ -82,9 +77,5 @@
   </c-tab-pane>
   <c-tab-pane class="p-3">
     <app-patient-appointments [user]="user" *ngIf="activePane === 1"></app-patient-appointments>
-  </c-tab-pane>
-
-  <c-tab-pane class="p-3">
-
   </c-tab-pane>
 </c-tab-content>
