@@ -27,14 +27,12 @@ export class SpecialitiesModelComponent implements OnInit {
   }
 
   createUpdateSpeciality() {
-    if (this.createUpdateSpecialityForm.valid) {
-      if (this.createUpdateSpecialityForm.get('id')?.value == 0) {
-        this.createSpeciality();
-      }else {
-        this.updateSpeciality();
-      }
-      this.modelToggeled(false);
+    if (this.createUpdateSpecialityForm.get('id')?.value == 0) {
+      this.createSpeciality();
+    } else {
+      this.updateSpeciality();
     }
+    this.modelToggeled(false);
   }
 
   updateSpeciality() {

@@ -60,6 +60,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/dashboard/dashboard-rooms/dashboard-rooms.module').then((m) => m.DashboardRoomsModule)
       },
+      {
+        path: 'medicines',
+        loadChildren: () =>
+          import('./features/dashboard/dashboard-medicines/dashboard-medicines.module').then((m) => m.DashboardMedicinesModule)
+      },
     ]
   },
   {

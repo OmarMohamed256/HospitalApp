@@ -1,0 +1,41 @@
+<c-navbar colorScheme="dark" expand="lg" class="bg-dark">
+    <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+        <button cButton color="light" (click)="openAndReset()">
+            <span class=""><svg class="border rounded border-dark" cIcon name="cilPlus"></svg>
+                Add new medicine</span>
+        </button>
+
+        <form cForm class="d-flex" role="search" (submit)="getMedicines()">
+            <input cFormControl type="search" placeholder="Search" name="searchTerm" aria-label="Search" class="me-2"
+                [(ngModel)]="medicineParams.searchTerm">
+            <button cButton color="light" variant="outline" type="submit">Search</button>
+        </form>
+        <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+
+    </div>
+</c-navbar>
+<table cTable *ngIf="medicines && medicines.length > 0">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let medicine of medicines" class="user-table" (click)="openModalAndSetMedicine(medicine)">
+            <td>{{medicine.id}}</td>
+            <td>{{medicine.name}}</td>
+            <td class="pt-1">
+                <button cButton color="danger" class="btn-m" (click)="deleteMedicine(medicine.id, $event)"><svg cIcon
+                        name="cil-trash"></svg></button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-center" *ngIf="pagination">
+    <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+        [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+</div>
+<app-medcine-modal [(visible)]="modalVisibility" (medicineCreated)="medicineCreated($event)"></app-medcine-modal>

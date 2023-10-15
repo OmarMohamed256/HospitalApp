@@ -15,6 +15,7 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { CommonSharedModule } from './shared/common-shared.module';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
+import { DashboardMedicinesComponent } from './features/dashboard/dashboard-medicines/dashboard-medicines.component';
 
 const APP_CONTAINERS = [
   DefaultHeaderComponent,

@@ -1,4 +1,3 @@
-import { ROLES } from 'src/app/constants/roles';
 import { IRoleNavData } from 'src/app/models/role-nav-data';
 
 export const navItems: IRoleNavData[] = [
@@ -53,4 +52,9 @@ export const navItems: IRoleNavData[] = [
     url: '/rooms',
     iconComponent: { name: 'cil-door' },
   },
+  {
+    name: 'Medicines',
+    url: '/medicines',
+    iconComponent: { name: 'cil-drink-alcohol' },
+  }
 ];

@@ -1,7 +1,7 @@
 <c-modal #scrollableLongContentModal id="scrollableLongContentModal" size="xl" (visibleChange)="modelToggeled($event)"
   [visible]="visible" scrollable>
   <c-modal-header>
-    <h5 cModalTitle>Service</h5>
+    <h5 cModalTitle>Medicine</h5>
     <button [cModalToggle]="scrollableLongContentModal.id" cButtonClose></button>
   </c-modal-header>
   <c-modal-body>
@@ -11,12 +11,12 @@
     <button [cModalToggle]="scrollableLongContentModal.id" cButton color="secondary">
       Close
     </button>
-    <button [disabled]="!createUpdateSpecialityForm.valid" cButton color="primary" (click)="createUpdateSpecialityForm.valid && createUpdateSpeciality()">Save changes</button>
+    <button [disabled]="!createUpdateMedicineForm.valid" cButton color="primary" (click)="createUpdateMedicineForm.valid && createUpdateMedicine()">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
 <ng-template #longContent>
-<form [formGroup]="createUpdateSpecialityForm" cForm (ngSubmit)="createUpdateSpecialityForm.valid" autocomplete="off">
+<form [formGroup]="createUpdateMedicineForm" cForm (ngSubmit)="createUpdateMedicineForm.valid" autocomplete="off">
     <div class="row">
         <div class="col">
             <div class="mb-3">
