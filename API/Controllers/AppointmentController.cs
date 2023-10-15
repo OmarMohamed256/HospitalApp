@@ -3,6 +3,7 @@ using API.Extenstions;
 using API.Helpers;
 using API.Models.DTOS;
 using API.Services.Interfaces;
+using HospitalApp.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,12 +57,13 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<AppointmentDto>> CreateAppointmentAsync(AppointmentDto appointmentDto)
         {
-            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto);
+            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto, false);
         }
         [HttpPut]
+        // [Authorize(Policy = Polices.RequireDoctorRole)]
         public async Task<ActionResult<AppointmentDto>> UpdateAppointmentAsync(AppointmentDto appointmentDto)
         {
-            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto);
+            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto, true);
         }
         [HttpDelete("{appointmentId}")]
         public async Task<ActionResult> DeleteAppointmentAsync(int appointmentId)

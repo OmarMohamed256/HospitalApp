@@ -111,6 +111,7 @@ namespace API.Repositories.Implementations
             return await _context.Appointments
             .Include(a => a.Doctor)
             .Include(a => a.Patient)
+            .AsNoTracking()
             .FirstOrDefaultAsync(a => a.Id == appointmentId);
         }
 

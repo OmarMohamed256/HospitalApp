@@ -21,7 +21,7 @@ namespace API.Services.Implementations
 
         }
 
-        public async Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto)
+        public async Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto, bool canAddMedicines)
         {
             var appointment = _mapper.Map<Appointment>(appointmentDto);
             if (await IsAppointmentValid(appointment))
@@ -29,6 +29,10 @@ namespace API.Services.Implementations
                 var oldAppointment = await _appointmentRepository.GetAppointmentByIdAsync(appointment.Id);
                 if (oldAppointment == null)
                 {
+                    // Check if medicine can be added
+                    if (!canAddMedicines && appointment.AppointmentMedicines.Any())
+                        throw new BadRequestException("Medicines cannot be added during appointment creation.");
+
                     appointment.Status = "booked";
                     _appointmentRepository.AddAppointment(appointment);
                 }
@@ -36,6 +40,9 @@ namespace API.Services.Implementations
                 {
                     if (oldAppointment.Status == "finalized")
                         throw new BadRequestException("Appointment is already finalized cannot update or add");
+                    // Check if medicine can be added
+                    if (!canAddMedicines && appointment.AppointmentMedicines.Any())
+                        throw new BadRequestException("Medicines cannot be added during appointment update.");
                     // Add ability to add medicines on update only
                     _appointmentRepository.UpdateAppointment(appointment);
                 }

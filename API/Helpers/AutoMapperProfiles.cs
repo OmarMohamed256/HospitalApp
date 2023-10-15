@@ -1,4 +1,5 @@
 using API.Models.DTOS;
+using API.Models.DTOS.AppointmentDtos;
 using API.Models.Entities;
 using AutoMapper;
 using HospitalApp.Models.Entities;
@@ -22,7 +23,6 @@ namespace API.Helpers
                 .ReverseMap();
 
             CreateMap<Speciality, SpecialityDto>().ReverseMap();
-            CreateMap<Appointment, AppointmentDto>().ReverseMap();
             CreateMap<Appointment, RoomAppointmentDto>().ReverseMap();
 
             CreateMap<Service, ServiceDto>().ReverseMap();
@@ -57,9 +57,13 @@ namespace API.Helpers
             CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();
             CreateMap<InventoryItemDto, InventoryItem>().ReverseMap();
             CreateMap<SupplyOrderDto, SupplyOrder>().ReverseMap();
+            CreateMap<AppointmentMedicineDto, AppointmentMedicine>().ReverseMap();
+
             CreateMap<Appointment, AppointmentDto>()
             .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
-            .ForMember(dest => dest.Patient, opt => opt.MapFrom(src => src.Patient)).ReverseMap();
+            .ForMember(dest => dest.Patient, opt => opt.MapFrom(src => src.Patient))
+            .ForMember(dest => dest.AppointmentMedicines, opt => opt.MapFrom(src => src.AppointmentMedicines))
+            .ReverseMap();
 
             CreateMap<Room, RoomDto>()
             .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))

@@ -1,8 +1,4 @@
-
-
-using HospitalApp.Models.Entities;
-using webapi.Entities;
-
+using API.Models.DTOS.AppointmentDtos;
 namespace API.Models.DTOS
 {
     public class AppointmentDto
@@ -21,5 +17,6 @@ namespace API.Models.DTOS
         public UserInfoDto? Doctor { get; set; }
         public UserInfoDto? Patient { get; set; }
         public SpecialityDto? Speciality { get; set; }
+        public ICollection<AppointmentMedicineDto>? AppointmentMedicines { get; set; }
     }
 }
