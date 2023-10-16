@@ -53,6 +53,14 @@ namespace API.Controllers
             if (appointment == null) return BadRequest("Appointment does not exist");
             return Ok(appointment);
         }
+        [HttpGet]
+        [Route("getMedicinesByAppointmentId/{appointmentId}")]
+        public async Task<ActionResult<ICollection<MedicineDto>>> GetMedicinesByAppointmentId
+            (int appointmentId)
+        {
+            var medicines = await _appoinmentService.GetMedicinesByAppointmentIdAsync(appointmentId);
+            return Ok(medicines);
+        }
 
         [HttpPost]
         public async Task<ActionResult<AppointmentDto>> CreateAppointmentAsync(AppointmentDto appointmentDto)

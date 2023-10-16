@@ -160,5 +160,11 @@ namespace API.Repositories.Implementations
             _context.AppointmentMedicine.RemoveRange(appointmentMedicines);
         }
 
+        public async Task<ICollection<AppointmentMedicine>> GetAppointmentMedicinesByWithMedicineAppointmentIdAsync(int appointmentId)
+        {
+            return await _context.AppointmentMedicine
+            .Include(am => am.Medicine)
+            .Where(am => am.AppointmentId == appointmentId).ToListAsync();
+        }
     }
 }

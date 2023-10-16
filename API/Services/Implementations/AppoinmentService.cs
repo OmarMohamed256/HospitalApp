@@ -1,9 +1,6 @@
-using API.Constants;
 using API.Errors;
 using API.Helpers;
 using API.Models.DTOS;
-using API.Models.DTOS.AppointmentDtos;
-using API.Models.Entities;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
 using AutoMapper;
@@ -53,7 +50,6 @@ namespace API.Services.Implementations
                     oldAppointment.AppointmentSpecialityId = appointment.AppointmentSpecialityId;
                     oldAppointment.CreationNote = appointment.CreationNote;
                 }
-
                 var result = await _appointmentRepository.SaveAllAsync();
                 if (result) return _mapper.Map<AppointmentDto>(appointment);
             }
@@ -112,6 +108,14 @@ namespace API.Services.Implementations
         {
             var upcomingAppointments = await _appointmentRepository.GetUpcomingAppointmentsDatesByDoctorIdAsync(doctorId);
             return upcomingAppointments;
+        }
+        public async Task<ICollection<MedicineDto>> GetMedicinesByAppointmentIdAsync(int appointmentId)
+        {
+            var appoinmentMedicineList = 
+                await _appointmentRepository.GetAppointmentMedicinesByWithMedicineAppointmentIdAsync(appointmentId);
+            var medicineDtoList = 
+                appoinmentMedicineList.Select(am => am.Medicine).Select(m => _mapper.Map<MedicineDto>(m)).ToList();
+            return medicineDtoList;
         }
     }
 }

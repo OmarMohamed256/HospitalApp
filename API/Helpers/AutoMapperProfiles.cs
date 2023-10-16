@@ -57,7 +57,9 @@ namespace API.Helpers
             CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();
             CreateMap<InventoryItemDto, InventoryItem>().ReverseMap();
             CreateMap<SupplyOrderDto, SupplyOrder>().ReverseMap();
-            CreateMap<AppointmentMedicineDto, AppointmentMedicine>().ReverseMap();
+            CreateMap<AppointmentMedicineDto, AppointmentMedicine>()
+            .ForMember(dest => dest.Medicine, opt => opt.MapFrom(src => src.Medicine))
+            .ReverseMap();
 
             CreateMap<Appointment, AppointmentDto>()
             .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))

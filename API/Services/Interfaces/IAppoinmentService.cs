@@ -11,5 +11,6 @@ namespace API.Services.Interfaces
         Task<AppointmentDto> GetAppointmentByIdAsync(int appointmentId);
         Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto, bool canAddMedicines);
         Task DeleteAppointment(int appointmentId);
+        Task<ICollection<MedicineDto>> GetMedicinesByAppointmentIdAsync(int appointmentId);
     }
 }
