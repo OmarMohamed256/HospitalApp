@@ -5,7 +5,7 @@ namespace API.Services.Interfaces
 {
     public interface IAdminService
     {
-        Task<UserInfoDto> CreateUser(CreateUserDto createUserDto);
+        Task<UserInfoDto> CreateUserAsync(CreateUserDto createUserDto);
         Task ToggleLockUser(string userId);
         Task ChangeUserRole(string userId, ChangeRoleDto changeRoleDto);
     }

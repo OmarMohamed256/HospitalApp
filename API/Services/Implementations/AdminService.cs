@@ -45,7 +45,7 @@ namespace API.Services.Implementations
             if (!invalidateToken.Succeeded) throw new Exception("failed to invalidate token");
         }
 
-        public async Task<UserInfoDto> CreateUser(CreateUserDto createUserDto)
+        public async Task<UserInfoDto> CreateUserAsync(CreateUserDto createUserDto)
         {
             bool userExists = await _authenticationService.UserExists(createUserDto.Username);
             if (userExists) throw new BadRequestException("Username is already taken");

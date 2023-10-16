@@ -79,13 +79,16 @@ namespace API.Services.Implementations
             using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             try
             {
-                var service = await _serviceRepository.GetServiceById(serviceDto.Id) ?? throw new ApiException(HttpStatusCode.BadRequest, "Service does not exist");
+                var newService = _mapper.Map<Service>(serviceDto);
+
+                var service = await _serviceRepository
+                    .GetServiceById(serviceDto.Id) ?? throw new ApiException(HttpStatusCode.BadRequest, "Service does not exist");
                 var serviceId = service.Id;
-                UpdateServiceInventoryItems(service, serviceDto);
 
                 service.Name = serviceDto.Name;
                 service.TotalPrice = serviceDto.TotalPrice;
                 service.ServiceSpecialityId = serviceDto.ServiceSpecialityId;
+                service.ServiceInventoryItems = newService.ServiceInventoryItems;
 
                 _serviceRepository.UpdateService(service);
                 bool saveService = await _serviceRepository.SaveAllAsync();
@@ -125,42 +128,6 @@ namespace API.Services.Implementations
             bool deleteServiceResult = await _serviceRepository.SaveAllAsync();
             if (deleteServiceResult) return true;
             return false;
-        }
-
-        private void UpdateServiceInventoryItems(Service service, CreateServiceDTO serviceDto)
-        {
-            service.ServiceInventoryItems ??= new List<ServiceInventoryItem>();
-
-            if (service.ServiceInventoryItems != null && service.ServiceInventoryItems.Any())
-            {
-                var updatedInventoryItemIds = serviceDto.ServiceInventoryItems.Select(i => i.InventoryItemId).ToList();
-                
-                var itemsToRemove = service.ServiceInventoryItems
-                       .Where(item => !updatedInventoryItemIds.Contains(item.InventoryItemId))
-                       .ToList();
-                _serviceRepository.DeleteServiceInventoryItemsRangeAsync(itemsToRemove);
-            }
-
-            if (serviceDto.ServiceInventoryItems != null)
-            {
-                foreach (var inventoryItemDto in serviceDto.ServiceInventoryItems)
-                {
-                    var existingInventoryItem = service.ServiceInventoryItems
-                        .FirstOrDefault(item => item.InventoryItemId == inventoryItemDto.InventoryItemId);
-
-                    if (existingInventoryItem != null) existingInventoryItem.QuantityNeeded = inventoryItemDto.QuantityNeeded;
-                    else
-                    {
-                        // Create and add new item
-                        var newInventoryItem = new ServiceInventoryItem
-                        {
-                            InventoryItemId = inventoryItemDto.InventoryItemId,
-                            QuantityNeeded = inventoryItemDto.QuantityNeeded
-                        };
-                        service.ServiceInventoryItems.Add(newInventoryItem);
-                    }
-                }
-            }
         }
 
         public async Task<PagedList<ServiceDto>> GetServicesAsync(ServiceParams serviceParams)
