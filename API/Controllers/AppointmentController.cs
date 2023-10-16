@@ -36,7 +36,6 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("all")]
-        [Authorize]
         public async Task<ActionResult<PagedList<AppointmentDto>>> GetAppointments
             ([FromQuery] AppointmentParams appointmentParams)
         {

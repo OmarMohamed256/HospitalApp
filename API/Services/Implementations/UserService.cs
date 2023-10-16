@@ -42,7 +42,8 @@ namespace API.Services.Implementations
         public async Task<bool> UpdateUser(UserUpdateDto userUpdateDto)
         {
 
-            var user = await _userManager.FindByIdAsync(userUpdateDto.Id.ToString()) ?? throw new ApiException(HttpStatusCode.NotFound, "User Not Found");
+            var user = await _userManager.FindByIdAsync(userUpdateDto.Id.ToString())
+                ?? throw new ApiException(HttpStatusCode.NotFound, "User Not Found");
 
             user.FullName = userUpdateDto.FullName ?? user.FullName;
             user.Age = userUpdateDto.Age ?? user.Age;
@@ -51,7 +52,16 @@ namespace API.Services.Implementations
             user.SecurityStamp = Guid.NewGuid().ToString();
             user.PriceVisit = userUpdateDto.PriceVisit ?? user.PriceVisit;
             user.PriceRevisit = userUpdateDto.PriceRevisit ?? user.PriceRevisit;
-
+            if (!string.IsNullOrEmpty(userUpdateDto.CurrentPassword) && !string.IsNullOrEmpty(userUpdateDto.NewPassword))
+            {
+                IdentityResult changePassResult =
+                    await _userManager.ChangePasswordAsync(user, userUpdateDto.CurrentPassword, userUpdateDto.NewPassword);
+                if (!changePassResult.Succeeded)
+                {
+                    var errorMessage = string.Join(", ", changePassResult.Errors.Select(e => e.Description));
+                    throw new Exception("Password Change Failed: " + errorMessage);
+                }
+            }
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded) return false;
             return true;

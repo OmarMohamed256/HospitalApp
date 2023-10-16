@@ -17,8 +17,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        [Authorize(Policy = Polices.RequireReceptionistRole)]
-        public async Task<ActionResult> UpdateUserAsAdmin(UserUpdateDto userUpdateDto)
+        public async Task<ActionResult> UpdatePatient(UserUpdateDto userUpdateDto)
         {
             bool isUpdated = await _userService.UpdateUser(userUpdateDto);
             if (isUpdated) return NoContent();

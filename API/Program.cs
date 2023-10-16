@@ -28,6 +28,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentityCore<AppUser>(options =>
 {
     options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 6;
     options.User.RequireUniqueEmail = true;
     options.Lockout.AllowedForNewUsers = false;
 })

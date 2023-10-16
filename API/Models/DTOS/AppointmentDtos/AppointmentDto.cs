@@ -7,6 +7,7 @@ namespace API.Models.DTOS
         public string? Status { get; set; }
         public string Type { get; set; }
         public DateTime DateOfVisit { get; set; }
+        public DateTime DateCreated { get; set; }
         public int DoctorId { get; set; }
         public int PatientId { get; set; }
         public int AppointmentSpecialityId { get; set; } // Added property for SpecialityId
