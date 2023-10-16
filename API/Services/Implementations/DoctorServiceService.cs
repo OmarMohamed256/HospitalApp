@@ -31,7 +31,9 @@ namespace API.Services.Implementations
 
         public async Task<DoctorServiceUpdateDto> UpdateDoctorService(DoctorServiceUpdateDto doctorServiceUpdateDto)
         {
-            var doctorService = await _doctorServiceRepository.GetDoctorServiceById(doctorServiceUpdateDto.Id) ?? throw new ApiException(HttpStatusCode.NotFound, "Service does not exist");
+            var doctorService = await _doctorServiceRepository.GetDoctorServiceById(doctorServiceUpdateDto.Id) 
+                ?? throw new ApiException(HttpStatusCode.NotFound, "Service does not exist");
+                
             doctorService.HospitalPercentage = doctorServiceUpdateDto.HospitalPercentage;
             doctorService.DoctorPercentage = doctorServiceUpdateDto.DoctorPercentage;
 

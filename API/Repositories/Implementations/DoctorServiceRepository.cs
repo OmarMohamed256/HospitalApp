@@ -51,10 +51,10 @@ namespace API.Repositories.Implementations
             await _context.DoctorServices.AddRangeAsync(doctorServices);
         }
 
-        public async Task<List<DoctorService>> GetDoctorServiceByServiceId(int Id)
+        public async Task<List<DoctorService>> GetDoctorServicesByServiceId(int serviceId)
         {
             return await _context.DoctorServices
-                .Where(ds => ds.ServiceId == Id)
+                .Where(ds => ds.ServiceId == serviceId)
                 .ToListAsync();
         }
 

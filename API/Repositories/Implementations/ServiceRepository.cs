@@ -31,6 +31,7 @@ namespace API.Repositories.Implementations
         public async Task<Service> GetServiceById(int id)
         {
             return await _context.Services
+                .Include(s => s.DoctorServices)
                 .Include(s => s.ServiceInventoryItems)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }

@@ -5,7 +5,7 @@ namespace API.Repositories.Interfaces
     public interface IDoctorServiceRepository
     {
         Task<IEnumerable<DoctorService>> GetDoctorServiceWithServiceByDoctorId(int doctorId);
-        Task<List<DoctorService>> GetDoctorServiceByServiceId(int Id);
+        Task<List<DoctorService>> GetDoctorServicesByServiceId(int serviceId);
         Task<DoctorService> GetDoctorServiceById(int Id);
         void UpdateDoctorService(DoctorService doctorService);
         Task CreateDoctorServicesForService(int serviceId, List<int> doctorIdsWithSpeciality);

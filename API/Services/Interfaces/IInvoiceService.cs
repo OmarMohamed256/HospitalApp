@@ -6,6 +6,5 @@ namespace API.Services.Interfaces
     {
         Task <InvoiceDto> CreateInvoiceAsync(CreateInvoiceDto invoiceDto);
         Task<InvoiceDto> GetInvoiceByIdAsync(int invoiceId);
-
     }
 }

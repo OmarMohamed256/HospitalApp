@@ -33,19 +33,17 @@ namespace API.Services.Implementations
             try
             {
                 var service = _mapper.Map<Service>(createServiceDto);
+                service.DoctorServices = await PopulateServiceDoctorServices(service);
                 _serviceRepository.AddService(service);
                 bool saveService = await _serviceRepository.SaveAllAsync();
                 if (saveService)
                 {
                     // Handle adding doctor services
-                    var serviceDtoNew = await HandleCreateDoctorServicesAsync(service);
                     scope.Complete();
-                    return serviceDtoNew;
+                    return _mapper.Map<CreateServiceDTO>(service);
+                    // return serviceDtoNew;
                 }
-                else
-                {
-                    throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add service");
-                }
+                throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add service");
             }
             catch (Exception)
             {
@@ -53,74 +51,53 @@ namespace API.Services.Implementations
                 throw;
             }
         }
-
-        private async Task<CreateServiceDTO> HandleCreateDoctorServicesAsync(Service service)
-        {
-            var doctorsWithSpecialityId = await _doctorRepository.GetDoctorsIdsBySpecialityId(service.ServiceSpecialityId);
-            if (!doctorsWithSpecialityId.Any()) return _mapper.Map<CreateServiceDTO>(service);
-            else
-            {
-                await _doctorServiceRepository.CreateDoctorServicesForService(service.Id, doctorsWithSpecialityId);
-                bool createDoctorServicesResult = await _serviceRepository.SaveAllAsync();
-                if (createDoctorServicesResult) return _mapper.Map<CreateServiceDTO>(service);
-            }
-            throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add doctor services");
-        }
-
-        private async Task<bool> HandleDeleteDoctorServicesAsync(List<DoctorService>? servicesToDelete)
-        {
-            // Call UpdateDoctorServicesForService after updating the service
-            _doctorServiceRepository.DeleteDoctorServices(servicesToDelete);
-            bool deleteDoctorsResult = await _serviceRepository.SaveAllAsync();
-            return deleteDoctorsResult;
-        }
         public async Task<CreateServiceDTO> UpdateServiceAsync(CreateServiceDTO serviceDto)
         {
             using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             try
             {
+                // update service
                 var newService = _mapper.Map<Service>(serviceDto);
-
                 var service = await _serviceRepository
                     .GetServiceById(serviceDto.Id) ?? throw new ApiException(HttpStatusCode.BadRequest, "Service does not exist");
                 var serviceId = service.Id;
-
                 service.Name = serviceDto.Name;
                 service.TotalPrice = serviceDto.TotalPrice;
                 service.ServiceSpecialityId = serviceDto.ServiceSpecialityId;
                 service.ServiceInventoryItems = newService.ServiceInventoryItems;
+                service.DoctorServices = await PopulateServiceDoctorServices(newService);
 
                 _serviceRepository.UpdateService(service);
                 bool saveService = await _serviceRepository.SaveAllAsync();
                 if (!saveService) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to update service");
-
-                // Add Delete DoctorServices if speciality changed
-                if (service.ServiceSpecialityId == serviceId)
-                {
-                    scope.Complete();
-                    return _mapper.Map<CreateServiceDTO>(service);
-                }
-
-                var servicesToDelete = await _doctorServiceRepository.GetDoctorServiceByServiceId(service.Id);
-                if (servicesToDelete == null || !servicesToDelete.Any())
-                {
-                    var result = await HandleCreateDoctorServicesAsync(service);
-                    scope.Complete();
-                    return result;
-                }
-
-                bool deleteDoctorsResult = await HandleDeleteDoctorServicesAsync(servicesToDelete);
-                if (!deleteDoctorsResult) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to delete doctor service");
-
-                var addDoctorServiceresult = await HandleCreateDoctorServicesAsync(service);
                 scope.Complete();
-                return addDoctorServiceresult;
+                return _mapper.Map<CreateServiceDTO>(service);
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        private async Task<List<int>> GetDoctorIdsListBySpecialityId(int specilaityId)
+        {
+            return await _doctorRepository.GetDoctorsIdsBySpecialityId(specilaityId);
+        }
+
+        private async Task<ICollection<DoctorService>> PopulateServiceDoctorServices(Service service)
+        {
+            ICollection<DoctorService> doctorServices = new List<DoctorService>();
+            var doctorsWithSpecialityId = await GetDoctorIdsListBySpecialityId(service.ServiceSpecialityId);
+            if (!doctorsWithSpecialityId.Any()) return doctorServices;
+            doctorServices = doctorsWithSpecialityId.Select(doctorId => new DoctorService
+            {
+                DoctorId = doctorId,
+                ServiceId = service.Id,
+                DoctorPercentage = 50,
+                HospitalPercentage = 50
+            }).ToList();
+            return doctorServices;
+        }
+
         public async Task<bool> DeleteServiceAsync(int id)
         {
             var service = await _serviceRepository.GetServiceById(id) ?? throw new ApiException(HttpStatusCode.NotFound, "Service Does not Exist");
