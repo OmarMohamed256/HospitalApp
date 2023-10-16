@@ -71,12 +71,14 @@
                 <label cLabel>Medicine</label>
                 <ng-select 
                 [items]="medicineList" 
-                [virtualScroll]="true" 
+                [virtualScroll]="true"
                 [bindLabel]="'name'" 
                 [bindValue]="'id'" 
                 (search)="searchMedicines($event)"
                 [multiple]="true"
                 (change)="onMedicineSelect($event)"
+                [(ngModel)]="selectedItems" [ngModelOptions]="{standalone: true}"
+                [compareWith]="compareFn"
                 >
               </ng-select>
             </div>

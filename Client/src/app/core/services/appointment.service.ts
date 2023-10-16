@@ -5,6 +5,7 @@ import { AppointmentParams } from 'src/app/models/Params/appointmentParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { Appointment } from 'src/app/models/appointment';
+import { Medicine } from 'src/app/models/medicine';
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +90,7 @@ export class AppointmentService {
   deleteAppointment(appointmentId: number) {
     return this.http.delete(this.baseUrl + 'appointment/' + appointmentId)
   }
+
   getAppointmentById(appointmentId: string) {
     const appointment = [... this.appointmentCache.values()]
     .reduce((arr, elem) => arr.concat(elem.result), [])
@@ -98,6 +100,9 @@ export class AppointmentService {
     return of(appointment);
   }
   return this.http.get<Appointment>(this.baseUrl + 'appointment/getAppointmentById/' + appointmentId);
+  }
+  getMedicinesByAppointmentId(appointmentId: string) {
+    return this.http.get<Medicine[]>(this.baseUrl + 'appointment/getMedicinesByAppointmentId/' + appointmentId);
   }
 
   clearCache() {

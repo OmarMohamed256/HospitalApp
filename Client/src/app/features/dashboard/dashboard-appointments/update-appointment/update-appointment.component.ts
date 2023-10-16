@@ -41,6 +41,7 @@ export class UpdateAppointmentComponent implements OnInit {
   selectedPatient: UserData | null = null;
   selectedDoctor: UserData | null = null;
   medicineList: Medicine[] = [];
+  selectedItems: Medicine[] = [];
 
   rolePatient = ROLES.PATIENT;
   roleDoctor = ROLES.DOCTOR;
@@ -75,6 +76,7 @@ export class UpdateAppointmentComponent implements OnInit {
     this.getSpecialities();
     this.route.data.subscribe(data => {
       this.appointment = data['appointment'];
+      this.intializeMedicineList(this.appointment?.id?.toString()!);
       this.patientList = [...this.patientList, this.appointment?.patient!];
       this.selectedPatient = this.patientList[0];
 
@@ -88,6 +90,18 @@ export class UpdateAppointmentComponent implements OnInit {
       this.selectedDay = this.getIntialSelectedDay();
       this.selectedTime = this.getIntialSelectedTime();
     })
+  }
+
+  intializeMedicineList(appointmentId: string) {
+    this.appointmentService.getMedicinesByAppointmentId(appointmentId).subscribe(response => {
+      this.medicineList = response;
+      this.selectedItems = response;
+      this.updateSelectedMedicineItems(response);
+    })
+  }
+
+  compareFn(item1: any, item2: any): boolean {
+    return item1 && item2 ? item1.id === item2.id : item1 === item2;
   }
 
   getIntialSelectedDay() {
@@ -302,6 +316,7 @@ export class UpdateAppointmentComponent implements OnInit {
 
   updateAppointment() {
     const appointment = this.mapFormToAppointment();
+    console.log(appointment)
     this.appointmentService.updateAppointment(appointment).subscribe({
       next: (response) => {
         this.appointmentService.clearCache();

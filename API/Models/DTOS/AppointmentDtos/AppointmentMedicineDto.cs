@@ -4,6 +4,6 @@ namespace API.Models.DTOS.AppointmentDtos
     {
         public int AppointmentId { get; set; }
         public int MedicineId { get; set; }
-        public MedicineDto Medicine { get; set; }
+        public MedicineDto? Medicine { get; set; }
     }
 }
