@@ -134,6 +134,7 @@ namespace API.Services.Implementations
             if (service.ServiceInventoryItems != null && service.ServiceInventoryItems.Any())
             {
                 var updatedInventoryItemIds = serviceDto.ServiceInventoryItems.Select(i => i.InventoryItemId).ToList();
+                
                 var itemsToRemove = service.ServiceInventoryItems
                        .Where(item => !updatedInventoryItemIds.Contains(item.InventoryItemId))
                        .ToList();

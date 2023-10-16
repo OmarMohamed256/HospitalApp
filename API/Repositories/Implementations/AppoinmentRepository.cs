@@ -1,4 +1,5 @@
 using API.Helpers;
+using API.Models.Entities;
 using API.Repositories.Interfaces;
 using Hospital.Data;
 using HospitalApp.Models.Entities;
@@ -106,12 +107,21 @@ namespace API.Repositories.Implementations
             .SingleOrDefaultAsync(a => a.DateOfVisit == dateOfVisit);
         }
 
+        public async Task<Appointment> GetAppointmentByIdAsyncNoTracking(int appointmentId)
+        {
+            return await _context.Appointments
+            .Include(a => a.Doctor)
+            .Include(a => a.Patient)
+            .Include(a => a.AppointmentMedicines)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(a => a.Id == appointmentId);
+        }
         public async Task<Appointment> GetAppointmentByIdAsync(int appointmentId)
         {
             return await _context.Appointments
             .Include(a => a.Doctor)
             .Include(a => a.Patient)
-            .AsNoTracking()
+            .Include(a => a.AppointmentMedicines)
             .FirstOrDefaultAsync(a => a.Id == appointmentId);
         }
 
@@ -143,6 +153,11 @@ namespace API.Repositories.Implementations
             }
 
             return (appointment.Type, appointment.PriceVisit, appointment.PriceRevisit);
+        }
+
+        public void DeleteAppointmentMedicinesRange(ICollection<AppointmentMedicine> appointmentMedicines)
+        {
+            _context.AppointmentMedicine.RemoveRange(appointmentMedicines);
         }
 
     }

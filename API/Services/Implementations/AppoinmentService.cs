@@ -2,6 +2,8 @@ using API.Constants;
 using API.Errors;
 using API.Helpers;
 using API.Models.DTOS;
+using API.Models.DTOS.AppointmentDtos;
+using API.Models.Entities;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
 using AutoMapper;
@@ -30,7 +32,7 @@ namespace API.Services.Implementations
                 if (oldAppointment == null)
                 {
                     // Check if medicine can be added
-                    if (!canAddMedicines && appointment.AppointmentMedicines.Any())
+                    if (!canAddMedicines && appointment.AppointmentMedicines != null && appointment.AppointmentMedicines.Any())
                         throw new BadRequestException("Medicines cannot be added during appointment creation.");
 
                     appointment.Status = "booked";
@@ -41,10 +43,15 @@ namespace API.Services.Implementations
                     if (oldAppointment.Status == "finalized")
                         throw new BadRequestException("Appointment is already finalized cannot update or add");
                     // Check if medicine can be added
-                    if (!canAddMedicines && appointment.AppointmentMedicines.Any())
+                    if (!canAddMedicines && appointment.AppointmentMedicines != null && appointment.AppointmentMedicines.Any())
                         throw new BadRequestException("Medicines cannot be added during appointment update.");
-                    // Add ability to add medicines on update only
-                    _appointmentRepository.UpdateAppointment(appointment);
+                    oldAppointment.AppointmentMedicines = appointment.AppointmentMedicines;
+                    oldAppointment.PatientId = appointment.PatientId;
+                    oldAppointment.DoctorId = appointment.DoctorId;
+                    oldAppointment.DateOfVisit = appointment.DateOfVisit;
+                    oldAppointment.Status = appointment.Status;
+                    oldAppointment.AppointmentSpecialityId = appointment.AppointmentSpecialityId;
+                    oldAppointment.CreationNote = appointment.CreationNote;
                 }
 
                 var result = await _appointmentRepository.SaveAllAsync();
@@ -52,6 +59,7 @@ namespace API.Services.Implementations
             }
             throw new Exception("Failed to add/update appointment");
         }
+
         private async Task<bool> IsAppointmentValid(Appointment appointment)
         {
             // Check DateOfVisit is in the future
@@ -73,7 +81,7 @@ namespace API.Services.Implementations
 
         public async Task DeleteAppointment(int appointmentId)
         {
-            var appointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentId) ?? throw new Exception("Appointment not found");
+            var appointment = await _appointmentRepository.GetAppointmentByIdAsyncNoTracking(appointmentId) ?? throw new Exception("Appointment not found");
             if (appointment.Status == "finalized")
                 throw new Exception("Appointment is finalized cannot delete");
             _appointmentRepository.DeleteAppointment(appointment);
@@ -82,7 +90,7 @@ namespace API.Services.Implementations
 
         public async Task<AppointmentDto> GetAppointmentByIdAsync(int appointmentId)
         {
-            var appointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentId) ?? throw new Exception("Appointment not found");
+            var appointment = await _appointmentRepository.GetAppointmentByIdAsyncNoTracking(appointmentId) ?? throw new Exception("Appointment not found");
             return _mapper.Map<AppointmentDto>(appointment);
         }
 
