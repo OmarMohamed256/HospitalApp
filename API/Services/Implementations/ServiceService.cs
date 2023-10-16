@@ -29,54 +29,28 @@ namespace API.Services.Implementations
         }
         public async Task<CreateServiceDTO> CreateServiceAsync(CreateServiceDTO createServiceDto)
         {
-            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            try
-            {
-                var service = _mapper.Map<Service>(createServiceDto);
-                service.DoctorServices = await PopulateServiceDoctorServices(service);
-                _serviceRepository.AddService(service);
-                bool saveService = await _serviceRepository.SaveAllAsync();
-                if (saveService)
-                {
-                    // Handle adding doctor services
-                    scope.Complete();
-                    return _mapper.Map<CreateServiceDTO>(service);
-                    // return serviceDtoNew;
-                }
-                throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add service");
-            }
-            catch (Exception)
-            {
-                scope.Dispose();
-                throw;
-            }
+            var service = _mapper.Map<Service>(createServiceDto);
+            service.DoctorServices = await PopulateServiceDoctorServices(service);
+            _serviceRepository.AddService(service);
+            bool saveService = await _serviceRepository.SaveAllAsync();
+            if (saveService) return _mapper.Map<CreateServiceDTO>(service);
+            throw new Exception("Failed to add service");
         }
         public async Task<CreateServiceDTO> UpdateServiceAsync(CreateServiceDTO serviceDto)
         {
-            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            try
-            {
-                // update service
-                var newService = _mapper.Map<Service>(serviceDto);
-                var service = await _serviceRepository
-                    .GetServiceById(serviceDto.Id) ?? throw new ApiException(HttpStatusCode.BadRequest, "Service does not exist");
-                var serviceId = service.Id;
-                service.Name = serviceDto.Name;
-                service.TotalPrice = serviceDto.TotalPrice;
-                service.ServiceSpecialityId = serviceDto.ServiceSpecialityId;
-                service.ServiceInventoryItems = newService.ServiceInventoryItems;
-                service.DoctorServices = await PopulateServiceDoctorServices(newService);
-
-                _serviceRepository.UpdateService(service);
-                bool saveService = await _serviceRepository.SaveAllAsync();
-                if (!saveService) throw new ApiException(HttpStatusCode.InternalServerError, "Failed to update service");
-                scope.Complete();
-                return _mapper.Map<CreateServiceDTO>(service);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            // update service
+            var newService = _mapper.Map<Service>(serviceDto);
+            var service = await _serviceRepository
+                .GetServiceById(serviceDto.Id) ?? throw new BadRequestException("Service does not exist");
+            service.Name = serviceDto.Name;
+            service.TotalPrice = serviceDto.TotalPrice;
+            service.ServiceSpecialityId = serviceDto.ServiceSpecialityId;
+            service.ServiceInventoryItems = newService.ServiceInventoryItems;
+            service.DoctorServices = await PopulateServiceDoctorServices(newService);
+            _serviceRepository.UpdateService(service);
+            bool saveService = await _serviceRepository.SaveAllAsync();
+            if (!saveService) throw new Exception("Failed to update service");
+            return _mapper.Map<CreateServiceDTO>(service);
         }
         private async Task<List<int>> GetDoctorIdsListBySpecialityId(int specilaityId)
         {

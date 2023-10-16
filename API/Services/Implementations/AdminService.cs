@@ -59,45 +59,48 @@ namespace API.Services.Implementations
                 PhoneNumber = createUserDto.PhoneNumber,
                 DoctorSpecialityId = createUserDto.DoctorSpecialityId,
                 PriceRevisit = createUserDto.PriceRevisit,
-                PriceVisit = createUserDto.PriceVisit
+                PriceVisit = createUserDto.PriceVisit,
+                DoctorWorkingHours = _mapper.Map<ICollection<DoctorWorkingHours>>(createUserDto.DoctorWorkingHours)
             };
             using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             try
             {
+                if (createUserDto.Role == Roles.Doctor)
+                    if (user.DoctorSpecialityId.HasValue) user.DoctorServices = await PopulateDoctorDoctorServices(user);
                 // Create User
                 await CreateUser(user, createUserDto.Password);
                 // Add Roles
                 await AddUserRoles(user, createUserDto.Role);
-                if (createUserDto.Role == Roles.Doctor)
-                {
-                    // Add doctor Working Hours
-                    if (createUserDto.DoctorWorkingHours != null)
-                        await AddDoctorWorkingHours(user.Id, createUserDto.DoctorWorkingHours);
-                    // Add Doctor service
-                    if (user.DoctorSpecialityId.HasValue)
-                    {
-                        await AddDoctorservices(user);
-                    }
-                }
                 scope.Complete(); // Mark the transaction as complete, to be committed
                 return _mapper.Map<UserInfoDto>(user);
             }
             catch (Exception)
             {
                 // No need to explicitly rollback, TransactionScope will handle it automatically
-                throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add user"); // Re-throw the exception for further handling
+                throw new Exception("Failed to add user"); // Re-throw the exception for further handling
             }
         }
-        private async Task AddDoctorservices(AppUser user)
+        private async Task<ICollection<DoctorService>> PopulateDoctorDoctorServices(AppUser user)
         {
-            var servicesWithSpecialityId =
-                await _serviceRepository.GetServicesIdsBySpecialityId(user.DoctorSpecialityId.Value);
-            if (servicesWithSpecialityId.Any())
+            ICollection<DoctorService> doctorServices = new List<DoctorService>();
+            if (user.DoctorSpecialityId == null) return doctorServices;
+            else
             {
-                await _doctorServiceRepository.CreateDoctorServicesForDoctor(user.Id, servicesWithSpecialityId);
-                bool saveDoctorService = await _serviceRepository.SaveAllAsync();
-                if (!saveDoctorService) throw new Exception("Failed to add doctor services");
+                var serviceIdsWithSpecialityId = await GetServicesIdsListBySpecialityId(user.DoctorSpecialityId.Value);
+                if (!serviceIdsWithSpecialityId.Any()) return doctorServices;
+                doctorServices = serviceIdsWithSpecialityId.Select(serviceId => new DoctorService
+                {
+                    DoctorId = user.Id,
+                    ServiceId = serviceId,
+                    DoctorPercentage = 50,
+                    HospitalPercentage = 50
+                }).ToList();
+                return doctorServices;
             }
+        }
+        private async Task<List<int>> GetServicesIdsListBySpecialityId(int specilaityId)
+        {
+            return await _serviceRepository.GetServicesIdsBySpecialityId(specilaityId);
         }
         private async Task CreateUser(AppUser user, string password)
         {
@@ -110,21 +113,6 @@ namespace API.Services.Implementations
             if (!Roles.IsValidRole(role)) throw new NotFoundException("Invalid role specified");
             var roleResults = await _userManager.AddToRoleAsync(user, role);
             if (!roleResults.Succeeded) throw new Exception("Failed to add role");
-        }
-
-        private async Task AddDoctorWorkingHours(int id, ICollection<DoctorWorkingHoursDto> doctorWorkingHours)
-        {
-            foreach (var workingHour in doctorWorkingHours)
-            {
-                workingHour.DoctorId = id;
-                if (workingHour.StartTime >= workingHour.EndTime) 
-                    throw new BadRequestException("End time must be greater than start time.");
-            }
-            // Add woking hours to doctor
-            var workingHours = _mapper.Map<IEnumerable<DoctorWorkingHours>>(doctorWorkingHours);
-            await _adminRepository.AddDoctorWorkingHours(workingHours);
-            var adminResult = await _adminRepository.SaveAllAsync();
-            if (!adminResult) throw new Exception("Failed to add working hours");
         }
 
         public async Task ToggleLockUser(string userId)
