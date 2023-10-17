@@ -44,11 +44,12 @@ namespace API.Services.Implementations
                 {
                     foreach (var invoiceDoctorServiceDto in invoiceDto.InvoiceDoctorServices)
                     {
-                        await AddDoctorServiceToInvoiceAsync(invoiceDto, invoice, invoiceDoctorServiceDto);
+                        invoice.InvoiceDoctorService.Add(await GetInvoiceDoctorService(invoice, invoiceDoctorServiceDto));
                     }
-
                     // Update invoice total
-                    await UpdateInvoiceTotalsAsync(invoice);
+                    UpdateInvoiceTotalsAsync(invoice);
+                    _invoiceRepository.AddInvoice(invoice);
+                    if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed adding invoice");
 
                     await FinalizeAppointment(invoiceDto.AppointmentId, invoice.Id);
                     scope.Complete();
@@ -56,12 +57,12 @@ namespace API.Services.Implementations
                 }
                 else
                 {
-                    throw new Exception("Services Not Supplied");
+                    throw new BadRequestException("Services Not Supplied");
                 }
             }
             catch (Exception)
             {
-                throw;
+                throw new Exception("Failed to add invoice");
             }
         }
         private async Task<Invoice> AddInvoiceAsync(CreateInvoiceDto invoiceDto)
@@ -73,7 +74,7 @@ namespace API.Services.Implementations
             decimal appointmentTypePrice;
             if (type == "visit") appointmentTypePrice = priceVisitTemp ?? 0;
             else if (type == "revisit") appointmentTypePrice = priceRevisitTemp ?? 0;
-            else  throw new Exception("Invalid appointment type");
+            else throw new Exception("Invalid appointment type");
 
             var invoice = new Invoice
             {
@@ -83,12 +84,14 @@ namespace API.Services.Implementations
                 TotalPaid = invoiceDto.TotalPaid,
                 TotalDue = appointmentTypePrice,
                 FinalizationDate = DateTime.Now,
-                AppointmentTypePrice = appointmentTypePrice
+                AppointmentTypePrice = appointmentTypePrice,
+                InvoiceDoctorService = new List<InvoiceDoctorService>(),
+                // Add custom items
+                CustomItems = new List<CustomItem>()
             };
-            // Add custom items
-            if (invoiceDto.CustomItems != null)
+
+            if (invoiceDto.CustomItems != null && invoiceDto.CustomItems.Any())
             {
-                invoice.CustomItems = new List<CustomItem>();
                 foreach (var customItemDto in invoiceDto.CustomItems)
                 {
                     var customItem = new CustomItem
@@ -101,15 +104,12 @@ namespace API.Services.Implementations
                     invoice.CustomItems.Add(customItem);
                 }
             }
-            _invoiceRepository.AddInvoice(invoice);
-            if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed adding invoice");
             return invoice;
         }
 
-        private async Task AddDoctorServiceToInvoiceAsync(CreateInvoiceDto invoiceDto, Invoice invoice,
+        private async Task<InvoiceDoctorService> GetInvoiceDoctorService(Invoice invoice,
         CreateInvoiceDoctorServiceDto invoiceDoctorServiceDto)
         {
-            // retrieve service
             var doctorServiceId = invoiceDoctorServiceDto.DoctorServiceId;
             var doctorService = await _doctorServiceRepository.GetDoctorServiceWithServiceAndItemsById(doctorServiceId);
             var invoiceDoctorService = new InvoiceDoctorService
@@ -122,34 +122,33 @@ namespace API.Services.Implementations
                 TotalDisposablesPrice = 0,
                 TotalPrice = doctorService.Service.TotalPrice * invoiceDoctorServiceDto.ServiceQuantity
             };
-            _invoiceRepository.AddInvoiceDoctorService(invoiceDoctorService);
-            if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed to add invoice doctor service");
-
-            // Call the function to handle inventory items
-            await HandleInventoryItemsAsync(doctorService, invoiceDoctorService, invoiceDoctorServiceDto, invoice);
+            invoiceDoctorService.InvoiceDoctorServiceSupplyOrders =
+                await GetInvoiceDoctorServiceSupplyOrders(doctorService, invoiceDoctorService);
+            return invoiceDoctorService;
         }
 
-        private async Task HandleInventoryItemsAsync(DoctorService doctorService,
-        InvoiceDoctorService invoiceDoctorService, CreateInvoiceDoctorServiceDto invoiceDoctorServiceDto, Invoice invoice)
+        private async Task<ICollection<InvoiceDoctorServiceSupplyOrders>> GetInvoiceDoctorServiceSupplyOrders(DoctorService doctorService,
+        InvoiceDoctorService invoiceDoctorService)
         {
-            if (doctorService.Service.ServiceInventoryItems == null) return;
-            // retrieve items
+            ICollection<InvoiceDoctorServiceSupplyOrders> invoiceDoctorServiceSupplyOrders =
+                new List<InvoiceDoctorServiceSupplyOrders>();
+            if (doctorService.Service.ServiceInventoryItems == null) return invoiceDoctorServiceSupplyOrders;
             foreach (var item in doctorService.Service.ServiceInventoryItems)
             {
                 // retrieve supply orders
-                var consumableSupplyOrders = await _supplyOrderRepository.GetConsumableSupplyOrdersByInventoryItemId(item.InventoryItemId);
+                var consumableSupplyOrders = await _supplyOrderRepository
+                    .GetConsumableSupplyOrdersByInventoryItemId(item.InventoryItemId);
                 int quantityNeeded = item.QuantityNeeded * invoiceDoctorService.ServiceQuantity;
                 int totalQuantity = consumableSupplyOrders.Sum(order => order.Quantity);
-                if (totalQuantity < quantityNeeded) throw new Exception("Not enough supply orders to fulfill quantity needed for an item in: " + doctorService.Service.Name + " Service");
-
+                if (totalQuantity < quantityNeeded)
+                    throw new BadRequestException("Not enough supply orders to fulfill quantity needed for an item in: " + doctorService.Service.Name + " Service");
                 foreach (var supplyOrder in consumableSupplyOrders)
                 {
                     if (quantityNeeded > 0)
                     {
-                        int quantityToConsume = Math.Min(quantityNeeded, supplyOrder.Quantity); // Determine how much can be consumed from this supply order
+                        int quantityToConsume = Math.Min(quantityNeeded, supplyOrder.Quantity);
                         supplyOrder.Quantity -= quantityToConsume;
                         quantityNeeded -= quantityToConsume;
-                        // update supply order and add a new InvoiceDoctorServiceSupplyOrders
                         var invoiceDoctorServiceSupplyOrder = new InvoiceDoctorServiceSupplyOrders
                         {
                             InvoiceDoctorServiceId = invoiceDoctorService.Id,
@@ -158,9 +157,8 @@ namespace API.Services.Implementations
                             SupplyOrderId = supplyOrder.Id,
                             TotalPrice = supplyOrder.ItemPrice * quantityToConsume
                         };
-                        _invoiceRepository.AddInvoiceDoctorServiceOrders(invoiceDoctorServiceSupplyOrder);
+                        invoiceDoctorServiceSupplyOrders.Add(invoiceDoctorServiceSupplyOrder);
                         _supplyOrderRepository.UpdateSupplyOrder(supplyOrder);
-                        if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed to update/add supply orders");
                         invoiceDoctorService.TotalDisposablesPrice += invoiceDoctorServiceSupplyOrder.TotalPrice;
                     }
                     else
@@ -170,22 +168,20 @@ namespace API.Services.Implementations
                 }
             }
             invoiceDoctorService.TotalPrice += invoiceDoctorService.TotalDisposablesPrice;
-            invoice.TotalDue += invoiceDoctorService.TotalPrice;
+            return invoiceDoctorServiceSupplyOrders;
         }
-
-        private async Task UpdateInvoiceTotalsAsync(Invoice invoice)
+        private void UpdateInvoiceTotalsAsync(Invoice invoice)
         {
             // Calculate total price including custom items
             decimal totalPriceWithCustomItems = invoice.CustomItems?.Sum(item => item.TotalPrice) ?? 0;
             invoice.CustomItemsTotalPrice = totalPriceWithCustomItems;
             invoice.TotalDue += totalPriceWithCustomItems;
-
+            // Calculate total price including InvoiceDoctorService
+            decimal totalPriceWithInvoiceDoctorService = invoice.InvoiceDoctorService?.Sum(item => item.TotalPrice) ?? 0;
+            invoice.TotalDue += totalPriceWithInvoiceDoctorService;
             // update totals with discount here
             invoice.TotalAfterDiscount = invoice.TotalDue * (1 - (invoice.DiscountPercentage / 100));
             invoice.TotalRemaining = invoice.TotalAfterDiscount - invoice.TotalPaid;
-
-            var saveInvoiceResult = await _invoiceRepository.SaveAllAsync();
-            if (!saveInvoiceResult) throw new Exception("Failed to save Invoice");
         }
         private async Task FinalizeAppointment(int appointmentId, int invoiceId)
         {
