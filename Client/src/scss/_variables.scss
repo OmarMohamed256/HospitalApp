@@ -8,7 +8,7 @@ $enable-deprecation-messages: true;
 
 // Color system
 
-// $white:     #fff;
+$white:     #fff;
 // $gray-base: #3c4b64;
 // $gray-100:  #ebedef;
 // $gray-200:  #d8dbe0;
@@ -19,8 +19,10 @@ $enable-deprecation-messages: true;
 // $gray-700:  #768192;
 // $gray-800:  #636f83;
 // $gray-900:  #4f5d73;
-// $black:     #000015;
-
+$black:     #000015;
+$sea-green : #2B7D49;
+$carnelian :  #B41822;
+$translucent : rgba($black, .125);
 // fusv-disable
 // $grays: (
 //   "100": $gray-100,
@@ -65,7 +67,7 @@ $enable-deprecation-messages: true;
 // scss-docs-end colors-map
 
 // $primary-dark:  #1f1498;
-// $primary:       #321fdb;
+ $primary:       #2B7D49;
 // $primary-50:    #988fed;
 // $primary-25:    #ccc7f6;
 
@@ -312,7 +314,7 @@ $enable-deprecation-messages: true;
 // Settings for the `<body>` element.
 
 // $body-bg:                   $white;
-// $body-color:                $high-emphasis-dark;
+$body-color:                $sea-green;
 // $body-text-align:           null;
 
 
@@ -402,7 +404,7 @@ $enable-deprecation-messages: true;
 //   5: 5px
 // );
 
-// $border-color:                $gray-200;
+$border-color:                $translucent;
 
 // $border-radius:               .25rem;
 // $border-radius-sm:            .2rem;
@@ -1094,7 +1096,7 @@ $enable-deprecation-messages: true;
 // $card-title-spacer-y:               $spacer / 2;
 // $card-border-width:                 $border-width;
 // $card-border-radius:                $border-radius;
-// $card-border-color:                 rgba($black, .125);
+$card-border-color:                 $translucent;
 // $card-inner-border-radius:          subtract($card-border-radius, $card-border-width);
 // $card-cap-padding-y:                $card-spacer-y / 2;
 // $card-cap-padding-x:                $card-spacer-x;
@@ -1534,7 +1536,7 @@ $enable-deprecation-messages: true;
 // $sidebar-padding-y:                        0;
 // $sidebar-padding-x:                        0;
 // $sidebar-color:                            $high-emphasis-light;
-// $sidebar-bg:                               $gray-base;
+// $sidebar-bg:                               $sea-green;
 // $sidebar-border-width:                     0;
 // $sidebar-border-color:                     transparent;
 // $sidebar-transition:                       margin-left .15s, margin-right .15s, box-shadow .075s, transform .15s, width .15s, z-index 0s ease .15s;
@@ -1564,7 +1566,7 @@ $enable-deprecation-messages: true;
 
 // $sidebar-nav-link-padding-y:               .8445rem;
 // $sidebar-nav-link-padding-x:               1rem;
-// $sidebar-nav-link-color:                   $medium-emphasis-light;
+$sidebar-nav-link-color:                   $white;
 // $sidebar-nav-link-bg:                      transparent;
 // $sidebar-nav-link-transition:              background .15s ease, color .15s ease;
 // $sidebar-nav-link-icon-color:              $medium-emphasis-light;

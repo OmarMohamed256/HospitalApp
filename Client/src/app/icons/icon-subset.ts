@@ -22,7 +22,8 @@ import {
   cilCalendar,
   cilViewColumn,
   cilDoor,
-  cilDrinkAlcohol
+  cilDrinkAlcohol,
+  cilPrint
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -49,7 +50,8 @@ export const iconSubset = {
   cilCalendar,
   cilViewColumn,
   cilDoor,
-  cilDrinkAlcohol
+  cilDrinkAlcohol,
+  cilPrint
 };
 
 export enum IconSubset {
@@ -76,5 +78,6 @@ export enum IconSubset {
   cilCalendar = 'cilCalendar',
   cilViewColumn = 'cilViewColumn',
   cilDoor = 'cilDoor',
-  cilDrinkAlcohol = 'cilDrinkAlcohol'
+  cilDrinkAlcohol = 'cilDrinkAlcohol',
+  cilPrint = 'cilPrint'
 }

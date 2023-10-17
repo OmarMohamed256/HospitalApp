@@ -10,6 +10,7 @@ namespace API.Repositories.Interfaces
         void UpdateAppointment(Appointment appointment);
         void DeleteAppointment(Appointment appointment);
         Task<PagedList<Appointment>> GetAppointmentsByPatientIdAsync(AppointmentParams appointmentParams, int patientId);
+        Task<PagedList<Appointment>> GetAppointmentsByDoctorIdAsync(AppointmentParams appointmentParams, int doctorId);
         Task<Appointment> GetAppointmentByIdAsync(int appointmentId);
         Task<Appointment> GetAppointmentByIdAsyncNoTracking(int appointmentId);
         Task<List<DateTime>> GetUpcomingAppointmentsDatesByDoctorIdAsync(int doctorId);

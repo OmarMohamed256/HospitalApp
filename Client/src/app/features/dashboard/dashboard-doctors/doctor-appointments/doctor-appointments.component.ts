@@ -7,13 +7,12 @@ import { AppointmentParams } from 'src/app/models/Params/appointmentParams';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
 import { UserData } from 'src/app/models/UserModels/userData';
-
 @Component({
-  selector: 'app-patient-appointments',
-  templateUrl: './patient-appointments.component.html',
-  styleUrls: ['./patient-appointments.component.scss']
+  selector: 'app-doctor-appointments',
+  templateUrl: './doctor-appointments.component.html',
+  styleUrls: ['./doctor-appointments.component.scss']
 })
-export class PatientAppointmentsComponent implements OnInit {
+export class DoctorAppointmentsComponent {
   appointments: Appointment[] | null = [];
   @Input() user: UserData | undefined;
   specialityList: Speciality[] = [];
@@ -48,11 +47,11 @@ export class PatientAppointmentsComponent implements OnInit {
   }
 
   getAppointments() {
-    this.appointmentService.getAppointmentsByPatientId(this.appointmentParams, this.user?.id!).subscribe(response => {
+    this.appointmentService.getAppointmentsByDoctorId(this.appointmentParams, this.user?.id!).subscribe(response => {
       this.appointments = response.result;
       this.pagination = response.pagination;
       this.appointments?.forEach(appointment => {
-        appointment.patient = this.user;
+        appointment.doctor = this.user;
       });
     })
   }

@@ -17,11 +17,19 @@ namespace API.Controllers
         {
             _appoinmentService = appoinmentService;
         }
-        [HttpGet("{patientId}")]
+        [HttpGet("getPatientAppointmentsById/{patientId}")]
         public async Task<ActionResult<PagedList<AppointmentDto>>> GetAppointmentsByUserId
             ([FromQuery] AppointmentParams appointmentParams, [Required] int patientId)
         {
             var appointments = await _appoinmentService.GetAppointmentsForPatientAsync(appointmentParams, patientId);
+            Response.AddPaginationHeader(appointments.CurrentPage, appointments.PageSize, appointments.TotalCount, appointments.TotalPages);
+            return Ok(appointments);
+        }
+        [HttpGet("getDoctorAppointmentsById/{doctorId}")]
+        public async Task<ActionResult<PagedList<AppointmentDto>>> GetAppointmentsByDoctorId
+            ([FromQuery] AppointmentParams appointmentParams, [Required] int doctorId)
+        {
+            var appointments = await _appoinmentService.GetAppointmentsForDoctorAsync(appointmentParams, doctorId);
             Response.AddPaginationHeader(appointments.CurrentPage, appointments.PageSize, appointments.TotalCount, appointments.TotalPages);
             return Ok(appointments);
         }

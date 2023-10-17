@@ -10,6 +10,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { UpdateAppointmentComponent } from './update-appointment/update-appointment.component';
 import { FinalizeAppointmentComponent } from './finalize-appointment/finalize-appointment.component';
 import { InvoiceAppointmentComponent } from './invoice-appointment/invoice-appointment.component';
+import { PrescriptionComponent } from './prescription/prescription.component';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
   imports: [
@@ -24,9 +26,10 @@ import { InvoiceAppointmentComponent } from './invoice-appointment/invoice-appoi
     CommonSharedModule,
     SharedModule,
     ModalModule,
-    NgSelectModule
+    NgSelectModule,
+    NgxPrintModule
   ],
-  declarations: [DashboardAppointmentsComponent, AddAppointmentComponent, UpdateAppointmentComponent, FinalizeAppointmentComponent, InvoiceAppointmentComponent],
+  declarations: [DashboardAppointmentsComponent, AddAppointmentComponent, UpdateAppointmentComponent, FinalizeAppointmentComponent, InvoiceAppointmentComponent, PrescriptionComponent],
   providers: [DatePipe]
 })
 export class DashboardAppointmentModule {

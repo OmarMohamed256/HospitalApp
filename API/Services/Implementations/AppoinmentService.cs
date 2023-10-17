@@ -111,11 +111,18 @@ namespace API.Services.Implementations
         }
         public async Task<ICollection<MedicineDto>> GetMedicinesByAppointmentIdAsync(int appointmentId)
         {
-            var appoinmentMedicineList = 
+            var appoinmentMedicineList =
                 await _appointmentRepository.GetAppointmentMedicinesByWithMedicineAppointmentIdAsync(appointmentId);
-            var medicineDtoList = 
+            var medicineDtoList =
                 appoinmentMedicineList.Select(am => am.Medicine).Select(m => _mapper.Map<MedicineDto>(m)).ToList();
             return medicineDtoList;
+        }
+
+        public async Task<PagedList<AppointmentDto>> GetAppointmentsForDoctorAsync(AppointmentParams appointmentParams, int doctorId)
+        {
+            PagedList<Appointment> appointments = await _appointmentRepository.GetAppointmentsByDoctorIdAsync(appointmentParams, doctorId);
+            var appointmentsDto = _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
+            return new PagedList<AppointmentDto>(appointmentsDto, appointments.TotalCount, appointments.CurrentPage, appointments.PageSize);
         }
     }
 }

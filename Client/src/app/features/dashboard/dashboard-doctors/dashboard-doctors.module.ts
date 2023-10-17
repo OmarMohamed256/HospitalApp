@@ -7,6 +7,7 @@ import { DashboardDoctorsComponent } from './dashboard-doctors.component';
 import { DashboardDoctorsRoutingModule } from './dashboard-doctors-routing.module';
 import { DoctorInfoComponent } from './doctor-info/doctor-info.component';
 import { DoctorServicesComponent } from './doctor-services/doctor-services.component';
+import { DoctorAppointmentsComponent } from './doctor-appointments/doctor-appointments.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,7 @@ import { DoctorServicesComponent } from './doctor-services/doctor-services.compo
     SharedModule,
     ModalModule,
     ],
-  declarations: [DashboardDoctorsComponent, DoctorInfoComponent, DoctorServicesComponent]
+  declarations: [DashboardDoctorsComponent, DoctorInfoComponent, DoctorServicesComponent, DoctorAppointmentsComponent]
 })
 export class DashboardDoctorModule {
 }

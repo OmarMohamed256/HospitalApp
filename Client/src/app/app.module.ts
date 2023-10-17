@@ -16,6 +16,7 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { CommonSharedModule } from './shared/common-shared.module';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { DashboardMedicinesComponent } from './features/dashboard/dashboard-medicines/dashboard-medicines.component';
+import { PatientAppointmentsComponent } from './features/dashboard/dashboard-patients/patient-appointments/patient-appointments.component';
 
 const APP_CONTAINERS = [
   DefaultHeaderComponent,

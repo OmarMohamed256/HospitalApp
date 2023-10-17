@@ -14,22 +14,15 @@
       Appointments
     </a>
   </c-nav-item>
-  <c-nav-item>
-    <a [cTabContent]="tabContent" [tabPaneIdx]="3" cNavLink>
-      Invoices
-    </a>
-  </c-nav-item>
 </c-nav>
 <c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
-  <c-tab-pane class="p-3"></c-tab-pane>
+  <c-tab-pane class="p-3">
+  </c-tab-pane>
   <c-tab-pane class="p-3" *ngIf="user">
     <app-doctor-services [doctorId]="user.id" *ngIf="activePane === 1">
     </app-doctor-services>
   </c-tab-pane>
   <c-tab-pane class="p-3">
-  </c-tab-pane>
-  <c-tab-pane class="p-3">
-  </c-tab-pane>
-  <c-tab-pane class="p-3">
+    <app-doctor-appointments [user]="user" *ngIf="activePane === 2"></app-doctor-appointments>
   </c-tab-pane>
 </c-tab-content>

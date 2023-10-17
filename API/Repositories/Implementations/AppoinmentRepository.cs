@@ -166,5 +166,34 @@ namespace API.Repositories.Implementations
             .Include(am => am.Medicine)
             .Where(am => am.AppointmentId == appointmentId).ToListAsync();
         }
+
+        public async Task<PagedList<Appointment>> GetAppointmentsByDoctorIdAsync(AppointmentParams appointmentParams, int doctorId)
+        {
+            var query = _context.Appointments
+            .Include(a => a.Patient)
+            .Where(p => p.DoctorId == doctorId)
+            .AsQueryable();
+
+            if (appointmentParams.SpecialityId != null)
+                query = query.Where(u => u.AppointmentSpecialityId == appointmentParams.SpecialityId);
+
+            if (appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
+                query = query.Where(a => EF.Functions.DateDiffDay(a.DateOfVisit, appointmentParams.AppointmentDateOfVisit) == 0);
+
+            if (!string.IsNullOrEmpty(appointmentParams.Type)) query = query.Where(u => u.Type == appointmentParams.Type);
+
+            query = (appointmentParams.OrderBy, appointmentParams.Order) switch
+            {
+                ("dateUpdated", "asc") => query.OrderBy(u => u.DateUpdated),
+                ("dateUpdated", "desc") => query.OrderByDescending(u => u.DateUpdated),
+                ("dateCreated", "asc") => query.OrderBy(u => u.DateCreated),
+                ("dateCreated", "desc") => query.OrderByDescending(u => u.DateCreated),
+                ("dateOfVisit", "asc") => query.OrderBy(u => u.DateOfVisit),
+                ("dateOfVisit", "desc") => query.OrderByDescending(u => u.DateOfVisit),
+                _ => query.OrderByDescending(u => u.DateCreated),
+            };
+
+            return await PagedList<Appointment>.CreateAsync(query, appointmentParams.PageNumber, appointmentParams.PageSize);
+        }
     }
 }

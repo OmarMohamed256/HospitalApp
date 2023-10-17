@@ -25,7 +25,7 @@ export class AppointmentService {
 
   constructor(private http: HttpClient) { }
 
-  getAppointmentsByUserId(appointmentParams: AppointmentParams, userId: string) {
+  getAppointmentsByPatientId(appointmentParams: AppointmentParams, userId: string) {
     if (this.currentUserId !== userId) {
       this.appointmentCache.clear();
       this.currentUserId = userId;
@@ -44,7 +44,33 @@ export class AppointmentService {
     if (appointmentParams.type.trim() !== '') params = params.append('type', appointmentParams.type.trim());
     if(appointmentParams.appointmentDateOfVisit) params = params.append('appointmentDateOfVisit', appointmentParams.appointmentDateOfVisit);
 
-    return getPaginatedResult<Appointment[]>(this.baseUrl + 'appointment/' + userId, params, this.http)
+    return getPaginatedResult<Appointment[]>(this.baseUrl + 'appointment/getPatientAppointmentsById/' + userId, params, this.http)
+      .pipe(map(response => {
+        this.appointmentCache.set(Object.values(appointmentParams).join("-"), response);
+        return response;
+      }))
+  }
+
+  getAppointmentsByDoctorId(appointmentParams: AppointmentParams, userId: string) {
+    if (this.currentUserId !== userId) {
+      this.appointmentCache.clear();
+      this.currentUserId = userId;
+    }
+    var response = this.appointmentCache.get(Object.values(appointmentParams).join("-"));
+
+    if (response) {
+      return of(response);
+    }
+
+    let params = getPaginationHeaders(appointmentParams.pageNumber, appointmentParams.pageSize);
+    params = params.append('orderBy', appointmentParams.orderBy);
+    params = params.append('order', appointmentParams.order);
+
+    if (appointmentParams.specialityId !== null) params = params.append('specialityId', appointmentParams.specialityId);
+    if (appointmentParams.type.trim() !== '') params = params.append('type', appointmentParams.type.trim());
+    if(appointmentParams.appointmentDateOfVisit) params = params.append('appointmentDateOfVisit', appointmentParams.appointmentDateOfVisit);
+
+    return getPaginatedResult<Appointment[]>(this.baseUrl + 'appointment/getDoctorAppointmentsById/' + userId, params, this.http)
       .pipe(map(response => {
         this.appointmentCache.set(Object.values(appointmentParams).join("-"), response);
         return response;

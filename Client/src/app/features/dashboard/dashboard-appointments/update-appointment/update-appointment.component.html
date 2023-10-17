@@ -69,18 +69,10 @@
         <div class="col">
             <div class="mb-3">
                 <label cLabel>Medicine</label>
-                <ng-select 
-                [items]="medicineList" 
-                [virtualScroll]="true"
-                [bindLabel]="'name'" 
-                [bindValue]="'id'" 
-                (search)="searchMedicines($event)"
-                [multiple]="true"
-                (change)="onMedicineSelect($event)"
-                [(ngModel)]="selectedItems" [ngModelOptions]="{standalone: true}"
-                [compareWith]="compareFn"
-                >
-              </ng-select>
+                <ng-select [items]="medicineList" [virtualScroll]="true" [bindLabel]="'name'" [bindValue]="'id'"
+                    (search)="searchMedicines($event)" [multiple]="true" (change)="onMedicineSelect($event)"
+                    [(ngModel)]="selectedItems" [ngModelOptions]="{standalone: true}" [compareWith]="compareFn">
+                </ng-select>
             </div>
         </div>
     </div>
@@ -99,5 +91,14 @@
             </li>
         </ul>
     </div>
-    <button type="submit" *ngIf="appointment?.status != 'finalized'" class="btn btn-primary">Update Appointment</button>
+    <div class="d-flex flex-row w-100 align-items-center justify-content-around">
+        <button type="submit" *ngIf="appointment?.status != 'finalized'" class="btn btn-primary">Update Appointment</button>
+        <button *ngIf="appointment?.status == 'finalized'" type="button"
+        class="btn btn-primary" [routerLink]="['/appointments/view-invoice', appointment?.invoiceId]">View Invoice</button>
+        <button type="button" class="btn btn-primary" printSectionId="prescription" ngxPrint [useExistingCss]="true" [previewOnly]="true">
+            <svg cIcon name="cilPrint" size="xl"></svg>
+          </button>
+    </div>
 </form>
+<hr/>
+<app-prescription></app-prescription>

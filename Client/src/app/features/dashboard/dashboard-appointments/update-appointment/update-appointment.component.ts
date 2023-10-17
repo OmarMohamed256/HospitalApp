@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AppointmentTypeList } from 'src/app/constants/appointmentTypes';
@@ -42,7 +42,7 @@ export class UpdateAppointmentComponent implements OnInit {
   selectedDoctor: UserData | null = null;
   medicineList: Medicine[] = [];
   selectedItems: Medicine[] = [];
-
+  
   rolePatient = ROLES.PATIENT;
   roleDoctor = ROLES.DOCTOR;
 
@@ -329,3 +329,5 @@ export class UpdateAppointmentComponent implements OnInit {
   }
 
 }
+
+
