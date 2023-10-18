@@ -17,19 +17,17 @@ namespace API.Services.Implementations
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IAdminRepository _adminRepository;
         private readonly IMapper _mapper;
         private readonly IServiceRepository _serviceRepository;
-        private readonly IDoctorServiceRepository _doctorServiceRepository;
+        private readonly IUserRepository _userReposiotry;
         public AdminService(UserManager<AppUser> userManager, IMapper mapper, IAuthenticationService authenticationService,
-        IAdminRepository adminRepository, IDoctorServiceRepository doctorServiceRepository, IServiceRepository serviceRepository)
+        IServiceRepository serviceRepository, IUserRepository userReposiotry)
         {
             _userManager = userManager;
             _authenticationService = authenticationService;
-            _adminRepository = adminRepository;
             _mapper = mapper;
             _serviceRepository = serviceRepository;
-            _doctorServiceRepository = doctorServiceRepository;
+            _userReposiotry = userReposiotry;
         }
 
         public async Task ChangeUserRole(string userId, ChangeRoleDto changeRoleDto)
@@ -47,10 +45,10 @@ namespace API.Services.Implementations
 
         public async Task<UserInfoDto> CreateUserAsync(CreateUserDto createUserDto)
         {
-            bool userExists = await _authenticationService.UserExists(createUserDto.Username);
-            if (userExists) throw new BadRequestException("Username is already taken");
+            await ValidateUserNameDoesntExist(createUserDto.Username);
             var user = new AppUser
             {
+                Id = 0,
                 UserName = createUserDto.Username.ToLower(),
                 Email = createUserDto.Email,
                 Gender = createUserDto.Gender,
@@ -80,6 +78,37 @@ namespace API.Services.Implementations
                 throw new Exception("Failed to add user"); // Re-throw the exception for further handling
             }
         }
+        public async Task<UserInfoDto> UpdateUserAsync(CreateUserDto createUserDto)
+        {
+            var user = await _userReposiotry.GetUserWithDoctorServicesAndDoctorWorkingHoursByIdAsync(createUserDto.Id)
+                ?? throw new ApiException(HttpStatusCode.NotFound, "User Not Found");
+            user.UserName = createUserDto.Username.ToLower() ?? user.UserName;
+            user.Email = createUserDto.Email ?? user.Email;
+            user.Gender = createUserDto.Gender ?? user.Gender;
+            user.Age = createUserDto.Age;
+            user.FullName = createUserDto.FullName ?? user.FullName;
+            user.PhoneNumber = createUserDto.PhoneNumber ?? user.PhoneNumber;
+            user.DoctorSpecialityId = createUserDto.DoctorSpecialityId ?? user.DoctorSpecialityId;
+            user.PriceRevisit = createUserDto.PriceRevisit ?? user.PriceRevisit;
+            user.PriceVisit = createUserDto.PriceVisit ?? user.PriceVisit;
+            user.DoctorWorkingHours = _mapper.Map<ICollection<DoctorWorkingHours>>(createUserDto.DoctorWorkingHours) ?? user.DoctorWorkingHours;
+            if (createUserDto.Role == Roles.Doctor)
+                if (user.DoctorSpecialityId.HasValue) user.DoctorServices = await PopulateDoctorDoctorServices(user);
+            // Create User
+            await UpdateUser(user);
+            return _mapper.Map<UserInfoDto>(user);
+            throw new Exception("Failed to add user"); // Re-throw the exception for further handling
+        }
+        private async Task UpdateUser(AppUser user)
+        {
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded) throw new Exception("Failed to update user");
+        }
+        private async Task ValidateUserNameDoesntExist(string username)
+        {
+            bool userExists = await _authenticationService.UserExists(username);
+            if (userExists) throw new BadRequestException("Username is already taken");
+        }
         private async Task<ICollection<DoctorService>> PopulateDoctorDoctorServices(AppUser user)
         {
             ICollection<DoctorService> doctorServices = new List<DoctorService>();
@@ -107,14 +136,12 @@ namespace API.Services.Implementations
             var result = await _userManager.CreateAsync(user, password);
             if (!result.Succeeded) throw new Exception("Failed to create user");
         }
-
         private async Task AddUserRoles(AppUser user, string role)
         {
             if (!Roles.IsValidRole(role)) throw new NotFoundException("Invalid role specified");
             var roleResults = await _userManager.AddToRoleAsync(user, role);
             if (!roleResults.Succeeded) throw new Exception("Failed to add role");
         }
-
         public async Task ToggleLockUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId) ?? throw new Exception("User not found");

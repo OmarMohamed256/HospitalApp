@@ -15,8 +15,7 @@ namespace API.Services.Implementations
         private readonly IUserRepository _userRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
-        public UserService(IUserRepository userRepository, UserManager<AppUser> userManager,
-         ITokenService tokenService, IMapper mapper)
+        public UserService(IUserRepository userRepository, UserManager<AppUser> userManager, IMapper mapper)
         {
             _userRepository = userRepository;
             _userManager = userManager;

@@ -18,6 +18,11 @@ namespace API.Controllers
         {
             return await _adminService.CreateUserAsync(createUserDto);
         }
+        [HttpPut("UpdateUser")]
+        public async Task<ActionResult<UserInfoDto>> UpdateUser(CreateUserDto createUserDto)
+        {
+            return await _adminService.UpdateUserAsync(createUserDto);
+        }
 
         [HttpPut("toggleLockUser/{userId}")]
         public async Task<ActionResult> ToggleLockUser(string userId)

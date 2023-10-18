@@ -72,5 +72,14 @@ namespace API.Repositories.Implementations
                 .Select(d => d.Id)
                 .ToListAsync();
         }
+
+        public async Task<AppUser> GetUserWithDoctorServicesAndDoctorWorkingHoursByIdAsync(int userId)
+        {
+            return await _context.Users
+            .Include(u => u.DoctorServices)
+            .Include(u => u.DoctorWorkingHours)
+            .Where(u => u.Id == userId)
+            .FirstOrDefaultAsync();
+        }
     }
 }

@@ -12,10 +12,6 @@ namespace API.Repositories.Implementations
         {
             _context = context;
         }
-        public async Task AddDoctorWorkingHours(IEnumerable<DoctorWorkingHours> workingHours)
-        {
-            await _context.DoctorWorkingHours.AddRangeAsync(workingHours);
-        }
         public async Task<bool> SaveAllAsync()
         {
             return await _context.SaveChangesAsync() > 0;
