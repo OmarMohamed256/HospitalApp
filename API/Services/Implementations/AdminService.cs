@@ -78,21 +78,21 @@ namespace API.Services.Implementations
                 throw new Exception("Failed to add user"); // Re-throw the exception for further handling
             }
         }
-        public async Task<UserInfoDto> UpdateUserAsync(CreateUserDto createUserDto)
+        public async Task<UserInfoDto> UpdateUserAsync(UpdateUserDto updateUserDto)
         {
-            var user = await _userReposiotry.GetUserWithDoctorServicesAndDoctorWorkingHoursByIdAsync(createUserDto.Id)
+            var user = await _userReposiotry.GetUserWithDoctorServicesAndDoctorWorkingHoursByIdAsync(updateUserDto.Id)
                 ?? throw new ApiException(HttpStatusCode.NotFound, "User Not Found");
-            user.UserName = createUserDto.Username.ToLower() ?? user.UserName;
-            user.Email = createUserDto.Email ?? user.Email;
-            user.Gender = createUserDto.Gender ?? user.Gender;
-            user.Age = createUserDto.Age;
-            user.FullName = createUserDto.FullName ?? user.FullName;
-            user.PhoneNumber = createUserDto.PhoneNumber ?? user.PhoneNumber;
-            user.DoctorSpecialityId = createUserDto.DoctorSpecialityId ?? user.DoctorSpecialityId;
-            user.PriceRevisit = createUserDto.PriceRevisit ?? user.PriceRevisit;
-            user.PriceVisit = createUserDto.PriceVisit ?? user.PriceVisit;
-            user.DoctorWorkingHours = _mapper.Map<ICollection<DoctorWorkingHours>>(createUserDto.DoctorWorkingHours) ?? user.DoctorWorkingHours;
-            if (createUserDto.Role == Roles.Doctor)
+            user.UserName = updateUserDto.Username.ToLower() ?? user.UserName;
+            user.Email = updateUserDto.Email ?? user.Email;
+            user.Gender = updateUserDto.Gender ?? user.Gender;
+            user.Age = updateUserDto.Age;
+            user.FullName = updateUserDto.FullName ?? user.FullName;
+            user.PhoneNumber = updateUserDto.PhoneNumber ?? user.PhoneNumber;
+            user.DoctorSpecialityId = updateUserDto.DoctorSpecialityId ?? user.DoctorSpecialityId;
+            user.PriceRevisit = updateUserDto.PriceRevisit ?? user.PriceRevisit;
+            user.PriceVisit = updateUserDto.PriceVisit ?? user.PriceVisit;
+            user.DoctorWorkingHours = _mapper.Map<ICollection<DoctorWorkingHours>>(updateUserDto.DoctorWorkingHours) ?? user.DoctorWorkingHours;
+            if (updateUserDto.Role == Roles.Doctor)
                 if (user.DoctorSpecialityId.HasValue) user.DoctorServices = await PopulateDoctorDoctorServices(user);
             // Create User
             await UpdateUser(user);

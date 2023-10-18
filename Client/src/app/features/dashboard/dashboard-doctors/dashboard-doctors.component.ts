@@ -34,7 +34,6 @@ export class DashboardDoctorsComponent implements OnInit {
 
   getDoctors() {
     this.userService.getUsers(this.userParams).subscribe(response => {
-      console.log(response)
       this.doctors = response.result;
       this.pagination = response.pagination
     })

@@ -104,8 +104,6 @@ export class AddServiceModalComponent implements OnInit {
 
   createUpdateService() {
     this.mapFormToService();
-    console.log(this.service)
-
     if (this.service.id == 0) {
       this.createService();
     }else {

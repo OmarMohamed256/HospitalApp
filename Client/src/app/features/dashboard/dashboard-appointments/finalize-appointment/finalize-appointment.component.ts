@@ -34,7 +34,6 @@ export class FinalizeAppointmentComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.appointment = data['appointment'];
-      console.log(this.appointment)
       this.getDoctorServicesByDoctorId();
       this.initializeForm();
     })

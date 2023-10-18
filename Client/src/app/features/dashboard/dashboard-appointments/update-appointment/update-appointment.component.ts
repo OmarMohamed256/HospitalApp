@@ -316,7 +316,6 @@ export class UpdateAppointmentComponent implements OnInit {
 
   updateAppointment() {
     const appointment = this.mapFormToAppointment();
-    console.log(appointment)
     this.appointmentService.updateAppointment(appointment).subscribe({
       next: (response) => {
         this.appointmentService.clearCache();

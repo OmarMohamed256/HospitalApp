@@ -29,9 +29,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from './pagination/pagination.component';
 import { AddUserModalComponent } from './add-user-modal/add-user-modal.component';
+import { UpdateUserViewComponent } from './update-user-view/update-user-view.component';
 
 @NgModule({
-  declarations: [TextInputComponent, PaginationComponent, AddUserModalComponent],
+  declarations: [TextInputComponent, PaginationComponent, AddUserModalComponent, UpdateUserViewComponent],
   exports: [TextInputComponent,
     AvatarModule,
     BreadcrumbModule,
@@ -58,6 +59,7 @@ import { AddUserModalComponent } from './add-user-modal/add-user-modal.component
     PaginationModule,
     PaginationComponent,
     AddUserModalComponent,
+    UpdateUserViewComponent,
     ModalModule
   ],
   imports: [
@@ -84,7 +86,7 @@ import { AddUserModalComponent } from './add-user-modal/add-user-modal.component
     SharedModule,
     CommonModule,
     PaginationModule,
-    ModalModule
+    ModalModule,
   ]
 })
 export class CommonSharedModule { }

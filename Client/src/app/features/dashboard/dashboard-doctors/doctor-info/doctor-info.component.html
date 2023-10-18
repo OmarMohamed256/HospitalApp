@@ -17,6 +17,10 @@
 </c-nav>
 <c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
   <c-tab-pane class="p-3">
+    <app-update-user-view 
+    [userRole]="'Doctor'" 
+    [user]="user" *ngIf="activePane === 0 && doctorWorkingHours != null" 
+    [doctorWorkingHours]="doctorWorkingHours"></app-update-user-view>
   </c-tab-pane>
   <c-tab-pane class="p-3" *ngIf="user">
     <app-doctor-services [doctorId]="user.id" *ngIf="activePane === 1">

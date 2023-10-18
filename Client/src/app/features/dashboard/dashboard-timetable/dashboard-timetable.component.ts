@@ -29,8 +29,6 @@ export class DashboardTimetableComponent {
 
     // Subscribe to the appointmentFinalized event
     this.signalr.appointmentFinalized.subscribe((response) => {
-      console.log(response)
-
       this.updateRoomAppointmentStatus(response.appointmentId, response.status);
     });
   }
@@ -38,7 +36,6 @@ export class DashboardTimetableComponent {
   updateRoomAppointmentStatus(appointmentId: number, status: string) {
     for (const room of this.rooms) {
       if (room.doctor && room.doctor.appointments) {
-        console.log(room.doctor.appointments)
         const appointmentToUpdate = room.doctor.appointments.find(appointment => appointment.id === appointmentId);
         if (appointmentToUpdate) {
           appointmentToUpdate.status = status;

@@ -1,0 +1,138 @@
+
+  <form [formGroup]="updateUserForm" cForm (ngSubmit)="updateUserForm.valid && submitUpdateUserForm()" autocomplete="off">
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>User Name</label>
+          <app-text-input icon="" formControlName="username"
+            [label]='"User Name"'></app-text-input>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Email</label>
+          <app-text-input icon="" formControlName="email" [label]='"Email"'></app-text-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Age</label>
+          <app-text-input icon="" formControlName="age" [label]='"Age"'></app-text-input>
+
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Full Name</label>
+          <app-text-input icon="" formControlName="fullName"
+            [label]='"Full Name"'></app-text-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Phone Number</label>
+          <app-text-input icon="" formControlName="phoneNumber"
+            [label]='"Phone Number"'></app-text-input>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Gender</label>
+          <select name="gender" aria-label="gender" formControlName="gender" cSelect>
+            <option value="" disabled>Gender</option>
+            <option *ngFor="let gender of genderList" [value]="gender.value">
+              {{gender.display}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label cLabel>Role</label>
+        <select name="role" aria-label="role" cSelect formControlName="role">
+          <option disabled value="" selected>Role</option>
+          <option *ngFor="let role of roles" [value]="role">
+            {{role}}
+          </option>
+        </select>
+      </div>
+      <div class="col mb-3" *ngIf="updateUserForm.value.role == 'Doctor'">
+        <label cLabel>Speciality</label>
+        <select name="doctorSpecialityId" cSelect formControlName="doctorSpecialityId">
+          <option disabled value="" selected>Speciality</option>
+          <option *ngFor="let speciality of specialityList" [value]="speciality.id" [selected]="speciality.id == user?.doctorSpecialityId">
+            {{speciality.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="row" *ngIf="updateUserForm.value.role == 'Doctor'">
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Price Visit</label>
+          <app-text-input type="number" icon="" formControlName="priceVisit" [label]='"Price Visit"'></app-text-input>
+        </div>
+      </div>
+      <div class="col">
+        <div class="mb-3">
+          <label cLabel>Price Revisit</label>
+          <app-text-input type="number" icon="" formControlName="priceRevisit" [label]='"Price Visit"'></app-text-input>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="updateUserForm.value.role == 'Doctor'">
+      <div class="col">
+        <div class="mb-3">
+          <!-- Display doctorWorkingHours -->
+          <div formArrayName="doctorWorkingHours">
+            <div *ngFor="let control of $any(updateUserForm.controls['doctorWorkingHours']).controls; let i = index"
+              [formGroupName]="i">
+              <div class="row mb-2">
+                <div class="col-2">
+                  <div class="text-dark fw-bold">{{ getDayOfWeekLabel(control.get('dayOfWeek').value) }}</div>
+                </div>
+                <div class="col">
+                  <select formControlName="startTime" class="form-select">
+                    <option value="" selected>Select a start time</option>
+                    <option *ngFor="let time of getHalfHourIntervals(); trackBy: trackByFn"
+                      [value]="time.timeSpanValue">{{ time.displayValue }}</option>
+                  </select>
+                  <div class="col" *ngIf="control.get('startTime').hasError('startTimeInvalid')">
+                    <div class="text-danger">start time must be less than End time</div>
+                  </div>
+                </div>
+                <div class="col">
+                  <select formControlName="endTime" class="form-select">
+                    <option value="" selected>Select an end time</option>
+                    <option *ngFor="let time of getHalfHourIntervals(); trackBy: trackByFn"
+                      [value]="time.timeSpanValue">{{ time.displayValue }}</option>
+                  </select>
+                  <div class="col" *ngIf="control.get('endTime').hasError('endTimeRequired')">
+                    <div class="text-danger">End time is required when start time is selected.</div>
+                  </div>
+                  <div class="col" *ngIf="control.get('endTime').hasError('endTimeInvalid')">
+                    <div class="text-danger">End time must be greater than start time</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="validationErrors.length > 0">
+      <ul class="text-danger">
+        <li *ngFor="let error of validationErrors">
+          {{error}}
+        </li>
+      </ul>
+    </div>
+    <div class="w-100 text-center mt-2">
+      <button [disabled]="!updateUserForm.valid" cButton color="primary" type="submit">Update User</button>
+    </div>
+  </form>

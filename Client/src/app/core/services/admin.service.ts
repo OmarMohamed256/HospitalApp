@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ChangeRole } from 'src/app/models/UserModels/changeRole';
 import { CreateUser } from 'src/app/models/UserModels/createUser';
+import { UpdateUser } from 'src/app/models/UserModels/updateUser';
 import { environment } from 'src/environments/environment.development';
 
 @Injectable({
@@ -14,6 +15,10 @@ export class AdminService {
 
   createUser(createUser: CreateUser) {
     return this.http.post(this.baseUrl + 'admin/createUser/', createUser);
+  }
+
+  updateUser(createUser: UpdateUser) {
+    return this.http.put(this.baseUrl + 'admin/updateUser/', createUser);
   }
 
   toggleLockout(userId: string) {

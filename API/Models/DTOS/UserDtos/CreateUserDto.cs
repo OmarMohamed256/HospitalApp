@@ -6,7 +6,6 @@ namespace API.Models.DTOS
 {
     public class CreateUserDto
     {
-        public int Id { get; set; }
         [Required] public string Username { get; set; }
         [Required] public string Email { get; set; }
         [Required] public required string Gender { get; set; }

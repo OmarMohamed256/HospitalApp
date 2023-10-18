@@ -19,7 +19,7 @@ namespace API.Controllers
             return await _adminService.CreateUserAsync(createUserDto);
         }
         [HttpPut("UpdateUser")]
-        public async Task<ActionResult<UserInfoDto>> UpdateUser(CreateUserDto createUserDto)
+        public async Task<ActionResult<UserInfoDto>> UpdateUser(UpdateUserDto createUserDto)
         {
             return await _adminService.UpdateUserAsync(createUserDto);
         }

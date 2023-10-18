@@ -7,10 +7,7 @@ import { CreateUser } from 'src/app/models/UserModels/createUser';
 import { Speciality } from 'src/app/models/speciality';
 import { TimeSpan } from 'src/app/models/timeSpan';
 import { UserData } from 'src/app/models/UserModels/userData';
-interface Interval {
-  displayValue: string;
-  timeSpanValue: string;
-}
+import { Interval } from 'src/app/models/interval';
 @Component({
   selector: 'app-add-user-modal',
   templateUrl: './add-user-modal.component.html',
@@ -90,6 +87,7 @@ export class AddUserModalComponent {
       (this.createUser.controls["doctorWorkingHours"] as FormArray).push(dayControl);
     }
   }
+
   getDayOfWeekLabel(dayOfWeek: number): string {
     switch (dayOfWeek) {
       case 0: return 'Sunday';
@@ -154,6 +152,7 @@ export class AddUserModalComponent {
 
     if (doctorWorkingHours.length > 0) {
       user.doctorWorkingHours = doctorWorkingHours;
+      console.log(user.doctorWorkingHours)
     }
     const selectedRole = this.createUser.get('role')?.value;
     if (selectedRole === 'Doctor') {

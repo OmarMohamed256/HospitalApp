@@ -17,7 +17,7 @@ export class DoctorInfoComponent implements OnInit {
   genderList = GenderList;
   updateDoctorForm!: FormGroup;
   validationErrors: string[] = [];
-  doctorWorkingHours: DoctorWorkingHours[] = [];
+  doctorWorkingHours: DoctorWorkingHours[] | null = null;
   
   constructor(private route: ActivatedRoute, private doctorWorkingHoursService: DoctorWorkingHoursService) {
   }
@@ -36,7 +36,6 @@ export class DoctorInfoComponent implements OnInit {
   getDoctorWorkingHours(userId: string) {
     this.doctorWorkingHoursService.getDoctorWorkingHoursByDoctorId(userId).subscribe(response => {
       this.doctorWorkingHours = response;
-      console.log(this.doctorWorkingHours);
     })
   }
 
