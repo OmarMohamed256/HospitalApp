@@ -2,6 +2,7 @@ namespace API.Models.DTOS
 {
     public class CreateInvoiceDto
     {
+        public int Id { get; set; } = 0;
         public string PaymentMethod { get; set; }
         public decimal DiscountPercentage { get; set; }
         public decimal TotalPaid { get; set; }

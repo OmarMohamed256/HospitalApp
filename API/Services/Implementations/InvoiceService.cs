@@ -37,47 +37,91 @@ namespace API.Services.Implementations
             try
             {
                 // 1- Add invoice
-                var invoice = await AddInvoiceAsync(invoiceDto);
-
-                // 2- Create list of InvoiceDoctorService
+                var invoice = await InitializeInvoiceAsync(invoiceDto);
+                // 2- Create invoice custom items 
+                if (invoiceDto.CustomItems != null && invoiceDto.CustomItems.Any())
+                    invoice.CustomItems = PopulateCustomItems(invoiceDto.CustomItems);
+                // 3- Create list of InvoiceDoctorService
+                invoice.InvoiceDoctorService = new List<InvoiceDoctorService>();
                 if (invoiceDto.InvoiceDoctorServices != null)
                 {
                     foreach (var invoiceDoctorServiceDto in invoiceDto.InvoiceDoctorServices)
-                    {
                         invoice.InvoiceDoctorService.Add(await GetInvoiceDoctorService(invoice, invoiceDoctorServiceDto));
-                    }
-                    // Update invoice total
-                    UpdateInvoiceTotalsAsync(invoice);
-                    _invoiceRepository.AddInvoice(invoice);
-                    if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed adding invoice");
-
-                    await FinalizeAppointment(invoiceDto.AppointmentId, invoice.Id);
-                    scope.Complete();
-                    return _mapper.Map<InvoiceDto>(invoice);
                 }
-                else
-                {
-                    throw new BadRequestException("Services Not Supplied");
-                }
+                // 4- Update invoice total
+                UpdateInvoiceTotalsAsync(invoice);
+                // 5- Add invoice
+                _invoiceRepository.AddInvoice(invoice);
+                if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed adding invoice");
+                // 6- Finalize appointment
+                await FinalizeAppointment(invoiceDto.AppointmentId, invoice.Id);
+                scope.Complete();
+                return _mapper.Map<InvoiceDto>(invoice);
             }
             catch (Exception)
             {
                 throw new Exception("Failed to add invoice");
             }
         }
-        private async Task<Invoice> AddInvoiceAsync(CreateInvoiceDto invoiceDto)
+        public async Task<InvoiceDto> UpdateInvoiceAsync(CreateInvoiceDto invoiceDto)
+        {
+            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            try
+            {
+
+                var invoice = await _invoiceRepository.GetInvoiceByIdAsync(invoiceDto.Id) ?? throw new BadRequestException("Invoice Not Found");
+                decimal appointmentTypePrice = await GetAppointmentTypePrice(invoice.AppointmentId);
+                // map certain data
+                invoice.DiscountPercentage = invoiceDto.DiscountPercentage;
+                invoice.PaymentMethod = invoiceDto.PaymentMethod;
+                invoice.TotalPaid = invoiceDto.TotalPaid;
+                invoice.TotalDue = appointmentTypePrice;
+                invoice.FinalizationDate = DateTime.Now;
+                // 2- Create invoice custom items 
+                if (invoiceDto.CustomItems != null && invoiceDto.CustomItems.Any())
+                    invoice.CustomItems = PopulateCustomItems(invoiceDto.CustomItems);
+                // 3- Create list of InvoiceDoctorService
+                invoice.InvoiceDoctorService = new List<InvoiceDoctorService>();
+                if (invoiceDto.InvoiceDoctorServices != null)
+                {
+                    foreach (var invoiceDoctorServiceDto in invoiceDto.InvoiceDoctorServices)
+                        invoice.InvoiceDoctorService.Add(await GetInvoiceDoctorService(invoice, invoiceDoctorServiceDto));
+                }
+                // 4- Update invoice total
+                UpdateInvoiceTotalsAsync(invoice);
+                // 5- Update invoice
+                _invoiceRepository.UpdateInvoice(invoice);
+
+                if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed adding invoice");
+                // 6- Finalize appointment
+                await FinalizeAppointment(invoiceDto.AppointmentId, invoice.Id);
+                scope.Complete();
+                return _mapper.Map<InvoiceDto>(invoice);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Failed to add invoice");
+            }
+        }
+
+        private async Task<decimal> GetAppointmentTypePrice(int appointmentId)
         {
             var (type, priceVisitTemp, priceRevisitTemp) =
-                await _appoinmentRepository.GetAppointmentTypeAndDoctorPricesAsync(invoiceDto.AppointmentId);
+                await _appoinmentRepository.GetAppointmentTypeAndDoctorPricesAsync(appointmentId);
             if (type == null) throw new Exception("Invalid AppointmentId or missing type");
 
             decimal appointmentTypePrice;
             if (type == "visit") appointmentTypePrice = priceVisitTemp ?? 0;
             else if (type == "revisit") appointmentTypePrice = priceRevisitTemp ?? 0;
             else throw new Exception("Invalid appointment type");
-
+            return appointmentTypePrice;
+        }
+        private async Task<Invoice> InitializeInvoiceAsync(CreateInvoiceDto invoiceDto)
+        {
+            decimal appointmentTypePrice = await GetAppointmentTypePrice(invoiceDto.AppointmentId);
             var invoice = new Invoice
             {
+                Id = invoiceDto.Id,
                 AppointmentId = invoiceDto.AppointmentId,
                 DiscountPercentage = invoiceDto.DiscountPercentage,
                 PaymentMethod = invoiceDto.PaymentMethod,
@@ -89,24 +133,24 @@ namespace API.Services.Implementations
                 // Add custom items
                 CustomItems = new List<CustomItem>()
             };
-
-            if (invoiceDto.CustomItems != null && invoiceDto.CustomItems.Any())
-            {
-                foreach (var customItemDto in invoiceDto.CustomItems)
-                {
-                    var customItem = new CustomItem
-                    {
-                        Name = customItemDto.Name,
-                        Price = customItemDto.Price,
-                        Units = customItemDto.Units,
-                        TotalPrice = customItemDto.Price * customItemDto.Units
-                    };
-                    invoice.CustomItems.Add(customItem);
-                }
-            }
             return invoice;
         }
-
+        private static ICollection<CustomItem> PopulateCustomItems(ICollection<CreateCustomItemDto> customItemsDto)
+        {
+            List<CustomItem> customItems = new();
+            foreach (var customItemDto in customItemsDto)
+            {
+                var customItem = new CustomItem
+                {
+                    Name = customItemDto.Name,
+                    Price = customItemDto.Price,
+                    Units = customItemDto.Units,
+                    TotalPrice = customItemDto.Price * customItemDto.Units
+                };
+                customItems.Add(customItem);
+            }
+            return customItems;
+        }
         private async Task<InvoiceDoctorService> GetInvoiceDoctorService(Invoice invoice,
         CreateInvoiceDoctorServiceDto invoiceDoctorServiceDto)
         {
@@ -170,7 +214,7 @@ namespace API.Services.Implementations
             invoiceDoctorService.TotalPrice += invoiceDoctorService.TotalDisposablesPrice;
             return invoiceDoctorServiceSupplyOrders;
         }
-        private void UpdateInvoiceTotalsAsync(Invoice invoice)
+        private static void UpdateInvoiceTotalsAsync(Invoice invoice)
         {
             // Calculate total price including custom items
             decimal totalPriceWithCustomItems = invoice.CustomItems?.Sum(item => item.TotalPrice) ?? 0;
@@ -189,13 +233,11 @@ namespace API.Services.Implementations
             if (updatedRecords <= 0) throw new Exception("Failed to update Appointment status");
             await SendAppointmentFinalized(appointmentId);
         }
-
         public async Task<InvoiceDto> GetInvoiceByIdAsync(int invoiceId)
         {
             var invoice = await _invoiceRepository.GetInvoiceByIdAsync(invoiceId) ?? throw new Exception("invoice does not exist");
             return _mapper.Map<InvoiceDto>(invoice);
         }
-
         public async Task SendAppointmentFinalized(int appointmentId)
         {
             await _appointmentNotification.Clients.All.SendAppointmentFinalized(new AppointmentStatus { AppointmentId = appointmentId });

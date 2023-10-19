@@ -16,7 +16,10 @@ namespace API.Repositories.Implementations
         {
             _context.Invoices.Add(invoice);
         }
-
+        public void UpdateInvoice(Invoice invoice)
+        {
+            _context.Invoices.Update(invoice);
+        }
         public void AddInvoiceDoctorService(InvoiceDoctorService invoiceDoctorService)
         {
             _context.InvoiceDoctorService.Add(invoiceDoctorService);

@@ -43,7 +43,7 @@ export const navItems: IRoleNavData[] = [
     iconComponent: { name: 'cil-group' },
   },
   {
-    name: 'Time Table',
+    name: 'Clinics',
     url: '/time-table',
     iconComponent: { name: 'cil-view-column' },
   },
