@@ -1,3 +1,4 @@
+using API.Constants;
 using API.Errors;
 using API.Helpers;
 using API.Models.DTOS;
@@ -12,7 +13,7 @@ namespace API.Services.Implementations
     {
         private readonly IAppoinmentRepository _appointmentRepository;
         private readonly IMapper _mapper;
-
+        private static readonly string[] UnmodifiableStatuses = { AppointmentStatus.Invoiced, AppointmentStatus.Finalized };
         public AppoinmentService(IAppoinmentRepository appointmentRepository, IMapper mapper)
         {
             _appointmentRepository = appointmentRepository;
@@ -32,13 +33,13 @@ namespace API.Services.Implementations
                     if (!canAddMedicines && appointment.AppointmentMedicines != null && appointment.AppointmentMedicines.Any())
                         throw new BadRequestException("Medicines cannot be added during appointment creation.");
 
-                    appointment.Status = "booked";
+                    appointment.Status = AppointmentStatus.Booked;
                     _appointmentRepository.AddAppointment(appointment);
                 }
                 else
                 {
-                    if (oldAppointment.Status == "finalized")
-                        throw new BadRequestException("Appointment is already finalized cannot update or add");
+                    if (UnmodifiableStatuses.Contains(oldAppointment.Status))
+                        throw new BadRequestException("Appointment is already finalized/invoiced cannot update or add");
                     // Check if medicine can be added
                     if (!canAddMedicines && appointment.AppointmentMedicines != null && appointment.AppointmentMedicines.Any())
                         throw new BadRequestException("Medicines cannot be added during appointment update.");
@@ -78,7 +79,7 @@ namespace API.Services.Implementations
         public async Task DeleteAppointment(int appointmentId)
         {
             var appointment = await _appointmentRepository.GetAppointmentByIdAsyncNoTracking(appointmentId) ?? throw new Exception("Appointment not found");
-            if (appointment.Status == "finalized")
+            if (UnmodifiableStatuses.Contains(appointment.Status))
                 throw new Exception("Appointment is finalized cannot delete");
             _appointmentRepository.DeleteAppointment(appointment);
             if (!await _appointmentRepository.SaveAllAsync()) throw new Exception("Can not delete appointment");

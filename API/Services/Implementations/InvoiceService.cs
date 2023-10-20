@@ -4,11 +4,11 @@ using API.Models.DTOS;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
-using API.SignalR;
 using AutoMapper;
 using HospitalApp.SignalR;
 using Microsoft.AspNetCore.SignalR;
-using static API.Helpers.Utilities;
+using API.Constants;
+using API.SignalR;
 
 namespace API.Services.Implementations
 {
@@ -55,7 +55,7 @@ namespace API.Services.Implementations
                 _invoiceRepository.AddInvoice(invoice);
                 if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed adding invoice");
                 // 6- Finalize appointment
-                await FinalizeAppointment(invoiceDto.AppointmentId, invoice.Id);
+                await UpdateAppointmentStatusAndInvoiceId(invoiceDto.AppointmentId, invoice.Id, AppointmentStatus.Finalized);
                 scope.Complete();
                 return _mapper.Map<InvoiceDto>(invoice);
             }
@@ -71,6 +71,8 @@ namespace API.Services.Implementations
             {
 
                 var invoice = await _invoiceRepository.GetInvoiceByIdWithPropertiesAsync(invoiceDto.Id) ?? throw new BadRequestException("Invoice Not Found");
+                if (invoice.Appointment.Status == AppointmentStatus.Invoiced)
+                    throw new BadRequestException("Appointment is already Invoiced");
                 // Compare list of InvoiceDoctorServices
                 List<CreateInvoiceDoctorServiceDto> listDto =
                     invoiceDto.InvoiceDoctorServices == null ? new List<CreateInvoiceDoctorServiceDto>() : invoiceDto.InvoiceDoctorServices.ToList();
@@ -105,7 +107,7 @@ namespace API.Services.Implementations
 
                 if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed adding invoice");
                 // 6- Finalize appointment
-                await FinalizeAppointment(invoiceDto.AppointmentId, invoice.Id);
+                await UpdateAppointmentStatusAndInvoiceId(invoiceDto.AppointmentId, invoice.Id, AppointmentStatus.Invoiced);
                 scope.Complete();
                 return _mapper.Map<InvoiceDto>(invoice);
             }
@@ -280,20 +282,18 @@ namespace API.Services.Implementations
             invoice.TotalAfterDiscount = invoice.TotalDue * (1 - (invoice.DiscountPercentage / 100));
             invoice.TotalRemaining = invoice.TotalAfterDiscount - invoice.TotalPaid;
         }
-        private async Task FinalizeAppointment(int appointmentId, int invoiceId)
+        private async Task UpdateAppointmentStatusAndInvoiceId(int appointmentId, int invoiceId, string appointmentStatus)
         {
-            var updatedRecords = await _appoinmentRepository.UpdateAppointmentInvoicedAsync(appointmentId, "finalized", invoiceId);
+            var updatedRecords = await _appoinmentRepository
+                .UpdateAppointmentInvoicedAsync(appointmentId, appointmentStatus, invoiceId);
             if (updatedRecords <= 0) throw new Exception("Failed to update Appointment status");
-            await SendAppointmentFinalized(appointmentId);
+            await _appointmentNotification.Clients.All.SendAppointmentStatusChange
+                (new AppointmentStatusSignalR { AppointmentId = appointmentId, Status = appointmentStatus });
         }
         public async Task<InvoiceDto> GetInvoiceByIdAsync(int invoiceId)
         {
             var invoice = await _invoiceRepository.GetInvoiceByIdAsync(invoiceId) ?? throw new Exception("invoice does not exist");
             return _mapper.Map<InvoiceDto>(invoice);
-        }
-        public async Task SendAppointmentFinalized(int appointmentId)
-        {
-            await _appointmentNotification.Clients.All.SendAppointmentFinalized(new AppointmentStatus { AppointmentId = appointmentId });
         }
     }
 }
