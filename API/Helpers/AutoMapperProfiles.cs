@@ -50,6 +50,7 @@ namespace API.Helpers
             CreateMap<InvoiceDto, Invoice>()
                 .ForMember(dest => dest.InvoiceDoctorService, opt => opt.MapFrom(src => src.InvoiceDoctorServices))
                 .ForMember(dest => dest.CustomItems, opt => opt.MapFrom(src => src.CustomItems))
+                .ForMember(dest => dest.Appointment, opt => opt.MapFrom(src => src.Appointment))
                 .ReverseMap();
 
             CreateMap<DoctorServiceDto, DoctorService>().ReverseMap();
@@ -81,5 +82,6 @@ namespace API.Helpers
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.SecurityStamp, opt => opt.Ignore()); // Assuming SecurityStamp should be ignored during mapping.
         }
+        
     }
 }

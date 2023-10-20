@@ -11,6 +11,7 @@ namespace API.Models.Entities
         public DateTime ExpiryDate { get; set; }
         public virtual InventoryItem? InventoryItem { get; set; }
         public virtual ICollection<InvoiceDoctorServiceSupplyOrders>? InvoiceDoctorServiceSupplyOrders { get; set; }
+        public int ConsumedQuantity { get; set; } = 0;
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
     }

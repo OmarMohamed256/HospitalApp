@@ -1,0 +1,82 @@
+<form [formGroup]="createInvoiceForm" cForm (ngSubmit)="createInvoiceForm.valid && createInvoice()" autocomplete="off"
+    *ngIf="doctor_services">
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Select Services</label>
+                <ng-select [(ngModel)]="selectedServices" (change)="onServiceSelect($event)" [items]="services"
+                    [virtualScroll]="true" [multiple]="true" [bindLabel]="'name'"
+                    (remove)="invoiceRemoveService($event)" [ngModelOptions]="{standalone: true}" [clearable]="false">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+    <div formArrayName="invoiceSelectedServices" class="mb-3">
+        <div *ngFor="let control of $any(createInvoiceForm.controls['invoiceSelectedServices']).controls; let i = index"
+            [formGroupName]="i">
+            <div class="row">
+                <div class="col">
+                    <label>Service Name</label>
+                    <app-text-input formControlName="serviceName" label='Service Name'></app-text-input>
+                </div>
+                <div class="col">
+                    <label>Service Price</label>
+                    <app-text-input formControlName="servicePrice" label='Service Price'></app-text-input>
+                </div>
+                <div class="col">
+                    <label>Quantity</label>
+                    <app-text-input type="number" formControlName="quantity" label='Quantity'
+                        (change)="quantityChanged(i)"></app-text-input>
+                </div>
+                <div class="col">
+                    <label>Service Total Price</label>
+                    <app-text-input type="number" formControlName="servicetotalPrice"
+                        label='Service Total Price'></app-text-input>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3 d-flex justify-content-center">
+        <div class="col-6 text-center">
+            <button cButton color="success" (click)="pushNewCustomItem()">Add A Custom Item</button>
+        </div>
+    </div>
+    <div formArrayName="customItems" class="mb-3">
+        <div *ngFor="let control of $any(createInvoiceForm.controls['customItems']).controls; let i = index"
+            [formGroupName]="i">
+            <div class="row">
+                <div class="col">
+                    <label>Item Name</label>
+                    <app-text-input formControlName="name" label='Item Name'></app-text-input>
+                </div>
+                <div class="col">
+                    <label>Item Price</label>
+                    <app-text-input type="number" formControlName="price" label='Item Price'></app-text-input>
+                </div>
+                <div class="col">
+                    <label>Units</label>
+                    <app-text-input type="number" formControlName="units" label='Units'></app-text-input>
+                </div>
+                <div class="col-1">
+                    <div class="d-flex flex-column">
+                        <label>Remove</label>
+                        <button cButton color="danger" class="btn-m" (click)="removeCustomItem(i)"><svg cIcon
+                                name="cil-trash"></svg></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3 d-flex justify-content-center">
+        <div class="col-6 text-center">
+            <button cButton color="primary" type="submit" [disabled]="!createInvoiceForm.valid">Create Invoice</button>
+        </div>
+    </div>
+    <div class="row" *ngIf="validationErrors.length > 0">
+        <ul class="text-danger">
+            <li *ngFor="let error of validationErrors">
+                {{error}}
+            </li>
+        </ul>
+    </div>
+</form>

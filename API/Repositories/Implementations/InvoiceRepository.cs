@@ -35,12 +35,27 @@ namespace API.Repositories.Implementations
             return await _context.Invoices
             .Include(i => i.CustomItems)
             .Include(i => i.InvoiceDoctorService)
+            .Include(i => i.Appointment)
             .SingleOrDefaultAsync(i => i.Id == invoiceId);
         }
-
+        public async Task<Invoice> GetInvoiceByIdWithPropertiesAsync(int invoiceId)
+        {
+            return await _context.Invoices
+            .Include(i => i.CustomItems)
+            .Include(i => i.InvoiceDoctorService)
+                .ThenInclude(ids => ids.InvoiceDoctorServiceSupplyOrders)
+                    .ThenInclude(idss => idss.SupplyOrder)
+            .Include(i => i.Appointment)
+            .SingleOrDefaultAsync(i => i.Id == invoiceId);
+        }
         public async Task<bool> SaveAllAsync()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public void RemoveInvoiceDoctorServiceSupplyOrder(InvoiceDoctorServiceSupplyOrders invoiceDoctorServiceSupplyOrder)
+        {
+            _context.InvoiceDoctorServiceSupplyOrders.Remove(invoiceDoctorServiceSupplyOrder);
         }
     }
 }

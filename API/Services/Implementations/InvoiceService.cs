@@ -8,6 +8,7 @@ using API.SignalR;
 using AutoMapper;
 using HospitalApp.SignalR;
 using Microsoft.AspNetCore.SignalR;
+using static API.Helpers.Utilities;
 
 namespace API.Services.Implementations
 {
@@ -69,7 +70,23 @@ namespace API.Services.Implementations
             try
             {
 
-                var invoice = await _invoiceRepository.GetInvoiceByIdAsync(invoiceDto.Id) ?? throw new BadRequestException("Invoice Not Found");
+                var invoice = await _invoiceRepository.GetInvoiceByIdWithPropertiesAsync(invoiceDto.Id) ?? throw new BadRequestException("Invoice Not Found");
+                // Compare list of InvoiceDoctorServices
+                List<CreateInvoiceDoctorServiceDto> listDto =
+                    invoiceDto.InvoiceDoctorServices == null ? new List<CreateInvoiceDoctorServiceDto>() : invoiceDto.InvoiceDoctorServices.ToList();
+                List<InvoiceDoctorService> listService =
+                    invoice.InvoiceDoctorService == null ? new List<InvoiceDoctorService>() : invoice.InvoiceDoctorService.ToList();
+                if (!CompareInvoiceDoctorServiceList(listDto, listService))
+                {
+                    if (invoice.InvoiceDoctorService != null) await ResetConsumedSupplyOrders(invoice.InvoiceDoctorService);
+                    // populate InvoiceDoctorService
+                    invoice.InvoiceDoctorService = new List<InvoiceDoctorService>();
+                    if (invoiceDto.InvoiceDoctorServices != null)
+                    {
+                        foreach (var invoiceDoctorServiceDto in invoiceDto.InvoiceDoctorServices)
+                            invoice.InvoiceDoctorService.Add(await GetInvoiceDoctorService(invoice, invoiceDoctorServiceDto));
+                    }
+                }
                 decimal appointmentTypePrice = await GetAppointmentTypePrice(invoice.AppointmentId);
                 // map certain data
                 invoice.DiscountPercentage = invoiceDto.DiscountPercentage;
@@ -81,12 +98,6 @@ namespace API.Services.Implementations
                 if (invoiceDto.CustomItems != null && invoiceDto.CustomItems.Any())
                     invoice.CustomItems = PopulateCustomItems(invoiceDto.CustomItems);
                 // 3- Create list of InvoiceDoctorService
-                invoice.InvoiceDoctorService = new List<InvoiceDoctorService>();
-                if (invoiceDto.InvoiceDoctorServices != null)
-                {
-                    foreach (var invoiceDoctorServiceDto in invoiceDto.InvoiceDoctorServices)
-                        invoice.InvoiceDoctorService.Add(await GetInvoiceDoctorService(invoice, invoiceDoctorServiceDto));
-                }
                 // 4- Update invoice total
                 UpdateInvoiceTotalsAsync(invoice);
                 // 5- Update invoice
@@ -103,6 +114,46 @@ namespace API.Services.Implementations
                 throw new Exception("Failed to add invoice");
             }
         }
+        private async Task ResetConsumedSupplyOrders(ICollection<InvoiceDoctorService> invoiceDoctorServices)
+        {
+            // reset consumed supply orders if InvoiceDoctorService changed
+            foreach (var invoiceDoctorService in invoiceDoctorServices)
+            {
+                if (invoiceDoctorService.InvoiceDoctorServiceSupplyOrders != null)
+                {
+                    foreach (var invoiceDoctorServiceSupplyOrder in invoiceDoctorService.InvoiceDoctorServiceSupplyOrders)
+                    {
+                        invoiceDoctorServiceSupplyOrder.SupplyOrder.Quantity
+                            += invoiceDoctorServiceSupplyOrder.QuantityUsed;
+                        invoiceDoctorServiceSupplyOrder.SupplyOrder.ConsumedQuantity
+                            -= invoiceDoctorServiceSupplyOrder.QuantityUsed;
+                        invoiceDoctorServiceSupplyOrder.QuantityUsed = 0;
+                        _invoiceRepository.RemoveInvoiceDoctorServiceSupplyOrder(invoiceDoctorServiceSupplyOrder);
+                    }
+                }
+            }
+            if (!await _invoiceRepository.SaveAllAsync()) throw new ApiException(500, "Failed resetting supply orders");
+        }
+
+        private static bool CompareInvoiceDoctorServiceList(List<CreateInvoiceDoctorServiceDto> listDto, List<InvoiceDoctorService> listService)
+        {
+            HashSet<(int?, int?)> dtoSet = new();
+            HashSet<(int?, int?)> serviceSet = new();
+
+            foreach (var dto in listDto)
+            {
+                dtoSet.Add((dto.DoctorServiceId, dto.ServiceQuantity));
+            }
+
+            foreach (var service in listService)
+            {
+                serviceSet.Add((service.DoctorServiceId, service.ServiceQuantity));
+            }
+
+            return dtoSet.SetEquals(serviceSet);
+        }
+
+
 
         private async Task<decimal> GetAppointmentTypePrice(int appointmentId)
         {
@@ -123,9 +174,9 @@ namespace API.Services.Implementations
             {
                 Id = invoiceDto.Id,
                 AppointmentId = invoiceDto.AppointmentId,
-                DiscountPercentage = invoiceDto.DiscountPercentage,
-                PaymentMethod = invoiceDto.PaymentMethod,
-                TotalPaid = invoiceDto.TotalPaid,
+                DiscountPercentage = 0,
+                PaymentMethod = "cash",
+                TotalPaid = 0,
                 TotalDue = appointmentTypePrice,
                 FinalizationDate = DateTime.Now,
                 AppointmentTypePrice = appointmentTypePrice,
@@ -185,13 +236,15 @@ namespace API.Services.Implementations
                 int quantityNeeded = item.QuantityNeeded * invoiceDoctorService.ServiceQuantity;
                 int totalQuantity = consumableSupplyOrders.Sum(order => order.Quantity);
                 if (totalQuantity < quantityNeeded)
-                    throw new BadRequestException("Not enough supply orders to fulfill quantity needed for an item in: " + doctorService.Service.Name + " Service");
+                    throw new BadRequestException("Not enough supply orders to fulfill quantity needed for an item in: "
+                        + doctorService.Service.Name + " Service");
                 foreach (var supplyOrder in consumableSupplyOrders)
                 {
                     if (quantityNeeded > 0)
                     {
                         int quantityToConsume = Math.Min(quantityNeeded, supplyOrder.Quantity);
                         supplyOrder.Quantity -= quantityToConsume;
+                        supplyOrder.ConsumedQuantity += quantityToConsume;
                         quantityNeeded -= quantityToConsume;
                         var invoiceDoctorServiceSupplyOrder = new InvoiceDoctorServiceSupplyOrders
                         {

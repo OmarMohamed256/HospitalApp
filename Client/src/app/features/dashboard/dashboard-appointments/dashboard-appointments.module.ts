@@ -12,6 +12,7 @@ import { FinalizeAppointmentComponent } from './finalize-appointment/finalize-ap
 import { InvoiceAppointmentComponent } from './invoice-appointment/invoice-appointment.component';
 import { PrescriptionComponent } from './prescription/prescription.component';
 import { NgxPrintModule } from 'ngx-print';
+import { MedicalOperationsComponent } from './medical-operations/medical-operations.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,7 @@ import { NgxPrintModule } from 'ngx-print';
     NgSelectModule,
     NgxPrintModule
   ],
-  declarations: [DashboardAppointmentsComponent, AddAppointmentComponent, UpdateAppointmentComponent, FinalizeAppointmentComponent, InvoiceAppointmentComponent, PrescriptionComponent],
+  declarations: [DashboardAppointmentsComponent, AddAppointmentComponent, UpdateAppointmentComponent, FinalizeAppointmentComponent, InvoiceAppointmentComponent, PrescriptionComponent, MedicalOperationsComponent],
   providers: [DatePipe]
 })
 export class DashboardAppointmentModule {

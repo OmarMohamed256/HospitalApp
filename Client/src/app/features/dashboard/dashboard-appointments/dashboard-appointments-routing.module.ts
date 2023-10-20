@@ -7,6 +7,7 @@ import { AppointmentDetailedResolver } from 'src/app/core/resolvers/appointment-
 import { FinalizeAppointmentComponent } from './finalize-appointment/finalize-appointment.component';
 import { InvoiceAppointmentComponent } from './invoice-appointment/invoice-appointment.component';
 import { InvoiceDetailedResolver } from 'src/app/core/resolvers/invoice-detailed.resolver';
+import { MedicalOperationsComponent } from './medical-operations/medical-operations.component';
 
 
 const routes: Routes = [
@@ -33,11 +34,19 @@ const routes: Routes = [
     }
   },
   {
-    path: 'finalize/:id',
+    path: 'finalize/:invoiceId',
     component: FinalizeAppointmentComponent,
-    resolve: { appointment: AppointmentDetailedResolver },
+    resolve: { invoice: InvoiceDetailedResolver },
     data: {
       title: `Finalize Appointment`
+    }
+  },
+  {
+    path: 'medical-operations/:id',
+    component: MedicalOperationsComponent,
+    resolve: { appointment: AppointmentDetailedResolver },
+    data: {
+      title: `Enter Medical Operations`
     }
   },
   {

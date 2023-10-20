@@ -16,6 +16,7 @@ export class InvoiceAppointmentComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.invoice = data['invoice'];
+      console.log(this.invoice)
     })
   }
 

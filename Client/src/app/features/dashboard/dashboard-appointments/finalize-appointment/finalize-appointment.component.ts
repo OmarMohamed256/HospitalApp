@@ -19,6 +19,7 @@ import { Service } from 'src/app/models/service';
 })
 export class FinalizeAppointmentComponent implements OnInit {
   appointment?: Appointment;
+  invoice?: Invoice;
   doctor_services: DoctorService[] | null = [];
   services: Service[] | null = [];
   selectedServices: Service[] | null = [];
@@ -33,7 +34,9 @@ export class FinalizeAppointmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.appointment = data['appointment'];
+      this.invoice = data['invoice'];
+      this.appointment = this.invoice?.appointment;
+      console.log(this.invoice)
       this.getDoctorServicesByDoctorId();
       this.initializeForm();
     })
@@ -43,7 +46,41 @@ export class FinalizeAppointmentComponent implements OnInit {
     this.doctorServiceService.getDoctorServiceByDocorId(this.appointment!.doctorId.toString()).subscribe(response => {
       this.doctor_services = response;
       this.services = this.doctor_services.map(item => item.service);
+      this.intializeDoctorServices();
     });
+  }
+
+  intializeDoctorServices() {
+    const filteredDoctorServices = this.doctor_services!.filter(service => {
+      return this.invoice?.invoiceDoctorServices.some(invoiceService => invoiceService.doctorServiceId === service.id);
+    });
+    this.selectedServices = filteredDoctorServices.map(item => item.service);
+    const selectedServicesFormArray = this.createInvoiceForm.get('invoiceSelectedServices') as FormArray;
+    for (const item of this.invoice?.invoiceDoctorServices!) {
+      const serviceItem = filteredDoctorServices.find(service => service.id == item.doctorServiceId)
+      selectedServicesFormArray.push(this.fb.group({
+        serviceName: [{ value: item.serviceName, disabled: true }, Validators.required],
+        servicePrice: [{ value: item.serviceSoldPrice, disabled: true }, Validators.required],
+        quantity: [item.serviceQuantity, [Validators.required, Validators.min(1)]],
+        serviceId: [serviceItem?.serviceId, Validators.required],
+        servicetotalPrice: [{ value: item.totalPrice, disabled: true }, Validators.required],
+        serviceDisposablePrice: [item.totalDisposablesPrice],
+      }));
+    }
+  }
+
+  initializeCustomItems() {
+    const customItemsArray = this.createInvoiceForm.get('customItems') as FormArray;
+  
+    if (this.invoice?.customItems) {
+      for (const item of this.invoice.customItems) {
+        customItemsArray.push(this.fb.group({
+          name: [item.name, Validators.required],
+          price: [item.price, [Validators.required, Validators.min(1)]],
+          units: [item.units, [Validators.required, Validators.min(1)]],
+        }));
+      }
+    }
   }
 
   initializeForm() {
@@ -57,6 +94,7 @@ export class FinalizeAppointmentComponent implements OnInit {
       discountPercentage: [0, [Validators.required, Validators.max(100), Validators.min(0)]],
       paymentMethod: ['cash', Validators.required]
     });
+    this.initializeCustomItems();
   }
 
   pushNewCustomItem() {
@@ -90,11 +128,8 @@ export class FinalizeAppointmentComponent implements OnInit {
 
   updateSelectedService(items: Service[]) {
     const selectedServicesFormArray = this.createInvoiceForm.get('invoiceSelectedServices') as FormArray;
-
     items.forEach((item: Service) => {
       const serviceId = item.id;
-
-      // Check if the serviceId already exists in selectedServicesFormArray
       const serviceAlreadyExists = selectedServicesFormArray.controls.some(control => {
         return control.get('serviceId')?.value === serviceId;
       });
@@ -154,7 +189,7 @@ export class FinalizeAppointmentComponent implements OnInit {
   }
 
   appendTypePriceToTotal() {
-    var price = this.appointment?.type === 'visit' ? this.appointment?.doctor?.priceVisit || 0 : this.appointment?.doctor?.priceRevisit || 0;
+    var price = this.invoice?.appointmentTypePrice;
     var total = this.createInvoiceForm.get('totalPrice')?.value + price;
     this.setTotalPrice(total);
   }
@@ -217,6 +252,7 @@ export class FinalizeAppointmentComponent implements OnInit {
 
   mapInvoiceFormToCreateInvoice() {
     const createInvoice: CreateInvoice = {
+      id:            this.invoice?.id,
       appointmentId: this.appointment?.id!,
       paymentMethod: this.createInvoiceForm.get('paymentMethod')?.value,
       discountPercentage: this.createInvoiceForm.get('discountPercentage')?.value,
@@ -229,7 +265,8 @@ export class FinalizeAppointmentComponent implements OnInit {
 
   createInvoice() {
     var invoice = this.mapInvoiceFormToCreateInvoice();
-    this.invoiceService.createInvoice(invoice).subscribe(response => {
+    console.log(invoice)
+    this.invoiceService.updateInvoice(invoice).subscribe(response => {
       this.sendToInvoiceView(response);
     })
   }

@@ -77,7 +77,7 @@ export class DashboardAppointmentsComponent implements OnInit {
     if (appointment.status === 'finalized') {
       this.router.navigate(['appointments/view-invoice', appointment.invoiceId]);
     } else {
-      this.router.navigate(['appointments/finalize', appointment.id]);
+      this.router.navigate(['appointments/medical-operations', appointment.id]);
     }
   }
 

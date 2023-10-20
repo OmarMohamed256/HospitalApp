@@ -15,6 +15,7 @@ namespace API.Models.DTOS
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
         public int AppointmentId { get; set; }
+        public AppointmentDto? Appointment { get; set; }
         public ICollection<CustomItemDto>? CustomItems { get; set; }
         public ICollection<InvoiceDoctorServiceDto>? InvoiceDoctorServices { get; set; }
     }

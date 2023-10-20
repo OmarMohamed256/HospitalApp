@@ -8,6 +8,7 @@ namespace API.Models.DTOS
         public string? Note { get; set; }
         public string? ItemName { get; set; }
         public int? InventoryItemId { get; set; }
+        public int ConsumedQuantity { get; set; } = 0;
         public DateTime ExpiryDate { get; set; }
     }
 }
