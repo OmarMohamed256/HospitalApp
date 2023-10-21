@@ -1,5 +1,6 @@
 using API.Models.DTOS;
 using API.Models.DTOS.AppointmentDtos;
+using API.Models.DTOS.ImageDtos;
 using API.Models.Entities;
 using AutoMapper;
 using HospitalApp.Models.Entities;
@@ -72,7 +73,7 @@ namespace API.Helpers
             .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
             .ReverseMap();
             CreateMap<Room, CreateRoomDto>().ReverseMap();
-            
+            CreateMap<ImageDto, Image>().ReverseMap();
             CreateMap<RegisterDto, AppUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Username))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))

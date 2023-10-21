@@ -1,6 +1,7 @@
 using API.Extenstions;
 using API.Helpers;
 using API.Models.DTOS;
+using API.Models.DTOS.ImageDtos;
 using API.Services.Interfaces;
 using HospitalApp.Constants;
 using Microsoft.AspNetCore.Authorization;
@@ -39,6 +40,14 @@ namespace API.Controllers
             var user = await _userService.GetUserById(Id);
             if (user == null) return NotFound("User with this id is not found");
             return Ok(user);
+        }
+        [HttpPost("uploadImage")]
+        public async Task<IActionResult> UploadImage([FromForm] ImageUploadDto imageUploadDto)
+        {
+            if (imageUploadDto == null || imageUploadDto.File == null || imageUploadDto.File.Length == 0)
+                return BadRequest("Invalid image upload request");
+            ImageDto imageDto = await _userService.UploadImage(imageUploadDto);
+            return Ok(imageDto);
         }
     }
 }

@@ -105,6 +105,7 @@ builder.Services.AddScoped<IDoctorWorkingHoursRepository, DoctorWorkingHoursRepo
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();

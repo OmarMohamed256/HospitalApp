@@ -29,7 +29,7 @@ namespace Hospital.Data
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<AppointmentMedicine> AppointmentMedicine { get; set; }
-
+        public DbSet<Image> Images { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -179,6 +179,11 @@ namespace Hospital.Data
                 .HasOne(am => am.Medicine)
                 .WithMany(m => m.AppointmentMedicines)
                 .HasForeignKey(am => am.MedicineId);
+                
+            modelBuilder.Entity<Image>()
+                .HasOne(i => i.User)
+                .WithMany(u => u.Images)
+                .HasForeignKey(i => i.UserId);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
