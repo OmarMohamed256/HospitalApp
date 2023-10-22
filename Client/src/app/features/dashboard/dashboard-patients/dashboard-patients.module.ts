@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { PatientInfoComponent } from './patient-info/patient-info.component';
 import { CommonSharedModule } from 'src/app/shared/common-shared.module';
 import { PatientAppointmentsComponent } from './patient-appointments/patient-appointments.component';
+import { FileUploadModalComponent } from './file-upload-modal/file-upload-modal.component';
 
 @NgModule({
   imports: [
@@ -20,8 +21,8 @@ import { PatientAppointmentsComponent } from './patient-appointments/patient-app
     InputGroupTextDirective,
     CommonSharedModule,
     SharedModule
-    ],
-  declarations: [DashboardPatientsComponent, PatientInfoComponent, PatientAppointmentsComponent]
+  ],
+  declarations: [DashboardPatientsComponent, PatientInfoComponent, PatientAppointmentsComponent, FileUploadModalComponent]
 })
 export class DashboardPatientModule {
 }

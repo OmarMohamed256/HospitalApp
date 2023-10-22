@@ -1,0 +1,49 @@
+<c-modal #imageUploadModal id="imageUploadModal" size="xl" (visibleChange)="modelToggeled($event)"
+  [visible]="visible" scrollable>
+  <c-modal-header>
+    <h5 cModalTitle>Image</h5>
+    <button [cModalToggle]="imageUploadModal.id" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <ng-container *ngTemplateOutlet="specialityContent"></ng-container>
+  </c-modal-body>
+  <c-modal-footer>
+    <button [cModalToggle]="imageUploadModal.id" cButton color="secondary">
+      Close
+    </button>
+    <button [disabled]="!uploadImageForm.valid" cButton color="primary" (click)="uploadImageForm.valid && addImage()">Save changes</button>
+  </c-modal-footer>
+</c-modal>
+
+<ng-template #specialityContent>
+<form [formGroup]="uploadImageForm" cForm (ngSubmit)="uploadImageForm.valid" autocomplete="off">
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Type</label>
+                <app-text-input icon="" formControlName="type" [label]='"Type"'></app-text-input>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Organ</label>
+                <app-text-input icon="" formControlName="organ" [label]='"Organ"'></app-text-input>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>Image Date</label>
+                <app-text-input type="date" icon="" formControlName="imageDate" [label]='"Image Date"'></app-text-input>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label cLabel>File</label>
+                <input type="file" formControlName="fileSource" class="form-control" (change)="onFileSelected($event)">
+            </div>
+        </div>
+    </div>
+</form>
+</ng-template>

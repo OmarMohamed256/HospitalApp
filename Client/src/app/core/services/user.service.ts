@@ -5,6 +5,8 @@ import { UserParams } from 'src/app/models/Params/userParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { map, of } from 'rxjs';
+import { ImageUpload } from 'src/app/models/ImageModels/imageUpload';
+import { Image } from 'src/app/models/ImageModels/image';
 
 @Injectable({
   providedIn: 'root'
@@ -70,5 +72,19 @@ export class UserService {
 
   updateUser(userData: UserData) {
     return this.http.put(this.baseUrl + 'user/', userData);
+  }
+
+  uploadImage(imageUpload: ImageUpload) {
+    console.log(imageUpload)
+    const formData = new FormData();
+    formData.append('file', imageUpload.file);
+    formData.append('userId', imageUpload.userId.toString());
+    formData.append('category', imageUpload.category);
+    let date = new Date(imageUpload.imageDate);
+    formData.append('imageDate', date.toISOString());
+    formData.append('type', imageUpload.type!);
+    formData.append('organ', imageUpload.organ!);
+    console.log(formData)
+    return this.http.post<Image>(this.baseUrl + 'user/uploadImage', formData);
   }
 }

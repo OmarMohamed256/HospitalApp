@@ -79,3 +79,34 @@
     <app-patient-appointments [user]="user" *ngIf="activePane === 1"></app-patient-appointments>
   </c-tab-pane>
 </c-tab-content>
+<c-nav variant="tabs" class="mt-5">
+  <c-nav-item>
+    <a [active]="true" [cTabContent]="tabContent2" cNavLink [tabPaneIdx]="0">
+      Lab Tests
+    </a>
+  </c-nav-item>
+  <c-nav-item>
+    <a [cTabContent]="tabContent2" cNavLink [tabPaneIdx]="1">
+      Radiology
+    </a>
+  </c-nav-item>
+  <c-nav-item>
+    <a [cTabContent]="tabContent2" cNavLink [tabPaneIdx]="2">
+      Official Documents
+    </a>
+  </c-nav-item>
+</c-nav>
+<c-tab-content #tabContent2="cTabContent" (activeTabPaneIdxChange)="onImageChange($event)" [activeTabPaneIdx]="imageActivePane">
+  <c-tab-pane class="p-3">
+    1
+  </c-tab-pane>
+  <c-tab-pane class="p-3">
+    2
+  </c-tab-pane>
+  <c-tab-pane class="p-3">
+    3
+  </c-tab-pane>
+</c-tab-content>
+<button class="btn btn-primary" (click)="openModal()">Upload Image</button>
+<app-file-upload-modal [(visible)]="modalVisibility" [userId]="user?.id!" 
+  [category]="selectedImageCategory"></app-file-upload-modal>
