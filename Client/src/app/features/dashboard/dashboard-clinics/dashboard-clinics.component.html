@@ -10,51 +10,56 @@
         </a>
     </c-nav-item>
 </c-nav>
-<c-tab-content #tabContent="cTabContent">
+<c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
     <c-tab-pane class="p-3">
-        <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
-            <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
-                <button (click)="toggleModal()" cButton color="light"> <span class=""><svg
-                            class="border rounded border-dark" cIcon name="cilPlus"></svg>
-                        Add new clinic</span></button>
-                <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
-                    [(ngModel)]="clinicParams.clinicSpecialityId" cSelect (change)="getClinics()">
-                    <option [value]="null" disabled>Speciality</option>
-                    <option *ngFor="let speciality of specialityList" [value]="speciality.id">
-                        {{ speciality.name }}
-                    </option>
-                </select>
-                <button cButton color="light" (click)="resetFiltersAndGetRooms()">Reset Filters</button>
+        <ng-container *ngIf="activePane === 0">
+            <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
+                <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+                    <button (click)="toggleModal()" cButton color="light"> <span class=""><svg
+                                class="border rounded border-dark" cIcon name="cilPlus"></svg>
+                            Add new clinic</span></button>
+                    <select name="speciality" *ngIf="specialityList" class="w-25" aria-label="speciality"
+                        [(ngModel)]="clinicParams.clinicSpecialityId" cSelect (change)="getClinics()">
+                        <option [value]="null" disabled>Speciality</option>
+                        <option *ngFor="let speciality of specialityList" [value]="speciality.id">
+                            {{ speciality.name }}
+                        </option>
+                    </select>
+                    <button cButton color="light" (click)="resetFiltersAndGetClinics()">Reset Filters</button>
 
+                </div>
+            </c-navbar>
+            <table cTable *ngIf="clinics && clinics.length > 0">
+                <thead>
+                    <tr>
+                        <th scope="col">Clinic Number</th>
+                        <th scope="col">Clinic Speciality</th>
+                        <th scope="col">Doctor Name</th>
+                        <th scope="col">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let clinic of clinics" class="user-table" (click)="setClinicAndShowModal(clinic)">
+                        <td>{{clinic.clinicNumber}}</td>
+                        <td>{{getSpecialityNameById(clinic.clinicSpecialityId)}}</td>
+                        <td>{{clinic.doctor?.fullName }}</td>
+                        <td class="pt-1"><button cButton color="danger" class="btn-m"
+                                (click)="deleteClinic(clinic.id, $event)"><svg cIcon name="cil-trash"></svg></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center" *ngIf="pagination">
+                <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems"
+                    [itemsPerPage]="pagination.itemsPerPage" [(ngModel)]="pagination.currentPage"
+                    (pageChanged)="pageChanged($event)"></app-pagination>
             </div>
-        </c-navbar>
-        <table cTable *ngIf="clinics && clinics.length > 0">
-            <thead>
-                <tr>
-                    <th scope="col">Clinic Number</th>
-                    <th scope="col">Clinic Speciality</th>
-                    <th scope="col">Doctor Name</th>
-                    <th scope="col">Remove</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let clinic of clinics" class="user-table" (click)="setRoomAndShowModal(clinic)">
-                    <td>{{clinic.clinicNumber}}</td>
-                    <td>{{getSpecialityNameById(clinic.clinicSpecialityId)}}</td>
-                    <td>{{clinic.doctor?.fullName }}</td>
-                    <td class="pt-1"><button cButton color="danger" class="btn-m"
-                            (click)="deleteClinic(clinic.id, $event)"><svg cIcon name="cil-trash"></svg></button></td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-center" *ngIf="pagination">
-            <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems"
-                [itemsPerPage]="pagination.itemsPerPage" [(ngModel)]="pagination.currentPage"
-                (pageChanged)="pageChanged($event)"></app-pagination>
-        </div>
-        <app-clinics-modal (clinicAddedUpdated)="clinicAddedUpdated($event)" [specialityList]="specialityList"
-            [(visible)]="modalVisibility"></app-clinics-modal>
+            <app-clinics-modal (clinicAddedUpdated)="clinicAddedUpdated($event)" [specialityList]="specialityList"
+                [(visible)]="modalVisibility"></app-clinics-modal>
+        </ng-container>
+
     </c-tab-pane>
     <c-tab-pane class="p-3">
+        <app-clinics-timetable *ngIf="activePane === 1"></app-clinics-timetable>
     </c-tab-pane>
 </c-tab-content>

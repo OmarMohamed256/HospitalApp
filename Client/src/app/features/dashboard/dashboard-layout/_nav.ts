@@ -44,11 +44,6 @@ export const navItems: IRoleNavData[] = [
   },
   {
     name: 'Clinics',
-    url: '/time-table',
-    iconComponent: { name: 'cil-view-column' },
-  },
-  {
-    name: 'Clinics',
     url: '/clinics',
     iconComponent: { name: 'cil-door' },
   },

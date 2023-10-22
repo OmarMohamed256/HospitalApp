@@ -1,7 +1,7 @@
 <c-modal #clinicModal id="clinicModal" size="xl" (visibleChange)="modelToggeled($event)"
   [visible]="visible" scrollable>
   <c-modal-header>
-    <h5 cModalTitle>Room</h5>
+    <h5 cModalTitle>Clinic</h5>
     <button [cModalToggle]="clinicModal.id" cButtonClose></button>
   </c-modal-header>
   <c-modal-body>
@@ -11,17 +11,17 @@
     <button [cModalToggle]="clinicModal.id" cButton color="secondary">
       Close
     </button>
-    <button cButton (click)="createUpdateRoom()" color="primary">Save changes</button>
+    <button cButton (click)="createUpdateClinic()" color="primary">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
 <ng-template #clinicContent>
-  <form [formGroup]="createUpdateRoomForm" cForm (ngSubmit)="createUpdateRoomForm.valid" autocomplete="off">
+  <form [formGroup]="createUpdateClinicForm" cForm (ngSubmit)="createUpdateClinicForm.valid" autocomplete="off">
     <div class="row">
       <div class="col">
         <div class="mb-3">
-          <label cLabel>Room Number</label>
-          <app-text-input icon="cilUser" formControlName="clinicNumber" [label]='"Room Number"'></app-text-input>
+          <label cLabel>Clinic Number</label>
+          <app-text-input icon="cilUser" formControlName="clinicNumber" [label]='"Clinic Number"'></app-text-input>
         </div>
       </div>
       <div class="col">
@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col" *ngIf="createUpdateRoomForm.get('clinicSpecialityId')?.value != ''">
+      <div class="col" *ngIf="createUpdateClinicForm.get('clinicSpecialityId')?.value != ''">
         <div class="mb-3">
           <label cLabel>Doctor</label>
           <ng-select [items]="doctorList" (search)="searchDoctors($event)" [virtualScroll]="true"

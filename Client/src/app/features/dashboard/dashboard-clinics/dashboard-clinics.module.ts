@@ -1,12 +1,13 @@
-import { ContainerComponent, FormSelectDirective, InputGroupTextDirective, ModalModule, NavbarModule, PaginationModule, SharedModule, TableModule } from "@coreui/angular";
+import { AlertModule, ContainerComponent, FormSelectDirective, InputGroupTextDirective, ModalModule, NavbarModule, PaginationModule, SharedModule, TableModule } from "@coreui/angular";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonSharedModule } from "src/app/shared/common-shared.module";
 import { DashboardClinicsComponent } from "./dashboard-clinics.component";
 import { DashboardClinicsRoutingModule } from "./dashboard-clinics-routing.module";
-import { RoomsClinicsComponent } from './clinics-modal/clinics-modal.component';
 import { NgSelectModule } from "@ng-select/ng-select";
+import { ClinicsModalComponent } from "./clinics-modal/clinics-modal.component";
+import { ClinicsTimetableComponent } from './clinics-timetable/clinics-timetable.component';
 
 
 @NgModule({
@@ -23,9 +24,10 @@ import { NgSelectModule } from "@ng-select/ng-select";
     CommonSharedModule,
     SharedModule,
     ModalModule,
-    NgSelectModule
+    NgSelectModule,
+    AlertModule
     ],
-  declarations: [DashboardClinicsComponent, RoomsClinicsComponent]
+  declarations: [DashboardClinicsComponent, ClinicsModalComponent, ClinicsTimetableComponent]
 })
 export class DashboardClinicsModule {
 }

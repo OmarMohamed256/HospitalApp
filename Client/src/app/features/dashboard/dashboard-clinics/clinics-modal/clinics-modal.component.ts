@@ -13,13 +13,13 @@ import { Speciality } from 'src/app/models/speciality';
   templateUrl: './clinics-modal.component.html',
   styleUrls: ['./clinics-modal.component.scss']
 })
-export class RoomsClinicsComponent implements OnInit {
+export class ClinicsModalComponent implements OnInit {
   @Input() visible: boolean = false;
   @Input() specialityList: Speciality[] = [];
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() clinicAddedUpdated = new EventEmitter<Clinic>();
 
-  createUpdateRoomForm!: FormGroup;
+  createUpdateClinicForm!: FormGroup;
   roleDoctor = ROLES.DOCTOR;
   doctorParams: UserParams = new UserParams({
     pageNumber: 1,
@@ -35,7 +35,7 @@ export class RoomsClinicsComponent implements OnInit {
     this.intializeForm();
   }
   intializeForm() {
-    this.createUpdateRoomForm = this.fb.group({
+    this.createUpdateClinicForm = this.fb.group({
       id: [0, Validators.required],
       clinicNumber: ['', Validators.required],
       clinicSpecialityId: [0, Validators.required],
@@ -48,22 +48,22 @@ export class RoomsClinicsComponent implements OnInit {
   }
   resetDoctorList() {
     this.doctorList = [];
-    this.createUpdateRoomForm.get("doctorId")?.setValue(0);
+    this.createUpdateClinicForm.get("doctorId")?.setValue(0);
 
   }
   searchDoctors(event: any) {
     if (event.term.trim().length > 2) {
       this.doctorParams.searchTerm = event.term;
-      this.doctorParams.doctorSpecialityId = this.createUpdateRoomForm.get('clinicSpecialityId')?.value;
+      this.doctorParams.doctorSpecialityId = this.createUpdateClinicForm.get('clinicSpecialityId')?.value;
       this.userService.getUserData(this.doctorParams).subscribe(response => {
         this.doctorList = response.result;
       });
     }
   }
 
-  createUpdateRoom() {
-    if (this.createUpdateRoomForm.valid) {
-      if (this.createUpdateRoomForm.get("id")?.value == 0) {
+  createUpdateClinic() {
+    if (this.createUpdateClinicForm.valid) {
+      if (this.createUpdateClinicForm.get("id")?.value == 0) {
         this.createClinic();
       } else {
         this.updateClinic();
@@ -72,14 +72,14 @@ export class RoomsClinicsComponent implements OnInit {
   }
 
   createClinic() {
-    this.clinicService.createClinic(this.createUpdateRoomForm.value).subscribe(response => {
+    this.clinicService.createClinic(this.createUpdateClinicForm.value).subscribe(response => {
       this.clinicAddedUpdated.emit(response);
       this.modelToggeled(false);
     })
   }
 
   updateClinic() {
-    this.clinicService.updateClinic(this.createUpdateRoomForm.value).subscribe(response => {
+    this.clinicService.updateClinic(this.createUpdateClinicForm.value).subscribe(response => {
       this.clinicAddedUpdated.emit(response);
       this.modelToggeled(false);
     })

@@ -2,15 +2,15 @@ import { Component, ViewChild } from '@angular/core';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
-import { RoomsClinicsComponent } from './clinics-modal/clinics-modal.component';
 import { UserData } from 'src/app/models/UserModels/userData';
 import { ToastrService } from 'ngx-toastr';
 import { Clinic } from 'src/app/models/ClinicModels/clinic';
 import { ClinicParams } from 'src/app/models/Params/clinicParams';
 import { ClinicService } from 'src/app/core/services/clinic.service';
+import { ClinicsModalComponent } from './clinics-modal/clinics-modal.component';
 
 @Component({
-  selector: 'app-clinics-clinics',
+  selector: 'app-dashboard-clinics',
   templateUrl: './dashboard-clinics.component.html',
   styleUrls: ['./dashboard-clinics.component.scss']
 })
@@ -25,7 +25,8 @@ export class DashboardClinicsComponent {
   modalVisibility: boolean = false;
   specialityList: Speciality[] = [];
   pagination: Pagination | null = null;
-  @ViewChild(RoomsClinicsComponent) clinicsModal!: RoomsClinicsComponent;
+  @ViewChild(ClinicsModalComponent) clinicsModal!: ClinicsModalComponent;
+  activePane = 0;
 
   constructor(private clinicService: ClinicService, private specialityService: SpecialityService, private toastr: ToastrService) {
   }
@@ -47,8 +48,10 @@ export class DashboardClinicsComponent {
       this.specialityList = response;
     })
   }
-
-  resetFiltersAndGetRooms() {
+  onTabChange($event: number) {
+    this.activePane = $event;
+  }
+  resetFiltersAndGetClinics() {
     this.resetFilters();
     this.getClinics();
   }
@@ -66,16 +69,16 @@ export class DashboardClinicsComponent {
   }
 
   clinicAddedUpdated(clinic: Clinic) {
-    this.resetFiltersAndGetRooms();
+    this.resetFiltersAndGetClinics();
   }
 
-  setRoomAndShowModal(clinic: Clinic) {
-    this.mapRoomDoctorToUserData(clinic);
-    this.mapRoomTocreateUpdateRoomForm(clinic);
+  setClinicAndShowModal(clinic: Clinic) {
+    this.mapClinicDoctorToUserData(clinic);
+    this.mapClinicTocreateUpdateClinicForm(clinic);
     this.toggleModal();
   }
 
-  mapRoomDoctorToUserData(clinic: Clinic) {
+  mapClinicDoctorToUserData(clinic: Clinic) {
     const newUserData: Partial<UserData> = {
       id: clinic.doctor?.id.toString(),
       fullName: clinic.doctor?.fullName,
@@ -86,12 +89,12 @@ export class DashboardClinicsComponent {
     }
   }
 
-  mapRoomTocreateUpdateRoomForm(clinic: Clinic) {
-    this.clinicsModal.createUpdateRoomForm.get("id")?.setValue(clinic.id);
+  mapClinicTocreateUpdateClinicForm(clinic: Clinic) {
+    this.clinicsModal.createUpdateClinicForm.get("id")?.setValue(clinic.id);
     const doctorId = clinic.doctorId ? clinic.doctorId.toString() : "0";
-    this.clinicsModal.createUpdateRoomForm.get("doctorId")?.setValue(doctorId);
-    this.clinicsModal.createUpdateRoomForm.get("clinicNumber")?.setValue(clinic.clinicNumber);
-    this.clinicsModal.createUpdateRoomForm.get("clinicSpecialityId")?.setValue(clinic.clinicSpecialityId);
+    this.clinicsModal.createUpdateClinicForm.get("doctorId")?.setValue(doctorId);
+    this.clinicsModal.createUpdateClinicForm.get("clinicNumber")?.setValue(clinic.clinicNumber);
+    this.clinicsModal.createUpdateClinicForm.get("clinicSpecialityId")?.setValue(clinic.clinicSpecialityId);
   }
   
   deleteClinic(clinicId: number, event: Event) {

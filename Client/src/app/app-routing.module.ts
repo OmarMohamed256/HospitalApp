@@ -51,11 +51,6 @@ const routes: Routes = [
           import('./features/dashboard/dashboard-inventory/dashboard-inventory.module').then((m) => m.DashboardInventoryModule)
       },
       {
-        path: 'time-table',
-        loadChildren: () =>
-          import('./features/dashboard/dashboard-timetable/dashboard-timetable.module').then((m) => m.DashboardTimeTableModule)
-      },
-      {
         path: 'clinics',
         loadChildren: () =>
           import('./features/dashboard/dashboard-clinics/dashboard-clinics.module').then((m) => m.DashboardClinicsModule)
