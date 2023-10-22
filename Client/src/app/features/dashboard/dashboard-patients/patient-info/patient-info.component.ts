@@ -6,11 +6,13 @@ import { GenderList } from 'src/app/constants/genders';
 import { UserService } from 'src/app/core/services/user.service';
 import { UserData } from 'src/app/models/UserModels/userData';
 import { FileUploadModalComponent } from '../file-upload-modal/file-upload-modal.component';
+import { Image } from 'src/app/models/ImageModels/image';
+import { GalleryItem, ImageItem } from 'ng-gallery';
 
 @Component({
   selector: 'app-patient-info',
   templateUrl: './patient-info.component.html',
-  styleUrls: ['./patient-info.component.scss']
+  styleUrls: ['./patient-info.component.scss'],
 })
 export class PatientInfoComponent implements OnInit {
   user: UserData | undefined;
@@ -21,9 +23,13 @@ export class PatientInfoComponent implements OnInit {
   imageActivePane = 0;
   modalVisibility: boolean = false;
   selectedImageCategory = 'lab_test';
+  images: Image[] = [];
+  galleryImages: GalleryItem[] = [];
+
   @ViewChild(FileUploadModalComponent) fileUploadModal!: FileUploadModalComponent;
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder, private userService: UserService, private toastr: ToastrService) {
+  constructor(private route: ActivatedRoute, private fb: FormBuilder,
+     private userService: UserService, private toastr: ToastrService) {
   }
 
   openModal() {
@@ -56,6 +62,7 @@ export class PatientInfoComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.user = data['user'];
       this.intializeForm();
+      this.getUserImages();
     })
   }
 
@@ -74,11 +81,33 @@ export class PatientInfoComponent implements OnInit {
       }
     });
   }
+  getUserImages() {
+    this.userService.getUserImages(this.user?.id!).subscribe(response => {
+      this.images = response;
+      this.filterGalleryImages();
+    })
+  }
+  filterGalleryImages() {
+    this.galleryImages = this.images
+    .filter(image => image.category === this.selectedImageCategory)
+    .map(image => {
+      return new ImageItem({ src: image.url, thumb: image.url }); // replace with actual thumbnail URL if available
+    });
+  }
   onTabChange($event: number) {
     this.activePane = $event;
   }
   onImageChange($event: number) {
-    this.selectedImageCategory = 'radiology';
+    if ($event === 0) {
+      this.selectedImageCategory = 'lab_test';
+      this.filterGalleryImages();
+    } else if ($event === 1) {
+      this.selectedImageCategory = 'radiology';
+      this.filterGalleryImages();
+    } else if ($event === 2) {
+      this.selectedImageCategory = 'official_documents';
+      this.filterGalleryImages();
+    }
     this.imageActivePane = $event;
   }
 }

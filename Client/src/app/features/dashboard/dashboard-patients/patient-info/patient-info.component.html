@@ -96,17 +96,21 @@
     </a>
   </c-nav-item>
 </c-nav>
-<c-tab-content #tabContent2="cTabContent" (activeTabPaneIdxChange)="onImageChange($event)" [activeTabPaneIdx]="imageActivePane">
+
+<c-tab-content #tabContent2="cTabContent" (activeTabPaneIdxChange)="onImageChange($event)"
+  [activeTabPaneIdx]="imageActivePane">
   <c-tab-pane class="p-3">
-    1
+    <gallery gallerize [items]="galleryImages" *ngIf="imageActivePane === 0"></gallery>
   </c-tab-pane>
   <c-tab-pane class="p-3">
-    2
+    <gallery gallerize [items]="galleryImages" *ngIf="imageActivePane === 1"></gallery>
   </c-tab-pane>
   <c-tab-pane class="p-3">
-    3
+    <gallery gallerize [items]="galleryImages" *ngIf="imageActivePane === 2"></gallery>
   </c-tab-pane>
 </c-tab-content>
-<button class="btn btn-primary" (click)="openModal()">Upload Image</button>
-<app-file-upload-modal [(visible)]="modalVisibility" [userId]="user?.id!" 
+<div class="w-100 text-center mt-5 mb-3">
+  <button class="btn btn-primary w-100" (click)="openModal()">Upload Image</button>
+</div>
+<app-file-upload-modal [(visible)]="modalVisibility" [userId]="user?.id!"
   [category]="selectedImageCategory"></app-file-upload-modal>

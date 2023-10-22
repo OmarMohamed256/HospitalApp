@@ -75,7 +75,6 @@ export class UserService {
   }
 
   uploadImage(imageUpload: ImageUpload) {
-    console.log(imageUpload)
     const formData = new FormData();
     formData.append('file', imageUpload.file);
     formData.append('userId', imageUpload.userId.toString());
@@ -84,7 +83,10 @@ export class UserService {
     formData.append('imageDate', date.toISOString());
     formData.append('type', imageUpload.type!);
     formData.append('organ', imageUpload.organ!);
-    console.log(formData)
     return this.http.post<Image>(this.baseUrl + 'user/uploadImage', formData);
+  }
+
+  getUserImages(userId: string) {
+    return this.http.get<Image[]>(this.baseUrl + 'user/userImages/' + userId);
   }
 }

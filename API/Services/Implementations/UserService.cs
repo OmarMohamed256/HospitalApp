@@ -79,16 +79,18 @@ namespace API.Services.Implementations
         {
             try
             {
+                string baseUrl = "http://localhost:5170/";
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + imageUploadDto.UserId + "_" + imageUploadDto.Category
                 + "_" + imageUploadDto.File.FileName;
 
-                string filePath = Path.Combine("images", uniqueFileName);
+                string filePath = Path.Combine("Images", uniqueFileName);
                 using var stream = new FileStream(filePath, FileMode.Create);
                 await imageUploadDto.File.CopyToAsync(stream);
+                
                 Image image = new()
                 {
                     Id = 0,
-                    Url = uniqueFileName,
+                    Url = baseUrl + filePath,
                     UserId = imageUploadDto.UserId,
                     Category = imageUploadDto.Category,
                     ImageDate = imageUploadDto.ImageDate,

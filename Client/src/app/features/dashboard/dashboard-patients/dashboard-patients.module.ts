@@ -8,6 +8,8 @@ import { PatientInfoComponent } from './patient-info/patient-info.component';
 import { CommonSharedModule } from 'src/app/shared/common-shared.module';
 import { PatientAppointmentsComponent } from './patient-appointments/patient-appointments.component';
 import { FileUploadModalComponent } from './file-upload-modal/file-upload-modal.component';
+import { GalleryModule } from 'ng-gallery';
+import { LightboxModule } from 'ng-gallery/lightbox';
 
 @NgModule({
   imports: [
@@ -20,7 +22,9 @@ import { FileUploadModalComponent } from './file-upload-modal/file-upload-modal.
     FormSelectDirective,
     InputGroupTextDirective,
     CommonSharedModule,
-    SharedModule
+    SharedModule,
+    GalleryModule,
+    LightboxModule
   ],
   declarations: [DashboardPatientsComponent, PatientInfoComponent, PatientAppointmentsComponent, FileUploadModalComponent]
 })

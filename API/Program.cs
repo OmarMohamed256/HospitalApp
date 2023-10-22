@@ -11,6 +11,7 @@ using HospitalApp.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using webapi.Data;
@@ -146,7 +147,12 @@ app.UseCors(policy => policy.AllowAnyHeader()
 .AllowCredentials()
 .WithOrigins("http://localhost:4200"));
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
+                RequestPath = new PathString("/Images")
+            });
 app.UseAuthentication();
 
 app.UseAuthorization();
