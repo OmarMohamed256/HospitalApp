@@ -26,6 +26,11 @@ namespace API.Services.Implementations
             _imageRepository = imageRepository;
         }
 
+        public async Task<ICollection<ImageDto>> GetAllUserImagesById(int userId)
+        {
+            var images = await _imageRepository.GetImagesByUserIdAsync(userId);
+            return _mapper.Map<ICollection<ImageDto>>(images);
+        }
 
         public async Task<PagedList<UserInfoDto>> GetAllUsersAsync(UserParams userParams)
         {

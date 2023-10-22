@@ -49,5 +49,11 @@ namespace API.Controllers
             ImageDto imageDto = await _userService.UploadImage(imageUploadDto);
             return Ok(imageDto);
         }
+        [HttpGet("userImages/{userId}")]
+        public async Task<ActionResult<ICollection<ImageDto>>> GetUserImagesById(int userId)
+        {
+            var images = await _userService.GetAllUserImagesById(userId);
+            return Ok(images);
+        }
     }
 }
