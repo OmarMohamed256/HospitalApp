@@ -1,7 +1,7 @@
 import { PaginationParams } from "./paginationParams";
 
-export class RoomParams extends PaginationParams {
+export class ClinicParams extends PaginationParams {
     includeUpcomingAppointments = false;
     appointmentDateOfVisit? = '';
-    roomSpecialityId = null;
+    clinicSpecialityId = null;
 }

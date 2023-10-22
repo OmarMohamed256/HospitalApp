@@ -3,15 +3,15 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonSharedModule } from "src/app/shared/common-shared.module";
-import { DashboardRoomsComponent } from "./dashboard-rooms.component";
-import { DashboardRoomsRoutingModule } from "./dashboard-rooms-routing.module";
-import { RoomsModalComponent } from './rooms-modal/rooms-modal.component';
+import { DashboardClinicsComponent } from "./dashboard-clinics.component";
+import { DashboardClinicsRoutingModule } from "./dashboard-clinics-routing.module";
+import { RoomsClinicsComponent } from './clinics-modal/clinics-modal.component';
 import { NgSelectModule } from "@ng-select/ng-select";
 
 
 @NgModule({
   imports: [
-    DashboardRoomsRoutingModule,
+    DashboardClinicsRoutingModule,
     TableModule,
     NavbarModule,
     ContainerComponent,
@@ -25,7 +25,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
     ModalModule,
     NgSelectModule
     ],
-  declarations: [DashboardRoomsComponent, RoomsModalComponent]
+  declarations: [DashboardClinicsComponent, RoomsClinicsComponent]
 })
-export class DashboardRoomsModule {
+export class DashboardClinicsModule {
 }

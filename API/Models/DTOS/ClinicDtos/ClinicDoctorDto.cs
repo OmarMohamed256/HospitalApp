@@ -1,9 +1,9 @@
 namespace API.Models.DTOS
 {
-    public class RoomDoctorDto
+    public class ClinicDoctorDto
     {
         public int Id { get; set; }
         public string FullName { get; set; }
-        public ICollection<RoomAppointmentDto> Appointments { get; set; }
+        public ICollection<ClinicAppointmentDto> Appointments { get; set; }
     }
 }

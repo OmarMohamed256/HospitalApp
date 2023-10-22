@@ -81,12 +81,14 @@ export class PatientInfoComponent implements OnInit {
       }
     });
   }
+
   getUserImages() {
     this.userService.getUserImages(this.user?.id!).subscribe(response => {
       this.images = response;
       this.filterGalleryImages();
     })
   }
+
   filterGalleryImages() {
     this.galleryImages = this.images
     .filter(image => image.category === this.selectedImageCategory)
@@ -94,9 +96,11 @@ export class PatientInfoComponent implements OnInit {
       return new ImageItem({ src: image.url, thumb: image.url }); // replace with actual thumbnail URL if available
     });
   }
+
   onTabChange($event: number) {
     this.activePane = $event;
   }
+
   onImageChange($event: number) {
     if ($event === 0) {
       this.selectedImageCategory = 'lab_test';
@@ -109,5 +113,11 @@ export class PatientInfoComponent implements OnInit {
       this.filterGalleryImages();
     }
     this.imageActivePane = $event;
+  }
+
+  galleryImageAdded(image: Image) {
+    this.images.push(image);
+    this.filterGalleryImages();
+    this.openModal();
   }
 }

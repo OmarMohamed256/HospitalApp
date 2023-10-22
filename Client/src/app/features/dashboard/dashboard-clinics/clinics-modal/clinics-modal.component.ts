@@ -1,23 +1,23 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ROLES } from 'src/app/constants/roles';
-import { RoomService } from 'src/app/core/services/room.service';
+import { ClinicService } from 'src/app/core/services/clinic.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { UserParams } from 'src/app/models/Params/userParams';
-import { Room } from 'src/app/models/RoomModels/room';
+import { Clinic } from 'src/app/models/ClinicModels/clinic';
 import { UserData } from 'src/app/models/UserModels/userData';
 import { Speciality } from 'src/app/models/speciality';
 
 @Component({
-  selector: 'app-rooms-modal',
-  templateUrl: './rooms-modal.component.html',
-  styleUrls: ['./rooms-modal.component.scss']
+  selector: 'app-clinics-modal',
+  templateUrl: './clinics-modal.component.html',
+  styleUrls: ['./clinics-modal.component.scss']
 })
-export class RoomsModalComponent implements OnInit {
+export class RoomsClinicsComponent implements OnInit {
   @Input() visible: boolean = false;
   @Input() specialityList: Speciality[] = [];
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() roomAddedUpdated = new EventEmitter<Room>();
+  @Output() clinicAddedUpdated = new EventEmitter<Clinic>();
 
   createUpdateRoomForm!: FormGroup;
   roleDoctor = ROLES.DOCTOR;
@@ -29,7 +29,7 @@ export class RoomsModalComponent implements OnInit {
   doctorList: Partial<UserData>[] = [];
   selectedDoctor!: Partial<UserData>;
 
-  constructor(private fb: FormBuilder, private roomService: RoomService, private userService: UserService) {
+  constructor(private fb: FormBuilder, private clinicService: ClinicService, private userService: UserService) {
   }
   ngOnInit(): void {
     this.intializeForm();
@@ -37,8 +37,8 @@ export class RoomsModalComponent implements OnInit {
   intializeForm() {
     this.createUpdateRoomForm = this.fb.group({
       id: [0, Validators.required],
-      roomNumber: ['', Validators.required],
-      roomSpecialityId: [0, Validators.required],
+      clinicNumber: ['', Validators.required],
+      clinicSpecialityId: [0, Validators.required],
       doctorId: [0],
     });
   }
@@ -54,7 +54,7 @@ export class RoomsModalComponent implements OnInit {
   searchDoctors(event: any) {
     if (event.term.trim().length > 2) {
       this.doctorParams.searchTerm = event.term;
-      this.doctorParams.doctorSpecialityId = this.createUpdateRoomForm.get('roomSpecialityId')?.value;
+      this.doctorParams.doctorSpecialityId = this.createUpdateRoomForm.get('clinicSpecialityId')?.value;
       this.userService.getUserData(this.doctorParams).subscribe(response => {
         this.doctorList = response.result;
       });
@@ -64,23 +64,23 @@ export class RoomsModalComponent implements OnInit {
   createUpdateRoom() {
     if (this.createUpdateRoomForm.valid) {
       if (this.createUpdateRoomForm.get("id")?.value == 0) {
-        this.createRoom();
+        this.createClinic();
       } else {
-        this.updateRoom();
+        this.updateClinic();
       }
     }
   }
 
-  createRoom() {
-    this.roomService.createRoom(this.createUpdateRoomForm.value).subscribe(response => {
-      this.roomAddedUpdated.emit(response);
+  createClinic() {
+    this.clinicService.createClinic(this.createUpdateRoomForm.value).subscribe(response => {
+      this.clinicAddedUpdated.emit(response);
       this.modelToggeled(false);
     })
   }
 
-  updateRoom() {
-    this.roomService.updateRoom(this.createUpdateRoomForm.value).subscribe(response => {
-      this.roomAddedUpdated.emit(response);
+  updateClinic() {
+    this.clinicService.updateClinic(this.createUpdateRoomForm.value).subscribe(response => {
+      this.clinicAddedUpdated.emit(response);
       this.modelToggeled(false);
     })
   }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from 'src/app/core/services/user.service';
+import { Image } from 'src/app/models/ImageModels/image';
 
 @Component({
   selector: 'app-file-upload-modal',
@@ -12,6 +13,7 @@ export class FileUploadModalComponent implements OnInit {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Input() userId = '';
   @Input() category = 'lab_test';
+  @Output() imageAdded = new EventEmitter<Image>();
   uploadImageForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private userService: UserService) {
@@ -42,7 +44,7 @@ export class FileUploadModalComponent implements OnInit {
   }
   uploadImage() {
     this.userService.uploadImage(this.uploadImageForm.value).subscribe(response => {
-      console.log(response);
+      this.imageAdded.emit(response);
     })
   }
 

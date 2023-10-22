@@ -48,8 +48,8 @@ export const navItems: IRoleNavData[] = [
     iconComponent: { name: 'cil-view-column' },
   },
   {
-    name: 'Rooms',
-    url: '/rooms',
+    name: 'Clinics',
+    url: '/clinics',
     iconComponent: { name: 'cil-door' },
   },
   {

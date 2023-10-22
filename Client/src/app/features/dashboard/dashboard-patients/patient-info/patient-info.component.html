@@ -113,4 +113,4 @@
   <button class="btn btn-primary w-100" (click)="openModal()">Upload Image</button>
 </div>
 <app-file-upload-modal [(visible)]="modalVisibility" [userId]="user?.id!"
-  [category]="selectedImageCategory"></app-file-upload-modal>
+  [category]="selectedImageCategory" (imageAdded)="galleryImageAdded($event)"></app-file-upload-modal>

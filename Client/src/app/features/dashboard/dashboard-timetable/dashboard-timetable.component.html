@@ -7,13 +7,13 @@
 </c-navbar>
 
 <c-row>
-  <c-col [sm]="4" *ngFor="let room of rooms">
+  <c-col [sm]="4" *ngFor="let clinic of clinics">
     <c-card class="mb-4 scroll">
-      <h4 class="card-header text-center">Room #: {{room.roomNumber}}</h4>
-      <h6 class="card-header text-center">Doctor Name: {{room.doctor?.fullName}}</h6>
+      <h4 class="card-header text-center">Clinic #: {{clinic.clinicNumber}}</h4>
+      <h6 class="card-header text-center">Doctor Name: {{clinic.doctor?.fullName}}</h6>
       <c-card-body class="text-center">
         <c-alert [color]="getColor(appointment.status)" class="d-flex flex-row justify-content-between"
-          *ngFor="let appointment of room.doctor?.appointments">
+          *ngFor="let appointment of clinic.doctor?.appointments">
           <p>Code: {{appointment.id}}</p>
           <p>{{appointment.dateOfVisit | date: 'short'}}</p>
           <p>{{appointment.status | uppercase}}</p>

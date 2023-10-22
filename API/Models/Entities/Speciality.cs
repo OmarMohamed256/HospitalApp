@@ -11,7 +11,7 @@ namespace HospitalApp.Models.Entities
         public virtual ICollection<Appointment>? Appointments { get; set; }
         public virtual ICollection<Service>? Services { get; set; }
         public virtual ICollection<InventoryItem>? InventoryItems { get; set; }
-        public virtual ICollection<Room>? Rooms { get; set; }
+        public virtual ICollection<Clinic>? Clinics { get; set; }
 
     }
 }

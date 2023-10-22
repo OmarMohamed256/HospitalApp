@@ -3,11 +3,11 @@ using webapi.Entities;
 
 namespace API.Models.Entities
 {
-    public class Room
+    public class Clinic
     {
         public int Id { get; set; }
-        public string RoomNumber { get; set; }
-        public int RoomSpecialityId { get; set; }
+        public string ClinicNumber { get; set; }
+        public int ClinicSpecialityId { get; set; }
         public virtual Speciality Speciality { get; set; }
         public int? DoctorId { get; set; }
         public virtual AppUser? Doctor { get; set; }

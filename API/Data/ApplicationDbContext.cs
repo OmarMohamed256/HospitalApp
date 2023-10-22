@@ -26,7 +26,7 @@ namespace Hospital.Data
         public DbSet<ServiceInventoryItem> ServiceInventoryItems { get; set; }
         public DbSet<InvoiceDoctorService> InvoiceDoctorService { get; set; }
         public DbSet<InvoiceDoctorServiceSupplyOrders> InvoiceDoctorServiceSupplyOrders { get; set; }
-        public DbSet<Room> Rooms { get; set; }
+        public DbSet<Clinic> Clinics { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<AppointmentMedicine> AppointmentMedicine { get; set; }
         public DbSet<Image> Images { get; set; }
@@ -157,15 +157,15 @@ namespace Hospital.Data
                 .WithMany(s => s.InventoryItems)
                 .HasForeignKey(ii => ii.InventoryItemSpecialityId);
 
-            modelBuilder.Entity<Room>()
+            modelBuilder.Entity<Clinic>()
                 .HasOne(r => r.Doctor)
                 .WithOne()
-                .HasForeignKey<Room>(r => r.DoctorId);
+                .HasForeignKey<Clinic>(r => r.DoctorId);
 
-            modelBuilder.Entity<Room>()
+            modelBuilder.Entity<Clinic>()
                 .HasOne(r => r.Speciality)
-                .WithMany(s => s.Rooms)
-                .HasForeignKey(r => r.RoomSpecialityId);
+                .WithMany(s => s.Clinics)
+                .HasForeignKey(r => r.ClinicSpecialityId);
 
             modelBuilder.Entity<AppointmentMedicine>()
                 .HasKey(am => new { am.AppointmentId, am.MedicineId });

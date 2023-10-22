@@ -1,33 +1,33 @@
-<c-modal #roomModal id="roomModal" size="xl" (visibleChange)="modelToggeled($event)"
+<c-modal #clinicModal id="clinicModal" size="xl" (visibleChange)="modelToggeled($event)"
   [visible]="visible" scrollable>
   <c-modal-header>
     <h5 cModalTitle>Room</h5>
-    <button [cModalToggle]="roomModal.id" cButtonClose></button>
+    <button [cModalToggle]="clinicModal.id" cButtonClose></button>
   </c-modal-header>
   <c-modal-body>
-    <ng-container *ngTemplateOutlet="roomContent"></ng-container>
+    <ng-container *ngTemplateOutlet="clinicContent"></ng-container>
   </c-modal-body>
   <c-modal-footer>
-    <button [cModalToggle]="roomModal.id" cButton color="secondary">
+    <button [cModalToggle]="clinicModal.id" cButton color="secondary">
       Close
     </button>
     <button cButton (click)="createUpdateRoom()" color="primary">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
-<ng-template #roomContent>
+<ng-template #clinicContent>
   <form [formGroup]="createUpdateRoomForm" cForm (ngSubmit)="createUpdateRoomForm.valid" autocomplete="off">
     <div class="row">
       <div class="col">
         <div class="mb-3">
           <label cLabel>Room Number</label>
-          <app-text-input icon="cilUser" formControlName="roomNumber" [label]='"Room Number"'></app-text-input>
+          <app-text-input icon="cilUser" formControlName="clinicNumber" [label]='"Room Number"'></app-text-input>
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label cLabel>Speciality</label>
-          <select name="roomSpecialityId" aria-label="roomSpecialityId" cSelect formControlName="roomSpecialityId" (change)="resetDoctorList()">
+          <select name="clinicSpecialityId" aria-label="clinicSpecialityId" cSelect formControlName="clinicSpecialityId" (change)="resetDoctorList()">
             <option [value]="0" disabled selected>Select speciality</option>
             <option *ngFor="let service of specialityList" [value]="service.id">
               {{service.name}}
@@ -37,7 +37,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col" *ngIf="createUpdateRoomForm.get('roomSpecialityId')?.value != ''">
+      <div class="col" *ngIf="createUpdateRoomForm.get('clinicSpecialityId')?.value != ''">
         <div class="mb-3">
           <label cLabel>Doctor</label>
           <ng-select [items]="doctorList" (search)="searchDoctors($event)" [virtualScroll]="true"
