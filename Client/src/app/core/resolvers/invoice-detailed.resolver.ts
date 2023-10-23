@@ -1,5 +1,5 @@
 import { ResolveFn } from "@angular/router";
-import { Invoice } from "src/app/models/invoice";
+import { Invoice } from "src/app/models/InvoiceModels/invoice";
 import { InvoiceService } from "../services/invoice.service";
 import { inject } from "@angular/core";
 import { of } from 'rxjs';

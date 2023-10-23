@@ -1,5 +1,6 @@
 import { CreateCustomItem } from "./createCustomItem";
 import { CreateInvoiceDoctorService } from "./createInvoiceDoctorService";
+import { InvoiceMedicine } from "./invoiceMedicine";
 
 export interface CreateInvoice {
     id?:                   number;
@@ -9,6 +10,7 @@ export interface CreateInvoice {
     appointmentId:         number;
     customItems:           CreateCustomItem[];
     invoiceDoctorServices: CreateInvoiceDoctorService[];
+    invoiceMedicines?:    InvoiceMedicine[];
 }
 
 

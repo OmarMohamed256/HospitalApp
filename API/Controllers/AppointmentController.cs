@@ -58,25 +58,16 @@ namespace API.Controllers
             if (appointment == null) return BadRequest("Appointment does not exist");
             return Ok(appointment);
         }
-        [HttpGet]
-        [Route("getMedicinesByAppointmentId/{appointmentId}")]
-        public async Task<ActionResult<ICollection<MedicineDto>>> GetMedicinesByAppointmentId
-            (int appointmentId)
-        {
-            var medicines = await _appoinmentService.GetMedicinesByAppointmentIdAsync(appointmentId);
-            return Ok(medicines);
-        }
-
         [HttpPost]
         public async Task<ActionResult<AppointmentDto>> CreateAppointmentAsync(AppointmentDto appointmentDto)
         {
-            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto, false);
+            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto);
         }
         [HttpPut]
         // [Authorize(Policy = Polices.RequireDoctorRole)]
         public async Task<ActionResult<AppointmentDto>> UpdateAppointmentAsync(AppointmentDto appointmentDto)
         {
-            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto, true);
+            return await _appoinmentService.CreateUpdateAppointmentAsync(appointmentDto);
         }
         [HttpDelete("{appointmentId}")]
         public async Task<ActionResult> DeleteAppointmentAsync(int appointmentId)

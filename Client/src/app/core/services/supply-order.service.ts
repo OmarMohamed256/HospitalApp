@@ -4,7 +4,7 @@ import { map, of } from 'rxjs';
 import { SupplyOrderParams } from 'src/app/models/Params/supplyOrderParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
-import { SupplyOrder } from 'src/app/models/supplyOrder';
+import { SupplyOrder } from 'src/app/models/InventoryModels/supplyOrder';
 
 @Injectable({
   providedIn: 'root'

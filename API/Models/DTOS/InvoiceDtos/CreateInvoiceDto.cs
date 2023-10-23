@@ -1,3 +1,5 @@
+using API.Models.DTOS.InvoiceDtos;
+
 namespace API.Models.DTOS
 {
     public class CreateInvoiceDto
@@ -9,5 +11,6 @@ namespace API.Models.DTOS
         public int AppointmentId { get; set; }
         public ICollection<CreateCustomItemDto>? CustomItems { get; set; }
         public ICollection<CreateInvoiceDoctorServiceDto>? InvoiceDoctorServices { get; set; }
+        public ICollection<InvoiceMedicineDto>? InvoiceMedicines { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InventoryService } from 'src/app/core/services/inventory.service';
-import { InventoryItem } from 'src/app/models/inventoryItems';
+import { InventoryItem } from 'src/app/models/InventoryModels/inventoryItems';
 import { Speciality } from 'src/app/models/speciality';
 
 @Component({

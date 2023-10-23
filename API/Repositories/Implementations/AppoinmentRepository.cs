@@ -112,7 +112,6 @@ namespace API.Repositories.Implementations
             return await _context.Appointments
             .Include(a => a.Doctor)
             .Include(a => a.Patient)
-            .Include(a => a.AppointmentMedicines)
             .AsNoTracking()
             .FirstOrDefaultAsync(a => a.Id == appointmentId);
         }
@@ -121,7 +120,6 @@ namespace API.Repositories.Implementations
             return await _context.Appointments
             .Include(a => a.Doctor)
             .Include(a => a.Patient)
-            .Include(a => a.AppointmentMedicines)
             .FirstOrDefaultAsync(a => a.Id == appointmentId);
         }
 
@@ -154,19 +152,6 @@ namespace API.Repositories.Implementations
 
             return (appointment.Type, appointment.PriceVisit, appointment.PriceRevisit);
         }
-
-        public void DeleteAppointmentMedicinesRange(ICollection<AppointmentMedicine> appointmentMedicines)
-        {
-            _context.AppointmentMedicine.RemoveRange(appointmentMedicines);
-        }
-
-        public async Task<ICollection<AppointmentMedicine>> GetAppointmentMedicinesByWithMedicineAppointmentIdAsync(int appointmentId)
-        {
-            return await _context.AppointmentMedicine
-            .Include(am => am.Medicine)
-            .Where(am => am.AppointmentId == appointmentId).ToListAsync();
-        }
-
         public async Task<PagedList<Appointment>> GetAppointmentsByDoctorIdAsync(AppointmentParams appointmentParams, int doctorId)
         {
             var query = _context.Appointments

@@ -5,7 +5,7 @@ import { ServiceParams } from 'src/app/models/Params/serviceParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { Service } from 'src/app/models/service';
-import { ServiceInventoryItem } from 'src/app/models/serviceInventoryItem';
+import { ServiceInventoryItem } from 'src/app/models/InventoryModels/serviceInventoryItem';
 
 @Injectable({
   providedIn: 'root'

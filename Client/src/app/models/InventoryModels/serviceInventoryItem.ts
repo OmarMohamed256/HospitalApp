@@ -1,5 +1,5 @@
 import { InventoryItem } from "./inventoryItems";
-import { Service } from "./service";
+import { Service } from "../service";
 
 export interface ServiceInventoryItem {
     id?:              number;

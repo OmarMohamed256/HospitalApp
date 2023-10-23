@@ -10,7 +10,7 @@ import { ServiceParams } from 'src/app/models/Params/serviceParams';
 import { Speciality } from 'src/app/models/speciality';
 import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
 import { FormArray } from '@angular/forms';
-import { ServiceInventoryItem } from 'src/app/models/serviceInventoryItem';
+import { ServiceInventoryItem } from 'src/app/models/InventoryModels/serviceInventoryItem';
 
 @Component({
   selector: 'app-dashboard-services',

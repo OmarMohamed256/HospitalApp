@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 import { ServiceService } from 'src/app/core/services/service.service';
 import { InventoryItemParams } from 'src/app/models/Params/inventoryItemParams';
-import { InventoryItem } from 'src/app/models/inventoryItems';
+import { InventoryItem } from 'src/app/models/InventoryModels/inventoryItems';
 import { Service } from 'src/app/models/service';
 import { Speciality } from 'src/app/models/speciality';
 

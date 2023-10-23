@@ -3,6 +3,17 @@
     <div class="row">
         <div class="col">
             <div class="mb-3">
+                <label cLabel>Medicine</label>
+                <ng-select [items]="medicineList" [virtualScroll]="true" [bindLabel]="'name'" [bindValue]="'id'"
+                    (search)="searchMedicines($event)" [multiple]="true" (change)="onMedicineSelect($event)"
+                    [(ngModel)]="selectedMedicines" [ngModelOptions]="{standalone: true}" [compareWith]="compareFn">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
                 <label cLabel>Select Services</label>
                 <ng-select [(ngModel)]="selectedServices" (change)="onServiceSelect($event)" [items]="services"
                     [virtualScroll]="true" [multiple]="true" [bindLabel]="'name'"

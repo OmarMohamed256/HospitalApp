@@ -28,7 +28,7 @@ namespace Hospital.Data
         public DbSet<InvoiceDoctorServiceSupplyOrders> InvoiceDoctorServiceSupplyOrders { get; set; }
         public DbSet<Clinic> Clinics { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
-        public DbSet<AppointmentMedicine> AppointmentMedicine { get; set; }
+        public DbSet<InvoiceMedicine> InvoiceMedicine { get; set; }
         public DbSet<Image> Images { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -167,17 +167,17 @@ namespace Hospital.Data
                 .WithMany(s => s.Clinics)
                 .HasForeignKey(r => r.ClinicSpecialityId);
 
-            modelBuilder.Entity<AppointmentMedicine>()
-                .HasKey(am => new { am.AppointmentId, am.MedicineId });
+            modelBuilder.Entity<InvoiceMedicine>()
+                .HasKey(am => new { am.InvoiceId, am.MedicineId });
 
-            modelBuilder.Entity<AppointmentMedicine>()
-                .HasOne(am => am.Appointment)
-                .WithMany(a => a.AppointmentMedicines)
-                .HasForeignKey(am => am.AppointmentId);
+            modelBuilder.Entity<InvoiceMedicine>()
+                .HasOne(am => am.Invoice)
+                .WithMany(a => a.InvoiceMedicines)
+                .HasForeignKey(am => am.InvoiceId);
 
-            modelBuilder.Entity<AppointmentMedicine>()
+            modelBuilder.Entity<InvoiceMedicine>()
                 .HasOne(am => am.Medicine)
-                .WithMany(m => m.AppointmentMedicines)
+                .WithMany(m => m.InvoiceMedicines)
                 .HasForeignKey(am => am.MedicineId);
                 
             modelBuilder.Entity<Image>()

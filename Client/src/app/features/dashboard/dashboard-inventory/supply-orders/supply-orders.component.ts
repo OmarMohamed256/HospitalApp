@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { SupplyOrderService } from 'src/app/core/services/supply-order.service';
 import { Pagination } from 'src/app/models/pagination';
-import { SupplyOrder } from 'src/app/models/supplyOrder';
+import { SupplyOrder } from 'src/app/models/InventoryModels/supplyOrder';
 import { SupplyOrderParams } from 'src/app/models/Params/supplyOrderParams';
 import { SupplyOrderModelComponent } from './supply-order-model/supply-order-model.component';
-import { InventoryItem } from 'src/app/models/inventoryItems';
+import { InventoryItem } from 'src/app/models/InventoryModels/inventoryItems';
 
 @Component({
   selector: 'app-supply-orders',

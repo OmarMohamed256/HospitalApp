@@ -12,5 +12,7 @@ namespace API.Repositories.Interfaces
         Task<Invoice> GetInvoiceByIdAsync(int invoiceId);
         Task<Invoice> GetInvoiceByIdWithPropertiesAsync(int invoiceId);
         Task<bool> SaveAllAsync();
+        void DeleteInvoiceMedicinesRange(ICollection<InvoiceMedicine> invoiceMedicines);
+        Task<ICollection<InvoiceMedicine>> GetInvoiceMedicinesWithMedicineByInvoiceIdAsync(int invoiceId);
     }
 }

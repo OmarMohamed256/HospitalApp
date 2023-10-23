@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AppointmentTypeList } from 'src/app/constants/appointmentTypes';
 import { ROLES } from 'src/app/constants/roles';
@@ -15,7 +15,6 @@ import { UserParams } from 'src/app/models/Params/userParams';
 import { firstValueFrom } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { Medicine } from 'src/app/models/medicine';
 import { MedicineService } from 'src/app/core/services/medicine.service';
 import { MedicineParams } from 'src/app/models/Params/medicineParams';
 
@@ -40,8 +39,8 @@ export class UpdateAppointmentComponent implements OnInit {
   appointment?: Appointment;
   selectedPatient: UserData | null = null;
   selectedDoctor: UserData | null = null;
-  medicineList: Medicine[] = [];
-  selectedItems: Medicine[] = [];
+  // medicineList: Medicine[] = [];
+  // selectedItems: Medicine[] = [];
   
   rolePatient = ROLES.PATIENT;
   roleDoctor = ROLES.DOCTOR;
@@ -49,10 +48,10 @@ export class UpdateAppointmentComponent implements OnInit {
   selectedDay: string | null = null;
   selectedTime: Date | null = null;
 
-  medicineParams: MedicineParams = {
-    pageNumber: 1,
-    pageSize: 5,
-  };
+  // medicineParams: MedicineParams = {
+  //   pageNumber: 1,
+  //   pageSize: 5,
+  // };
 
   patientParams: UserParams = new UserParams({
     pageNumber: 1,
@@ -76,7 +75,7 @@ export class UpdateAppointmentComponent implements OnInit {
     this.getSpecialities();
     this.route.data.subscribe(data => {
       this.appointment = data['appointment'];
-      this.intializeMedicineList(this.appointment?.id?.toString()!);
+      // this.intializeMedicineList(this.appointment?.id?.toString()!);
       this.patientList = [...this.patientList, this.appointment?.patient!];
       this.selectedPatient = this.patientList[0];
 
@@ -92,17 +91,17 @@ export class UpdateAppointmentComponent implements OnInit {
     })
   }
 
-  intializeMedicineList(appointmentId: string) {
-    this.appointmentService.getMedicinesByAppointmentId(appointmentId).subscribe(response => {
-      this.medicineList = response;
-      this.selectedItems = response;
-      this.updateSelectedMedicineItems(response);
-    })
-  }
+  // intializeMedicineList(appointmentId: string) {
+  //   this.appointmentService.getMedicinesByAppointmentId(appointmentId).subscribe(response => {
+  //     this.medicineList = response;
+  //     this.selectedMedicines = response;
+  //     this.updateSelectedMedicineItems(response);
+  //   })
+  // }
 
-  compareFn(item1: any, item2: any): boolean {
-    return item1 && item2 ? item1.id === item2.id : item1 === item2;
-  }
+  // compareFn(item1: any, item2: any): boolean {
+  //   return item1 && item2 ? item1.id === item2.id : item1 === item2;
+  // }
 
   getIntialSelectedDay() {
     if (this.appointment?.dateOfVisit) {
@@ -130,33 +129,32 @@ export class UpdateAppointmentComponent implements OnInit {
       doctorId: [this.appointment?.doctorId, Validators.required],
       patientId: [this.appointment?.patientId, Validators.required],
       appointmentSpecialityId: [this.appointment?.appointmentSpecialityId, Validators.required],
-      appointmentMedicines: this.fb.array([])
     });
   }
 
-  searchMedicines(event: any) {
-    if (event.term.trim().length > 1) {
-      this.medicineParams.searchTerm = event.term;
-      this.medicineService.getMedicines(this.medicineParams).subscribe(response => {
-        this.medicineList = response.result;
-      });
-    }
-  }
+  // searchMedicines(event: any) {
+  //   if (event.term.trim().length > 1) {
+  //     this.medicineParams.searchTerm = event.term;
+  //     this.medicineService.getMedicines(this.medicineParams).subscribe(response => {
+  //       this.medicineList = response.result;
+  //     });
+  //   }
+  // }
 
-  onMedicineSelect(medicines: Medicine[]) {
-    this.updateSelectedMedicineItems(medicines);
-  }
+  // onMedicineSelect(medicines: Medicine[]) {
+  //   this.updateSelectedMedicineItems(medicines);
+  // }
 
-  updateSelectedMedicineItems(medicines: any) {
-    const selectedMedicineItemsFormArray = this.UpdateAppointmentForm.get('appointmentMedicines') as FormArray;
-    selectedMedicineItemsFormArray.clear();
+  // updateSelectedMedicineItems(medicines: any) {
+  //   const selectedMedicineItemsFormArray = this.UpdateAppointmentForm.get('appointmentMedicines') as FormArray;
+  //   selectedMedicineItemsFormArray.clear();
 
-    medicines.forEach((medicine: any) => {
-      selectedMedicineItemsFormArray.push(this.fb.group({
-        medicineId: [medicine.id],
-      }));
-    });
-  }
+  //   medicines.forEach((medicine: any) => {
+  //     selectedMedicineItemsFormArray.push(this.fb.group({
+  //       medicineId: [medicine.id],
+  //     }));
+  //   });
+  // }
 
   getSpecialities() {
     this.specialityService.getSpecialities().subscribe(response => {
@@ -309,7 +307,7 @@ export class UpdateAppointmentComponent implements OnInit {
       status: this.UpdateAppointmentForm.get('status')?.value,
       type: this.UpdateAppointmentForm.get('type')?.value,
       dateCreated: this.appointment?.dateCreated,
-      appointmentMedicines: this.UpdateAppointmentForm.get('appointmentMedicines')?.value
+      // appointmentMedicines: this.UpdateAppointmentForm.get('appointmentMedicines')?.value
     }
     return appointment;
   }

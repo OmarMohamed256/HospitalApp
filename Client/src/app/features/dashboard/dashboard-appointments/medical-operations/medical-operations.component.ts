@@ -3,11 +3,14 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DoctorServiceService } from 'src/app/core/services/doctor-service.service';
 import { InvoiceService } from 'src/app/core/services/invoice.service';
+import { MedicineService } from 'src/app/core/services/medicine.service';
 import { ServiceService } from 'src/app/core/services/service.service';
+import { CreateInvoice } from 'src/app/models/InvoiceModels/createInvoice';
+import { CreateInvoiceDoctorService } from 'src/app/models/InvoiceModels/createInvoiceDoctorService';
+import { MedicineParams } from 'src/app/models/Params/medicineParams';
 import { Appointment } from 'src/app/models/appointment';
-import { CreateInvoice } from 'src/app/models/createInvoice';
-import { CreateInvoiceDoctorService } from 'src/app/models/createInvoiceDoctorService';
 import { DoctorService } from 'src/app/models/doctorService';
+import { Medicine } from 'src/app/models/medicine';
 import { Service } from 'src/app/models/service';
 
 @Component({
@@ -22,10 +25,16 @@ export class MedicalOperationsComponent {
   selectedServices: Service[] | null = [];
   validationErrors: string[] = [];
   createInvoiceForm!: FormGroup;
+  medicineList: Medicine[] = [];
+  selectedMedicines: Medicine[] = [];
+  medicineParams: MedicineParams = {
+    pageNumber: 1,
+    pageSize: 5,
+  };
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute,
     private doctorServiceService: DoctorServiceService, private serviceService: ServiceService,
-    private invoiceService: InvoiceService, private router: Router) {
+    private invoiceService: InvoiceService, private router: Router, private medicineService: MedicineService) {
   }
 
   ngOnInit(): void {
@@ -34,6 +43,33 @@ export class MedicalOperationsComponent {
       this.getDoctorServicesByDoctorId();
       this.initializeForm();
     })
+  }
+
+  compareFn(item1: any, item2: any): boolean {
+    return item1 && item2 ? item1.id === item2.id : item1 === item2;
+  }
+
+  searchMedicines(event: any) {
+    if (event.term.trim().length > 1) {
+      this.medicineParams.searchTerm = event.term;
+      this.medicineService.getMedicines(this.medicineParams).subscribe(response => {
+        this.medicineList = response.result;
+      });
+    }
+  }
+
+  onMedicineSelect(medicines: Medicine[]) {
+    this.updateSelectedMedicineItems(medicines);
+  }
+
+  updateSelectedMedicineItems(medicines: any) {
+    const selectedMedicineItemsFormArray = this.createInvoiceForm.get('invoiceMedicines') as FormArray;
+    selectedMedicineItemsFormArray.clear();
+    medicines.forEach((medicine: any) => {
+      selectedMedicineItemsFormArray.push(this.fb.group({
+        medicineId: [medicine.id],
+      }));
+    });
   }
 
   getDoctorServicesByDoctorId() {
@@ -47,6 +83,7 @@ export class MedicalOperationsComponent {
     this.createInvoiceForm = this.fb.group({
       invoiceSelectedServices: this.fb.array([]),
       customItems: this.fb.array([]),
+      invoiceMedicines: this.fb.array([])
     });
   }
 
@@ -134,7 +171,8 @@ export class MedicalOperationsComponent {
       discountPercentage: 0,
       totalPaid: 0,
       invoiceDoctorServices: this.mapCreateDoctorService(),
-      customItems: this.createInvoiceForm.get('customItems')?.value
+      customItems: this.createInvoiceForm.get('customItems')?.value,
+      invoiceMedicines: this.createInvoiceForm.get('invoiceMedicines')?.value
     };
     return createInvoice;
   }
@@ -150,7 +188,7 @@ export class MedicalOperationsComponent {
     const doctorServices: CreateInvoiceDoctorService[] = [];
 
     const invoiceSelectedServicesFormArray = this.createInvoiceForm.get('invoiceSelectedServices') as FormArray;
-    
+
     invoiceSelectedServicesFormArray.controls.forEach(control => {
       const doctorService: CreateInvoiceDoctorService = {
         doctorServiceId: this.doctor_services?.find(s => s.serviceId == control.get('serviceId')?.value)?.id!,

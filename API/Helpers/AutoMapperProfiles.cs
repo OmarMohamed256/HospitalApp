@@ -1,6 +1,6 @@
 using API.Models.DTOS;
-using API.Models.DTOS.AppointmentDtos;
 using API.Models.DTOS.ImageDtos;
+using API.Models.DTOS.InvoiceDtos;
 using API.Models.Entities;
 using AutoMapper;
 using HospitalApp.Models.Entities;
@@ -52,6 +52,7 @@ namespace API.Helpers
                 .ForMember(dest => dest.InvoiceDoctorService, opt => opt.MapFrom(src => src.InvoiceDoctorServices))
                 .ForMember(dest => dest.CustomItems, opt => opt.MapFrom(src => src.CustomItems))
                 .ForMember(dest => dest.Appointment, opt => opt.MapFrom(src => src.Appointment))
+                .ForMember(dest => dest.InvoiceMedicines, opt => opt.MapFrom(src => src.InvoiceMedicines))
                 .ReverseMap();
 
             CreateMap<DoctorServiceDto, DoctorService>().ReverseMap();
@@ -59,14 +60,14 @@ namespace API.Helpers
             CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();
             CreateMap<InventoryItemDto, InventoryItem>().ReverseMap();
             CreateMap<SupplyOrderDto, SupplyOrder>().ReverseMap();
-            CreateMap<AppointmentMedicineDto, AppointmentMedicine>()
+            CreateMap<InvoiceMedicineDto, InvoiceMedicine>()
             .ForMember(dest => dest.Medicine, opt => opt.MapFrom(src => src.Medicine))
             .ReverseMap();
-
+            
+            
             CreateMap<Appointment, AppointmentDto>()
             .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
             .ForMember(dest => dest.Patient, opt => opt.MapFrom(src => src.Patient))
-            .ForMember(dest => dest.AppointmentMedicines, opt => opt.MapFrom(src => src.AppointmentMedicines))
             .ReverseMap();
 
             CreateMap<Clinic, ClinicDto>()
@@ -83,6 +84,6 @@ namespace API.Helpers
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.SecurityStamp, opt => opt.Ignore()); // Assuming SecurityStamp should be ignored during mapping.
         }
-        
+
     }
 }

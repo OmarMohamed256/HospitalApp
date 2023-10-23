@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Invoice } from 'src/app/models/invoice';
+import { Invoice } from 'src/app/models/InvoiceModels/invoice';
 
 @Component({
   selector: 'app-invoice-appointment',

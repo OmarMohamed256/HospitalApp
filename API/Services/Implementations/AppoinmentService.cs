@@ -21,7 +21,7 @@ namespace API.Services.Implementations
 
         }
 
-        public async Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto, bool canAddMedicines)
+        public async Task<AppointmentDto> CreateUpdateAppointmentAsync(AppointmentDto appointmentDto)
         {
             var appointment = _mapper.Map<Appointment>(appointmentDto);
             if (await IsAppointmentValid(appointment))
@@ -29,10 +29,6 @@ namespace API.Services.Implementations
                 var oldAppointment = await _appointmentRepository.GetAppointmentByIdAsync(appointment.Id);
                 if (oldAppointment == null)
                 {
-                    // Check if medicine can be added
-                    if (!canAddMedicines && appointment.AppointmentMedicines != null && appointment.AppointmentMedicines.Any())
-                        throw new BadRequestException("Medicines cannot be added during appointment creation.");
-
                     appointment.Status = AppointmentStatus.Booked;
                     _appointmentRepository.AddAppointment(appointment);
                 }
@@ -41,9 +37,6 @@ namespace API.Services.Implementations
                     if (UnmodifiableStatuses.Contains(oldAppointment.Status))
                         throw new BadRequestException("Appointment is already finalized/invoiced cannot update or add");
                     // Check if medicine can be added
-                    if (!canAddMedicines && appointment.AppointmentMedicines != null && appointment.AppointmentMedicines.Any())
-                        throw new BadRequestException("Medicines cannot be added during appointment update.");
-                    oldAppointment.AppointmentMedicines = appointment.AppointmentMedicines;
                     oldAppointment.PatientId = appointment.PatientId;
                     oldAppointment.DoctorId = appointment.DoctorId;
                     oldAppointment.DateOfVisit = appointment.DateOfVisit;
@@ -59,9 +52,6 @@ namespace API.Services.Implementations
 
         private async Task<bool> IsAppointmentValid(Appointment appointment)
         {
-            // Check DateOfVisit is in the future
-            if (appointment.DateOfVisit <= DateTime.Now)
-                throw new BadRequestException("Date of visit must be in the future.");
             // Check patient's availability etc.
             var patientAppointmentExist =
                 await _appointmentRepository.GetAppointmentsForUserByDateOfVisit(appointment.DateOfVisit);
@@ -109,14 +99,6 @@ namespace API.Services.Implementations
         {
             var upcomingAppointments = await _appointmentRepository.GetUpcomingAppointmentsDatesByDoctorIdAsync(doctorId);
             return upcomingAppointments;
-        }
-        public async Task<ICollection<MedicineDto>> GetMedicinesByAppointmentIdAsync(int appointmentId)
-        {
-            var appoinmentMedicineList =
-                await _appointmentRepository.GetAppointmentMedicinesByWithMedicineAppointmentIdAsync(appointmentId);
-            var medicineDtoList =
-                appoinmentMedicineList.Select(am => am.Medicine).Select(m => _mapper.Map<MedicineDto>(m)).ToList();
-            return medicineDtoList;
         }
 
         public async Task<PagedList<AppointmentDto>> GetAppointmentsForDoctorAsync(AppointmentParams appointmentParams, int doctorId)

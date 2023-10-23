@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 import { SupplyOrderService } from 'src/app/core/services/supply-order.service';
 import { InventoryItemParams } from 'src/app/models/Params/inventoryItemParams';
-import { InventoryItem } from 'src/app/models/inventoryItems';
-import { SupplyOrder } from 'src/app/models/supplyOrder';
+import { InventoryItem } from 'src/app/models/InventoryModels/inventoryItems';
+import { SupplyOrder } from 'src/app/models/InventoryModels/supplyOrder';
 
 @Component({
   selector: 'app-supply-order-model',

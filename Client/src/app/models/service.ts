@@ -1,4 +1,4 @@
-import { ServiceInventoryItem } from "./serviceInventoryItem";
+import { ServiceInventoryItem } from "./InventoryModels/serviceInventoryItem";
 
 export interface Service {
     id:                    number;

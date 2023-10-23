@@ -4,12 +4,15 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { PaymentList } from 'src/app/constants/paymentMethods';
 import { DoctorServiceService } from 'src/app/core/services/doctor-service.service';
 import { InvoiceService } from 'src/app/core/services/invoice.service';
+import { MedicineService } from 'src/app/core/services/medicine.service';
 import { ServiceService } from 'src/app/core/services/service.service';
 import { Appointment } from 'src/app/models/appointment';
-import { CreateInvoice } from 'src/app/models/createInvoice';
-import { CreateInvoiceDoctorService } from 'src/app/models/createInvoiceDoctorService';
 import { DoctorService } from 'src/app/models/doctorService';
-import { Invoice } from 'src/app/models/invoice';
+import { CreateInvoice } from 'src/app/models/InvoiceModels/createInvoice';
+import { CreateInvoiceDoctorService } from 'src/app/models/InvoiceModels/createInvoiceDoctorService';
+import { Invoice } from 'src/app/models/InvoiceModels/invoice';
+import { Medicine } from 'src/app/models/medicine';
+import { MedicineParams } from 'src/app/models/Params/medicineParams';
 import { Service } from 'src/app/models/service';
 
 @Component({
@@ -26,20 +29,63 @@ export class FinalizeAppointmentComponent implements OnInit {
   validationErrors: string[] = [];
   paymentMethodList = PaymentList;
   createInvoiceForm!: FormGroup;
+  medicineList: Medicine[] = [];
+  selectedMedicines: Medicine[] = [];
+  medicineParams: MedicineParams = {
+    pageNumber: 1,
+    pageSize: 5,
+  };
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute,
     private doctorServiceService: DoctorServiceService, private serviceService: ServiceService,
-    private invoiceService: InvoiceService, private router: Router) {
+    private invoiceService: InvoiceService, private router: Router, private medicineService: MedicineService) {
   }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.invoice = data['invoice'];
       this.appointment = this.invoice?.appointment;
-      console.log(this.invoice)
       this.getDoctorServicesByDoctorId();
       this.initializeForm();
+      this.intializeMedicineList();
     })
+  }
+
+  compareFn(item1: any, item2: any): boolean {
+    return item1 && item2 ? item1.id === item2.id : item1 === item2;
+  }
+  searchMedicines(event: any) {
+    if (event.term.trim().length > 1) {
+      this.medicineParams.searchTerm = event.term;
+      this.medicineService.getMedicines(this.medicineParams).subscribe(response => {
+        this.medicineList = response.result;
+      });
+    }
+  }
+
+  onMedicineSelect(medicines: Medicine[]) {
+    this.updateSelectedMedicineItems(medicines);
+  }
+  intializeMedicineList() {
+    if (this.invoice?.invoiceMedicines) {
+      this.selectedMedicines = this.invoice.invoiceMedicines
+        .map(item => item.medicine)
+        .filter(medicine => medicine !== undefined) as Medicine[];
+    } else {
+      this.selectedMedicines = [];
+    }
+    this.medicineList = this.selectedMedicines;
+    this.updateSelectedMedicineItems(this.selectedMedicines);
+  }
+
+  updateSelectedMedicineItems(medicines: any) {
+    const selectedMedicineItemsFormArray = this.createInvoiceForm.get('invoiceMedicines') as FormArray;
+    selectedMedicineItemsFormArray.clear();
+    medicines.forEach((medicine: any) => {
+      selectedMedicineItemsFormArray.push(this.fb.group({
+        medicineId: [medicine.id],
+      }));
+    });
   }
 
   getDoctorServicesByDoctorId() {
@@ -71,7 +117,7 @@ export class FinalizeAppointmentComponent implements OnInit {
 
   initializeCustomItems() {
     const customItemsArray = this.createInvoiceForm.get('customItems') as FormArray;
-  
+
     if (this.invoice?.customItems) {
       for (const item of this.invoice.customItems) {
         customItemsArray.push(this.fb.group({
@@ -92,7 +138,8 @@ export class FinalizeAppointmentComponent implements OnInit {
       totalRemaning: [{ value: 0, disabled: true }, [Validators.required]],
       totalAfterDiscount: [{ value: 0, disabled: true }, [Validators.required]],
       discountPercentage: [0, [Validators.required, Validators.max(100), Validators.min(0)]],
-      paymentMethod: ['cash', Validators.required]
+      paymentMethod: ['cash', Validators.required],
+      invoiceMedicines: this.fb.array([])
     });
     this.initializeCustomItems();
   }
@@ -200,7 +247,7 @@ export class FinalizeAppointmentComponent implements OnInit {
     this.createInvoiceForm.get('totalPaid')?.setValue(0);
   }
 
-  calculateServiceTotals(selectedServicesFormArray : FormArray) {
+  calculateServiceTotals(selectedServicesFormArray: FormArray) {
     // Calculate the total servicetotalPrice
     const totalServicetotalPrice = selectedServicesFormArray.controls.reduce((total, control) => {
       const servicetotalPrice = control.get('servicetotalPrice')?.value;
@@ -212,7 +259,7 @@ export class FinalizeAppointmentComponent implements OnInit {
     this.setTotalPrice(total);
   }
 
-  calculateCustomItemsTotals(customItemsFormArray : FormArray) {
+  calculateCustomItemsTotals(customItemsFormArray: FormArray) {
     // Calculate the total customItemstotalPrice
     const totalCustomItemstotalPrice = customItemsFormArray.controls.reduce((total, control) => {
       const price = control.get('price')?.value;
@@ -233,7 +280,7 @@ export class FinalizeAppointmentComponent implements OnInit {
   }
 
   setTotalAfterDiscount(discountValue: number) {
-    this.createInvoiceForm.get('totalAfterDiscount')?.setValue(this.createInvoiceForm.get('totalPrice')?.value * (1 - (discountValue/100)));
+    this.createInvoiceForm.get('totalAfterDiscount')?.setValue(this.createInvoiceForm.get('totalPrice')?.value * (1 - (discountValue / 100)));
   }
 
   changeTotalRemaning(event: any) {
@@ -252,13 +299,14 @@ export class FinalizeAppointmentComponent implements OnInit {
 
   mapInvoiceFormToCreateInvoice() {
     const createInvoice: CreateInvoice = {
-      id:            this.invoice?.id,
+      id: this.invoice?.id,
       appointmentId: this.appointment?.id!,
       paymentMethod: this.createInvoiceForm.get('paymentMethod')?.value,
       discountPercentage: this.createInvoiceForm.get('discountPercentage')?.value,
       totalPaid: this.createInvoiceForm.get('totalPaid')?.value,
       invoiceDoctorServices: this.mapCreateDoctorService(),
-      customItems: this.createInvoiceForm.get('customItems')?.value
+      customItems: this.createInvoiceForm.get('customItems')?.value,
+      invoiceMedicines: this.createInvoiceForm.get('invoiceMedicines')?.value
     };
     return createInvoice;
   }
@@ -276,14 +324,14 @@ export class FinalizeAppointmentComponent implements OnInit {
     const navigationExtras: NavigationExtras = {
       queryParams
     };
-    this.router.navigate(['appointments/view-invoice/' + response.id ], navigationExtras);
+    this.router.navigate(['appointments/view-invoice/' + response.id], navigationExtras);
   }
 
   mapCreateDoctorService() {
     const doctorServices: CreateInvoiceDoctorService[] = [];
 
     const invoiceSelectedServicesFormArray = this.createInvoiceForm.get('invoiceSelectedServices') as FormArray;
-    
+
     invoiceSelectedServicesFormArray.controls.forEach(control => {
       const doctorService: CreateInvoiceDoctorService = {
         doctorServiceId: this.doctor_services?.find(s => s.serviceId == control.get('serviceId')?.value)?.id!,
@@ -294,5 +342,5 @@ export class FinalizeAppointmentComponent implements OnInit {
     return doctorServices;
   }
 
-  
+
 }

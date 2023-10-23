@@ -19,7 +19,5 @@ namespace API.Repositories.Interfaces
         Task<(string Type, decimal? PriceVisit, decimal? PriceRevisit)> GetAppointmentTypeAndDoctorPricesAsync(int appointmentId);
         Task<bool> SaveAllAsync();
         Task<int> UpdateAppointmentInvoicedAsync(int appointmentId, string status, int invoiceId);
-        void DeleteAppointmentMedicinesRange(ICollection<AppointmentMedicine> appointmentMedicines);
-        Task<ICollection<AppointmentMedicine>> GetAppointmentMedicinesByWithMedicineAppointmentIdAsync(int appointmentId);
     }
 }

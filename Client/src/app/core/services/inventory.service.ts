@@ -4,7 +4,7 @@ import { map, of } from 'rxjs';
 import { InventoryItemParams } from 'src/app/models/Params/inventoryItemParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
-import { InventoryItem } from 'src/app/models/inventoryItems';
+import { InventoryItem } from 'src/app/models/InventoryModels/inventoryItems';
 
 @Injectable({
   providedIn: 'root'

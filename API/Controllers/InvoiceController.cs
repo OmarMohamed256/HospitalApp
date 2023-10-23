@@ -27,5 +27,12 @@ namespace API.Controllers
         {
             return await _invoiceService.GetInvoiceByIdAsync(invoiceId);
         }
+        [HttpGet]
+        [Route("getMedicinesByInvoiceId/{invoiceId}")]
+        public async Task<ActionResult<ICollection<MedicineDto>>> GetMedicinesByInvoiceId (int invoiceId)
+        {
+            var medicines = await _invoiceService.GetMedicinesByInvoiceId(invoiceId);
+            return Ok(medicines);
+        }
     }
 }

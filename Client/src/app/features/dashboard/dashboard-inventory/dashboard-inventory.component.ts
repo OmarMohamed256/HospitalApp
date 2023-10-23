@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { InventoryService } from 'src/app/core/services/inventory.service';
 import { SpecialityService } from 'src/app/core/services/speciality.service';
 import { InventoryItemParams } from 'src/app/models/Params/inventoryItemParams';
-import { InventoryItem } from 'src/app/models/inventoryItems';
+import { InventoryItem } from 'src/app/models/InventoryModels/inventoryItems';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
 import { InventoryItemModalComponent } from './inventory-item-modal/inventory-item-modal.component';

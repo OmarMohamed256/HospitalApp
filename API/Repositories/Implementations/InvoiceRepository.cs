@@ -36,6 +36,7 @@ namespace API.Repositories.Implementations
             .Include(i => i.CustomItems)
             .Include(i => i.InvoiceDoctorService)
             .Include(i => i.Appointment)
+            .Include(i => i.InvoiceMedicines).ThenInclude(im => im.Medicine)
             .SingleOrDefaultAsync(i => i.Id == invoiceId);
         }
         public async Task<Invoice> GetInvoiceByIdWithPropertiesAsync(int invoiceId)
@@ -46,16 +47,27 @@ namespace API.Repositories.Implementations
                 .ThenInclude(ids => ids.InvoiceDoctorServiceSupplyOrders)
                     .ThenInclude(idss => idss.SupplyOrder)
             .Include(i => i.Appointment)
+            .Include(i => i.InvoiceMedicines)
             .SingleOrDefaultAsync(i => i.Id == invoiceId);
         }
         public async Task<bool> SaveAllAsync()
         {
             return await _context.SaveChangesAsync() > 0;
         }
-
         public void RemoveInvoiceDoctorServiceSupplyOrder(InvoiceDoctorServiceSupplyOrders invoiceDoctorServiceSupplyOrder)
         {
             _context.InvoiceDoctorServiceSupplyOrders.Remove(invoiceDoctorServiceSupplyOrder);
+        }
+        public void DeleteInvoiceMedicinesRange(ICollection<InvoiceMedicine> appointmentMedicines)
+        {
+            _context.InvoiceMedicine.RemoveRange(appointmentMedicines);
+        }
+
+        public async Task<ICollection<InvoiceMedicine>> GetInvoiceMedicinesWithMedicineByInvoiceIdAsync(int invoiceId)
+        {
+            return await _context.InvoiceMedicine
+            .Include(am => am.Medicine)
+            .Where(am => am.InvoiceId == invoiceId).ToListAsync();
         }
     }
 }
