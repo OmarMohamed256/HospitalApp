@@ -11,6 +11,28 @@
             </div>
         </div>
     </div>
+    <div formArrayName="invoiceMedicines" class="mb-3">
+        <div *ngFor="let control of $any(createInvoiceForm.controls['invoiceMedicines']).controls; let i = index"
+            [formGroupName]="i">
+            <div class="row mb-3">
+                <div class="col">
+                    <app-text-input formControlName="medicineName" label='Medicine Name'></app-text-input>
+                </div>
+                <div class="col">
+                    <app-text-input formControlName="dosageAmount" label='Dosage Amount'></app-text-input>
+                </div>
+                <div class="col">
+                    <app-text-input formControlName="duration" label='Duration'></app-text-input>
+                </div>
+                <div class="col">
+                    <app-text-input formControlName="frequency" label='Frequency'></app-text-input>
+                </div>
+                <div class="col">
+                    <app-text-input formControlName="note" label='Note'></app-text-input>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             <div class="mb-3">

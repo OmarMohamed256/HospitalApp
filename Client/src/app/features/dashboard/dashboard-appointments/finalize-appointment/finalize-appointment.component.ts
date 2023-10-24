@@ -75,16 +75,43 @@ export class FinalizeAppointmentComponent implements OnInit {
       this.selectedMedicines = [];
     }
     this.medicineList = this.selectedMedicines;
-    this.updateSelectedMedicineItems(this.selectedMedicines);
+    this.updateSelectedMedicineItems(this.invoice?.invoiceMedicines);
   }
 
   updateSelectedMedicineItems(medicines: any) {
+    this.removeUnselectedMedicineItems(medicines);
+    this.addNewMedicineItems(medicines);
+  }
+  
+  removeUnselectedMedicineItems(medicines: Medicine[]) {
     const selectedMedicineItemsFormArray = this.createInvoiceForm.get('invoiceMedicines') as FormArray;
-    selectedMedicineItemsFormArray.clear();
+  
+    for (let i = selectedMedicineItemsFormArray.length - 1; i >= 0; i--) {
+      const medicineId = selectedMedicineItemsFormArray.at(i).get('medicineId')?.value;
+      if (!medicines.some(medicine => medicine.id === medicineId)) {
+        selectedMedicineItemsFormArray.removeAt(i);
+      }
+    }
+  }
+  
+  addNewMedicineItems(medicines: Medicine[]) {
+    console.log(medicines)
+    const selectedMedicineItemsFormArray = this.createInvoiceForm.get('invoiceMedicines') as FormArray;
     medicines.forEach((medicine: any) => {
-      selectedMedicineItemsFormArray.push(this.fb.group({
-        medicineId: [medicine.id],
-      }));
+      const existingMedicine = selectedMedicineItemsFormArray.controls.find(control =>
+        control.get('medicineId')?.value === medicine.id
+      );
+  
+      if (!existingMedicine) {
+        selectedMedicineItemsFormArray.push(this.fb.group({
+          medicineName: [{value: medicine.name, disabled: true}],
+          medicineId: [medicine.medicineId == null ? medicine.id : medicine.medicineId],
+          dosageAmount: [medicine.dosageAmount == '' ? '' : medicine.dosageAmount, Validators.required],
+          duration: [medicine.duration == '' ? '' : medicine.duration, Validators.required],
+          frequency: [medicine.frequency == '' ? '' : medicine.frequency, Validators.required],
+          note: [medicine.note == '' ? '' : medicine.note],
+        }));
+      }
     });
   }
 
@@ -313,7 +340,6 @@ export class FinalizeAppointmentComponent implements OnInit {
 
   createInvoice() {
     var invoice = this.mapInvoiceFormToCreateInvoice();
-    console.log(invoice)
     this.invoiceService.updateInvoice(invoice).subscribe(response => {
       this.sendToInvoiceView(response);
     })

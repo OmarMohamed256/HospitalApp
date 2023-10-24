@@ -62,15 +62,44 @@ export class MedicalOperationsComponent {
     this.updateSelectedMedicineItems(medicines);
   }
 
-  updateSelectedMedicineItems(medicines: any) {
+  updateSelectedMedicineItems(medicines: Medicine[]) {
+    this.removeUnselectedMedicineItems(medicines);
+    this.addNewMedicineItems(medicines);
+  }
+  
+  removeUnselectedMedicineItems(medicines: Medicine[]) {
     const selectedMedicineItemsFormArray = this.createInvoiceForm.get('invoiceMedicines') as FormArray;
-    selectedMedicineItemsFormArray.clear();
+  
+    for (let i = selectedMedicineItemsFormArray.length - 1; i >= 0; i--) {
+      const medicineId = selectedMedicineItemsFormArray.at(i).get('medicineId')?.value;
+      if (!medicines.some(medicine => medicine.id === medicineId)) {
+        selectedMedicineItemsFormArray.removeAt(i);
+      }
+    }
+  }
+  
+  addNewMedicineItems(medicines: Medicine[]) {
+    const selectedMedicineItemsFormArray = this.createInvoiceForm.get('invoiceMedicines') as FormArray;
+  
     medicines.forEach((medicine: any) => {
-      selectedMedicineItemsFormArray.push(this.fb.group({
-        medicineId: [medicine.id],
-      }));
+      const existingMedicine = selectedMedicineItemsFormArray.controls.find(control =>
+        control.get('medicineId')?.value === medicine.id
+      );
+  
+      if (!existingMedicine) {
+        selectedMedicineItemsFormArray.push(this.fb.group({
+          medicineName: [{value: medicine.name, disabled: true}],
+          medicineId: [medicine.id],
+          dosageAmount: [medicine.dosageAmount == '' ? '' : medicine.dosageAmount, Validators.required],
+          duration: [medicine.duration == '' ? '' : medicine.duration, Validators.required],
+          frequency: [medicine.frequency == '' ? '' : medicine.frequency, Validators.required],
+          note: [medicine.note == '' ? '' : medicine.note],
+        }));
+      }
     });
   }
+  
+  
 
   getDoctorServicesByDoctorId() {
     this.doctorServiceService.getDoctorServiceByDocorId(this.appointment!.doctorId.toString()).subscribe(response => {
@@ -199,3 +228,6 @@ export class MedicalOperationsComponent {
     return doctorServices;
   }
 }
+
+
+

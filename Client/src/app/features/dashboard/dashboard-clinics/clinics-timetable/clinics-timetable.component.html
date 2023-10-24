@@ -1,29 +1,30 @@
 <c-navbar colorScheme="dark" expand="lg" class="bg-dark mb-3">
-    <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
-  
-      <input type="date" class="form-control" (change)="filterByDate($event)">
-      <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
-    </div>
-  </c-navbar>
-  
-  <c-row>
-    <c-col [sm]="4" *ngFor="let clinic of clinics">
-      <c-card class="mb-4 scroll">
-        <h4 class="card-header text-center">Clinic #: {{clinic.clinicNumber}}</h4>
-        <h6 class="card-header text-center">Doctor Name: {{clinic.doctor?.fullName}}</h6>
-        <c-card-body class="text-center">
-          <c-alert [color]="getColor(appointment.status)" class="d-flex flex-row justify-content-between"
-            *ngFor="let appointment of clinic.doctor?.appointments">
+  <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
+
+    <input type="date" class="form-control" (change)="filterByDate($event)">
+    <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
+  </div>
+</c-navbar>
+
+<c-row>
+  <c-col [sm]="4" *ngFor="let clinic of clinics">
+    <c-card class="mb-4 scroll">
+      <h4 class="card-header text-center">Clinic #: {{clinic.clinicNumber}}</h4>
+      <h6 class="card-header text-center">Doctor Name: {{clinic.doctor?.fullName}}</h6>
+      <c-card-body class="text-center">
+        <ng-container *ngFor="let appointment of clinic.doctor?.appointments">
+          <c-alert [color]="getColor(appointment.status)" class="d-flex flex-row justify-content-between">
             <p>Code: {{appointment.id}}</p>
             <p>{{appointment.dateOfVisit | date: 'short'}}</p>
             <p>{{appointment.status | uppercase}}</p>
           </c-alert>
-        </c-card-body>
-      </c-card>
-    </c-col>
-    
-  </c-row>
-  <div class="d-flex justify-content-center" *ngIf="pagination">
-    <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
-      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
-  </div>
+        </ng-container>
+      </c-card-body>
+    </c-card>
+  </c-col>
+
+</c-row>
+<div class="d-flex justify-content-center" *ngIf="pagination">
+  <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+</div>

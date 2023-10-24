@@ -1,18 +1,21 @@
 <c-nav variant="tabs">
     <c-nav-item>
         <a [active]="true" [cTabContent]="tabContent" [tabPaneIdx]="0" cNavLink>
-            Clinics
+            Time Table
         </a>
     </c-nav-item>
     <c-nav-item>
         <a [cTabContent]="tabContent" [tabPaneIdx]="1" cNavLink>
-            Time Table
+            Clinics
         </a>
     </c-nav-item>
 </c-nav>
 <c-tab-content #tabContent="cTabContent" (activeTabPaneIdxChange)="onTabChange($event)" [activeTabPaneIdx]="activePane">
     <c-tab-pane class="p-3">
-        <ng-container *ngIf="activePane === 0">
+        <app-clinics-timetable *ngIf="activePane === 0"></app-clinics-timetable>
+    </c-tab-pane>
+    <c-tab-pane class="p-3">
+        <ng-container *ngIf="activePane === 1">
             <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
                 <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
                     <button (click)="toggleModal()" cButton color="light"> <span class=""><svg
@@ -57,9 +60,5 @@
             <app-clinics-modal (clinicAddedUpdated)="clinicAddedUpdated($event)" [specialityList]="specialityList"
                 [(visible)]="modalVisibility"></app-clinics-modal>
         </ng-container>
-
-    </c-tab-pane>
-    <c-tab-pane class="p-3">
-        <app-clinics-timetable *ngIf="activePane === 1"></app-clinics-timetable>
     </c-tab-pane>
 </c-tab-content>

@@ -11,7 +11,7 @@ import { ClinicParams } from 'src/app/models/Params/clinicParams';
 })
 export class ClinicsTimetableComponent {
   clinics: Clinic[] = [];
-  
+  activePane = 0;
   clinicParams: ClinicParams = {
     pageNumber: 1,
     pageSize: 6,
@@ -44,13 +44,14 @@ export class ClinicsTimetableComponent {
       }
     }
   }
+
   getClinics() {
     this.clinicService.getClinics(this.clinicParams).subscribe(response => {
       this.clinics = response.result;
       this.pagination = response.pagination
     })
   }
-  activePane = 0;
+
   onTabChange($event: number) {
     this.activePane = $event;
   }

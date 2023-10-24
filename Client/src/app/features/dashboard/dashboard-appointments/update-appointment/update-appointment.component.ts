@@ -16,7 +16,6 @@ import { firstValueFrom } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { MedicineService } from 'src/app/core/services/medicine.service';
-import { MedicineParams } from 'src/app/models/Params/medicineParams';
 
 @Component({
   selector: 'app-update-appointment',
