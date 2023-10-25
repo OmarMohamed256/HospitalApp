@@ -1,0 +1,54 @@
+<c-navbar colorScheme="dark" expand="lg" class="bg-dark">
+    <div navbar class="d-flex flex-column gap-2 justify-content-between w-100 px-5">
+        <button cButton color="light"> <span class=""><svg class="border rounded border-dark"
+                    cIcon name="cilPlus"></svg>
+                Add new sell order</span></button>
+        <div class="d-flex flex-row justify-content-between">
+            <select name="speciality" *ngIf="orderByList" class="w-25" [(ngModel)]="sellOrderParams.orderBy" cSelect>
+                <option [value]="null" disabled>Order By</option>
+                <option *ngFor="let orderBy of orderByList" [value]="orderBy.value">
+                    {{ orderBy.display }}
+                </option>
+            </select>
+            <select name="speciality" *ngIf="orderList" class="w-25" [(ngModel)]="sellOrderParams.order" cSelect>
+                <option [value]="null" disabled>Order</option>
+                <option *ngFor="let order of orderList" [value]="order.value">
+                    {{ order.display }}
+                </option>
+            </select>
+            <button cButton color="light" (click)="getSellOrders()">Apply Filters</button>
+        </div>
+
+        <div class="d-flex flex-row justify-content-between">
+            <form cForm class="d-flex" role="search" (submit)="getSellOrders()">
+                <input cFormControl type="search" placeholder="Search" name="searchTerm" aria-label="Search"
+                    class="me-2" [(ngModel)]="sellOrderParams.searchTerm">
+                <button cButton color="light" variant="outline" type="submit">Search</button>
+            </form>
+            <button cButton color="light" (click)="resetFiltersAndGetSellOrders()">Reset Filters</button>
+        </div>
+
+    </div>
+</c-navbar>
+<table cTable *ngIf="sellOrders">
+    <thead>
+        <tr>
+            <th scope="col">Item Name</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Sell Price</th>
+            <th scope="col">Include Expired Items</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let sellOrder of sellOrders" class="user-table"  >
+            <td>{{sellOrder.itemName}}</td>
+            <td>{{sellOrder.quantity}}</td>
+            <td>{{sellOrder.sellPrice}}</td>
+            <td>{{sellOrder.includeExpiredItems}}</td>
+        </tr>
+    </tbody>
+</table>
+<div class="d-flex justify-content-center" *ngIf="pagination">
+    <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
+      [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
+  </div>

@@ -1,8 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SupplyOrderService } from 'src/app/core/services/supply-order.service';
 import { Pagination } from 'src/app/models/pagination';
 import { SupplyOrder } from 'src/app/models/InventoryModels/supplyOrder';
-import { SupplyOrderParams } from 'src/app/models/Params/supplyOrderParams';
+import { OrderParams } from 'src/app/models/Params/OrderParams';
 import { SupplyOrderModelComponent } from './supply-order-model/supply-order-model.component';
 import { InventoryItem } from 'src/app/models/InventoryModels/inventoryItems';
 
@@ -11,9 +11,9 @@ import { InventoryItem } from 'src/app/models/InventoryModels/inventoryItems';
   templateUrl: './supply-orders.component.html',
   styleUrls: ['./supply-orders.component.scss']
 })
-export class SupplyOrdersComponent {
+export class SupplyOrdersComponent  implements OnInit{
   supplyOrders: SupplyOrder[] | null = [];
-  supplyOrderParams: SupplyOrderParams = {
+  supplyOrderParams: OrderParams = {
     pageNumber: 1,
     pageSize: 15,
     searchTerm: '',
@@ -29,6 +29,8 @@ export class SupplyOrdersComponent {
   @ViewChild(SupplyOrderModelComponent) supplyOrderModal!: SupplyOrderModelComponent;
 
   constructor(private supplyOrderService: SupplyOrderService) {
+  }
+  ngOnInit(): void {
     this.getSupplyOrders();
   }
 

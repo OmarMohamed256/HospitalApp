@@ -64,8 +64,10 @@
     <app-inventory-item-modal (inventoryItemUpdatedCreated)="IItemAddedUpdated($event)"
      [specialityList]="specialityList" [(visible)]="modalVisibility"></app-inventory-item-modal>
   </c-tab-pane>
-  <c-tab-pane class="p-3" *ngIf="activePane === 1">
-    <app-supply-orders></app-supply-orders>
+  <c-tab-pane class="p-3">
+    <app-supply-orders *ngIf="activePane === 1"></app-supply-orders>
   </c-tab-pane>
-  <c-tab-pane class="p-3"></c-tab-pane>
+  <c-tab-pane class="p-3">
+    <app-sell-orders *ngIf="activePane === 2"></app-sell-orders>
+  </c-tab-pane>
 </c-tab-content>

@@ -9,6 +9,7 @@ import { SupplyOrdersComponent } from './supply-orders/supply-orders.component';
 import { SupplyOrderModelComponent } from './supply-orders/supply-order-model/supply-order-model.component';
 import { NgSelectModule } from "@ng-select/ng-select";
 import { InventoryItemModalComponent } from './inventory-item-modal/inventory-item-modal.component';
+import { SellOrdersComponent } from './sell-orders/sell-orders.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,7 @@ import { InventoryItemModalComponent } from './inventory-item-modal/inventory-it
     ModalModule,
     NgSelectModule
     ],
-  declarations: [DashboardInventoryComponent, SupplyOrdersComponent, SupplyOrderModelComponent, InventoryItemModalComponent]
+  declarations: [DashboardInventoryComponent, SupplyOrdersComponent, SupplyOrderModelComponent, InventoryItemModalComponent, SellOrdersComponent]
 })
 export class DashboardInventoryModule {
 }

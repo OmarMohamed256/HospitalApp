@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
-import { SupplyOrderParams } from 'src/app/models/Params/supplyOrderParams';
+import { OrderParams } from 'src/app/models/Params/OrderParams';
 import { environment } from 'src/environments/environment.development';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { SupplyOrder } from 'src/app/models/InventoryModels/supplyOrder';
@@ -11,7 +11,7 @@ import { SupplyOrder } from 'src/app/models/InventoryModels/supplyOrder';
 })
 export class SupplyOrderService {
   baseUrl = environment.apiUrl;
-  supplyOrderParams: SupplyOrderParams = {
+  supplyOrderParams: OrderParams = {
     pageNumber: 1,
     pageSize: 15,
     searchTerm: '',
@@ -24,7 +24,7 @@ export class SupplyOrderService {
 
   constructor(private http: HttpClient) { }
 
-  getSupplyOrders(supplyOrderParams: SupplyOrderParams) {
+  getSupplyOrders(supplyOrderParams: OrderParams) {
     var response = this.supplyOrderCache.get(Object.values(supplyOrderParams).join("-"));
     if (response) {
       return of(response);
@@ -50,7 +50,7 @@ export class SupplyOrderService {
   }
   
   resetParams() {
-    this.supplyOrderParams = new SupplyOrderParams();
+    this.supplyOrderParams = new OrderParams();
     this.supplyOrderCache.clear();
     return this.supplyOrderParams;
   }
