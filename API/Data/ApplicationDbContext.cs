@@ -23,6 +23,7 @@ namespace Hospital.Data
         public DbSet<DoctorWorkingHours> DoctorWorkingHours { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
         public DbSet<SupplyOrder> SupplyOrders { get; set; }
+        public DbSet<SellOrder> SellOrders { get; set; }
         public DbSet<ServiceInventoryItem> ServiceInventoryItems { get; set; }
         public DbSet<InvoiceDoctorService> InvoiceDoctorService { get; set; }
         public DbSet<InvoiceDoctorServiceSupplyOrders> InvoiceDoctorServiceSupplyOrders { get; set; }
@@ -110,6 +111,12 @@ namespace Hospital.Data
             modelBuilder.Entity<SupplyOrder>()
                 .HasOne(so => so.InventoryItem)
                 .WithMany(ii => ii.SupplyOrders)
+                .HasForeignKey(so => so.InventoryItemId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<SellOrder>()
+                .HasOne(so => so.InventoryItem)
+                .WithMany(ii => ii.SellOrders)
                 .HasForeignKey(so => so.InventoryItemId)
                 .OnDelete(DeleteBehavior.SetNull);
 

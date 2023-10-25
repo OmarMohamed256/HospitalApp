@@ -81,6 +81,7 @@ export class SupplyOrdersComponent {
     this.supplyOrderModal.supplyOrderForm.get("id")?.setValue(supplyOrder.id);
     this.supplyOrderModal.supplyOrderForm.get("quantity")?.setValue(supplyOrder.quantity);
     this.supplyOrderModal.supplyOrderForm.get("itemPrice")?.setValue(supplyOrder.itemPrice);
+    this.supplyOrderModal.supplyOrderForm.get("sellPrice")?.setValue(supplyOrder.sellPrice);
     this.supplyOrderModal.supplyOrderForm.get("note")?.setValue(supplyOrder.note);
     this.supplyOrderModal.supplyOrderForm.get("inventoryItemId")?.setValue(supplyOrder.inventoryItemId);
     this.supplyOrderModal.supplyOrderForm.get('inventoryItemId')?.disable();

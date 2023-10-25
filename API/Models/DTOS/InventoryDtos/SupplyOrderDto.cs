@@ -10,5 +10,7 @@ namespace API.Models.DTOS
         public int? InventoryItemId { get; set; }
         public int ConsumedQuantity { get; set; } = 0;
         public DateTime ExpiryDate { get; set; }
+        public string? SupplierName { get; set; }
+        public decimal SellPrice { get; set; }
     }
 }

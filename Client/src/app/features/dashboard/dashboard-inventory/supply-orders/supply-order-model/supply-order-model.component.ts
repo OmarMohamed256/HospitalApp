@@ -47,6 +47,7 @@ export class SupplyOrderModelComponent implements OnInit {
       id: [0, Validators.required],
       quantity: [0, Validators.required],
       itemPrice: [0, Validators.required],
+      sellPrice: [0, Validators.required],
       note: [''],
       inventoryItemId: [0, Validators.required],
       expiryDate: ['', Validators.required],

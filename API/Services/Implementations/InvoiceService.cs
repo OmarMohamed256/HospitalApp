@@ -252,10 +252,10 @@ namespace API.Services.Implementations
                         var invoiceDoctorServiceSupplyOrder = new InvoiceDoctorServiceSupplyOrders
                         {
                             InvoiceDoctorServiceId = invoiceDoctorService.Id,
-                            ItemPrice = supplyOrder.ItemPrice,
+                            ItemPrice = supplyOrder.SellPrice,
                             QuantityUsed = quantityToConsume,
                             SupplyOrderId = supplyOrder.Id,
-                            TotalPrice = supplyOrder.ItemPrice * quantityToConsume
+                            TotalPrice = supplyOrder.SellPrice * quantityToConsume
                         };
                         invoiceDoctorServiceSupplyOrders.Add(invoiceDoctorServiceSupplyOrder);
                         _supplyOrderRepository.UpdateSupplyOrder(supplyOrder);

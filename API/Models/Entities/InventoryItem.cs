@@ -9,6 +9,8 @@ namespace API.Models.Entities
         public int InventoryItemSpecialityId { get; set; }
         public virtual Speciality InventoryItemSpeciality { get; set; }
         public virtual ICollection<SupplyOrder>? SupplyOrders { get; set; }
+        public virtual ICollection<SellOrder>? SellOrders { get; set; }
+
         public ICollection<ServiceInventoryItem>? ServiceInventoryItems { get; set; }
 
     }
