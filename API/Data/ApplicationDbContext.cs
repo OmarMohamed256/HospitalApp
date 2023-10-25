@@ -27,6 +27,7 @@ namespace Hospital.Data
         public DbSet<ServiceInventoryItem> ServiceInventoryItems { get; set; }
         public DbSet<InvoiceDoctorService> InvoiceDoctorService { get; set; }
         public DbSet<InvoiceDoctorServiceSupplyOrders> InvoiceDoctorServiceSupplyOrders { get; set; }
+        public DbSet<SellOrderConsumesSupplyOrder> SellOrderConsumesSupplyOrders { get; set; }
         public DbSet<Clinic> Clinics { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<InvoiceMedicine> InvoiceMedicine { get; set; }
@@ -58,14 +59,11 @@ namespace Hospital.Data
                 .WithMany(s => s.Appointments)
                 .HasForeignKey(a => a.AppointmentSpecialityId);
 
-            // Configure the relationship for BookedAppointments
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Patient)
                 .WithMany(u => u.BookedAppointments)
                 .HasForeignKey(a => a.PatientId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-            // Configure the relationship for Appointments where the user is the doctor
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Doctor)
                 .WithMany(d => d.BookedWithAppointments)
@@ -94,7 +92,6 @@ namespace Hospital.Data
                 .HasForeignKey(ds => ds.DoctorId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<DoctorService>()
                 .HasOne(ds => ds.Service)
                 .WithMany(s => s.DoctorServices)
@@ -122,13 +119,11 @@ namespace Hospital.Data
 
             modelBuilder.Entity<ServiceInventoryItem>()
                 .HasKey(sm => new { sm.ServiceId, sm.InventoryItemId });
-
             modelBuilder.Entity<ServiceInventoryItem>()
                 .HasOne(sii => sii.InventoryItem)
                 .WithMany(ii => ii.ServiceInventoryItems)
                 .HasForeignKey(sii => sii.InventoryItemId)
                 .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<ServiceInventoryItem>()
                 .HasOne(sii => sii.Service)
                 .WithMany(s => s.ServiceInventoryItems)
@@ -139,11 +134,23 @@ namespace Hospital.Data
                 .WithMany(ii => ii.InvoiceDoctorServiceSupplyOrders)
                 .HasForeignKey(sii => sii.SupplyOrderId)
                 .OnDelete(DeleteBehavior.SetNull);
-
             modelBuilder.Entity<InvoiceDoctorServiceSupplyOrders>()
                 .HasOne(sii => sii.InvoiceDoctorService)
                 .WithMany(s => s.InvoiceDoctorServiceSupplyOrders)
                 .HasForeignKey(sii => sii.InvoiceDoctorServiceId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<SellOrderConsumesSupplyOrder>()
+                .HasOne(socso => socso.SellOrder)
+                .WithMany(s => s.SellOrderConsumesSupplyOrders)
+                .HasForeignKey(socso => socso.SellOrderId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<SellOrderConsumesSupplyOrder>()
+                .HasOne(socso => socso.SupplyOrder)
+                .WithMany(s => s.SellOrderConsumesSupplyOrders)
+                .HasForeignKey(socso => socso.SupplyOrderId)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<InvoiceDoctorService>()
@@ -151,7 +158,6 @@ namespace Hospital.Data
                 .WithMany(ii => ii.InvoiceDoctorService)
                 .HasForeignKey(sii => sii.InvoiceId)
                 .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<InvoiceDoctorService>()
                 .HasOne(sii => sii.DoctorService)
                 .WithMany(s => s.InvoiceDoctorService)
@@ -168,7 +174,6 @@ namespace Hospital.Data
                 .HasOne(r => r.Doctor)
                 .WithOne()
                 .HasForeignKey<Clinic>(r => r.DoctorId);
-
             modelBuilder.Entity<Clinic>()
                 .HasOne(r => r.Speciality)
                 .WithMany(s => s.Clinics)
@@ -176,12 +181,10 @@ namespace Hospital.Data
 
             modelBuilder.Entity<InvoiceMedicine>()
                 .HasKey(am => new { am.InvoiceId, am.MedicineId });
-
             modelBuilder.Entity<InvoiceMedicine>()
                 .HasOne(am => am.Invoice)
                 .WithMany(a => a.InvoiceMedicines)
                 .HasForeignKey(am => am.InvoiceId);
-
             modelBuilder.Entity<InvoiceMedicine>()
                 .HasOne(am => am.Medicine)
                 .WithMany(m => m.InvoiceMedicines)

@@ -8,6 +8,7 @@ namespace API.Models.Entities
         public string? SupplierName { get; set; }
         public DateTime ExpiryDate { get; set; }
         public virtual ICollection<InvoiceDoctorServiceSupplyOrders>? InvoiceDoctorServiceSupplyOrders { get; set; }
+        public virtual ICollection<SellOrderConsumesSupplyOrder>? SellOrderConsumesSupplyOrders { get; set; }
         public int ConsumedQuantity { get; set; } = 0;
     }
 }

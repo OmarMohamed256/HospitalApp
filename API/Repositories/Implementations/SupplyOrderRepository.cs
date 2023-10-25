@@ -74,5 +74,7 @@ namespace API.Repositories.Implementations
             .Where(so => so.Id == supplyOrderId)
             .FirstOrDefaultAsync();
         }
+
+
     }
 }

@@ -107,6 +107,7 @@ builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IClinicRepository, ClinicRepository>();
 builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<ISellOrderRepository, SellOrderRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -123,6 +124,7 @@ builder.Services.AddScoped<IDoctorWorkingHoursService, DoctorWorkingHoursService
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IClinicService, ClinicService>();
 builder.Services.AddScoped<IMedicineService, MedicineService>();
+builder.Services.AddScoped<ISellOrderService, SellOrderService>();
 
 builder.Services.AddSignalR();
 

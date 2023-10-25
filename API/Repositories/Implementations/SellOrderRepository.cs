@@ -24,7 +24,7 @@ namespace API.Repositories.Implementations
         public async Task<SellOrder> GetSellOrderByIdAsync(int sellOrderId)
         {
             return await _context.SellOrders
-            .AsNoTracking()
+            .Include(so => so.SellOrderConsumesSupplyOrders)
             .Where(so => so.Id == sellOrderId)
             .FirstOrDefaultAsync();
         }

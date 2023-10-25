@@ -8,5 +8,7 @@ namespace API.Models.Entities
     {
         public string? SoldTo { get; set; }
         public bool IncludeExpiredItems { get; set; }
+        public virtual ICollection<SellOrderConsumesSupplyOrder>? SellOrderConsumesSupplyOrders { get; set; }
+
     }
 }
