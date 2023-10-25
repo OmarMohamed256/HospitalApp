@@ -7,6 +7,6 @@ namespace API.Models.Entities
     public class SellOrder : OrderEntity
     {
         public string? SoldTo { get; set; }
-        public bool IncludeDateExpired { get; set; }
+        public bool IncludeExpiredItems { get; set; }
     }
 }

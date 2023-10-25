@@ -48,7 +48,7 @@ namespace API.Services.Implementations
             throw new ApiException(HttpStatusCode.InternalServerError, "Failed to add/update supply order");
         }
 
-        public async Task<PagedList<SupplyOrderDto>> GetSupplyOrdersAsync(SupplyOrderParams supplyOrderParams)
+        public async Task<PagedList<SupplyOrderDto>> GetSupplyOrdersAsync(OrderParams supplyOrderParams)
         {
             PagedList<SupplyOrder> supplyOrders = await _supplyOrderRepository.GetSupplyOrdersAsync(supplyOrderParams);
 

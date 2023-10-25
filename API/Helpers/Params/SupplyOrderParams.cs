@@ -1,6 +1,6 @@
 namespace API.Helpers
 {
-    public class SupplyOrderParams : PaginationParams
+    public class OrderParams : PaginationParams
     {
         public string OrderBy { get; set; } = "dateCreated";
         public string Order { get; set; } = "desc";

@@ -1,5 +1,6 @@
 using API.Models.DTOS;
 using API.Models.DTOS.ImageDtos;
+using API.Models.DTOS.InventoryDtos;
 using API.Models.DTOS.InvoiceDtos;
 using API.Models.Entities;
 using AutoMapper;
@@ -60,6 +61,7 @@ namespace API.Helpers
             CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();
             CreateMap<InventoryItemDto, InventoryItem>().ReverseMap();
             CreateMap<SupplyOrderDto, SupplyOrder>().ReverseMap();
+            CreateMap<SellOrderDto, SellOrder>().ReverseMap();
             CreateMap<InvoiceMedicineDto, InvoiceMedicine>()
             .ForMember(dest => dest.Medicine, opt => opt.MapFrom(src => src.Medicine))
             .ReverseMap();

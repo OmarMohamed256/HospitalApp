@@ -17,7 +17,7 @@ namespace API.Controllers
 
         [HttpGet]
         public async Task<ActionResult<PagedList<SupplyOrderDto>>> GetSupplyOrdersAsync(
-            [FromQuery] SupplyOrderParams supplyOrderParams)
+            [FromQuery] OrderParams supplyOrderParams)
         {
             var supplyOrders = await _supplyOrderService.GetSupplyOrdersAsync(supplyOrderParams);
             Response.AddPaginationHeader(supplyOrders.CurrentPage, supplyOrders.PageSize, supplyOrders.TotalCount, supplyOrders.TotalPages);

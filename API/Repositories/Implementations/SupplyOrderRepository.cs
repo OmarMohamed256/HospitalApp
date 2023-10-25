@@ -21,7 +21,7 @@ namespace API.Repositories.Implementations
         {
             _context.SupplyOrders.Update(supplyOrder);
         }
-        public async Task<PagedList<SupplyOrder>> GetSupplyOrdersAsync(SupplyOrderParams supplyOrderParams)
+        public async Task<PagedList<SupplyOrder>> GetSupplyOrdersAsync(OrderParams supplyOrderParams)
         {
             var query = _context.SupplyOrders.AsQueryable();
 
@@ -49,10 +49,16 @@ namespace API.Repositories.Implementations
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<ICollection<SupplyOrder>> GetConsumableSupplyOrdersByInventoryItemId(int inventoryItemId)
+        public async Task<ICollection<SupplyOrder>> GetConsumableSupplyOrdersByInventoryItemId(int inventoryItemId, bool includeExpired = false)
         {
-            return await _context.SupplyOrders
+            if (!includeExpired)
+            {
+                return await _context.SupplyOrders
                 .Where(so => so.ExpiryDate >= DateTime.Now && so.InventoryItemId == inventoryItemId && so.Quantity > 0)
+                .OrderBy(so => so.ExpiryDate).ToListAsync();
+            }
+            return await _context.SupplyOrders
+                .Where(so => so.InventoryItemId == inventoryItemId && so.Quantity > 0)
                 .OrderBy(so => so.ExpiryDate).ToListAsync();
         }
 
