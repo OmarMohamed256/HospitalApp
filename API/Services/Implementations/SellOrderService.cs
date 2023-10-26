@@ -53,6 +53,19 @@ namespace API.Services.Implementations
                 sellOrder.SellPrice = sellOrderDto.SellPrice;
                 sellOrder.Note = sellOrderDto.Note;
                 sellOrder.SoldTo = sellOrderDto.SoldTo;
+
+                // update SellOrderConsumesSupplyOrders total prices too
+                if( sellOrder.SellOrderConsumesSupplyOrders != null )
+                {
+                    foreach(var sellOrderConsumesSupplyOrder in sellOrder.SellOrderConsumesSupplyOrders)
+                    {
+                        if(sellOrderConsumesSupplyOrder.SellOrderId == sellOrder.Id)
+                        {
+                            sellOrderConsumesSupplyOrder.ItemPrice = sellOrder.SellPrice;
+                            sellOrderConsumesSupplyOrder.TotalPrice = sellOrderDto.SellPrice * sellOrderConsumesSupplyOrder.QuantityUsed;
+                        }
+                    }
+                }
                 _sellOrderRepository.UpdateSellOrder(sellOrder);
             }
             if (await _sellOrderRepository.SaveAllAsync()) return _mapper.Map<SellOrderDto>(sellOrder);
@@ -78,7 +91,7 @@ namespace API.Services.Implementations
                         ItemPrice = sellOrderDto.SellPrice,
                         QuantityUsed = quantityToConsume,
                         SupplyOrderId = supplyOrder.Id,
-                        TotalPrice = supplyOrder.SellPrice * quantityToConsume
+                        TotalPrice = sellOrderDto.SellPrice * quantityToConsume
                     };
                     sellOrderConsumesSupplyOrders.Add(sellOrderConsumesSupplyOrder);
                     _supplyOrderRepository.UpdateSupplyOrder(supplyOrder);

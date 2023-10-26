@@ -1,6 +1,6 @@
 <c-navbar colorScheme="dark" expand="lg" class="bg-dark">
     <div navbar class="d-flex flex-column gap-2 justify-content-between w-100 px-5">
-        <button cButton color="light"> <span class=""><svg class="border rounded border-dark"
+        <button cButton color="light" (click)="initFormAndToggleModel()"> <span class=""><svg class="border rounded border-dark"
                     cIcon name="cilPlus"></svg>
                 Add new sell order</span></button>
         <div class="d-flex flex-row justify-content-between">
@@ -40,7 +40,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let sellOrder of sellOrders" class="user-table"  >
+        <tr *ngFor="let sellOrder of sellOrders" class="user-table" (click)="setSellOrderAndShowModal(sellOrder)">
             <td>{{sellOrder.itemName}}</td>
             <td>{{sellOrder.quantity}}</td>
             <td>{{sellOrder.sellPrice}}</td>
@@ -52,3 +52,4 @@
     <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"
       [(ngModel)]="pagination.currentPage" (pageChanged)="pageChanged($event)"></app-pagination>
   </div>
+<app-sell-order-modal (sellOrderAddedUpdated)="sellOrderAddedUpdated($event)" [(visible)]="modalVisibility"></app-sell-order-modal>

@@ -1,0 +1,70 @@
+<c-modal #sellOrdersModal id="sellOrdersModal" (visibleChange)="modelToggeled($event)" size="xl" [visible]="visible"
+    scrollable>
+    <c-modal-header>
+        <h5 cModalTitle>Service</h5>
+        <button [cModalToggle]="sellOrdersModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+        <ng-container *ngTemplateOutlet="sellOrderContent"></ng-container>
+    </c-modal-body>
+    <c-modal-footer>
+        <button [cModalToggle]="sellOrdersModal.id" cButton color="secondary">
+            Close
+        </button>
+        <button [disabled]="!sellOrderForm.valid" cButton color="primary"
+            (click)="sellOrderForm.valid && createUpdateSellOrder()">Save changes</button>
+    </c-modal-footer>
+</c-modal>
+
+<ng-template #sellOrderContent>
+    <form [formGroup]="sellOrderForm" autocomplete="off">
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label cLabel>Item</label>
+                    <ng-select [items]="inventoryItems" (search)="searchItems($event)" [virtualScroll]="true"
+                        [bindLabel]="'name'" [bindValue]="'id'" [multiple]="false" formControlName="inventoryItemId">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label cLabel>Quantity</label>
+                    <app-text-input type="number" formControlName="quantity" [label]='"Quantity"'></app-text-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label cLabel>Sell Price</label>
+                    <app-text-input type="number" formControlName="sellPrice" [label]='"Sell Price"'></app-text-input>
+                </div>
+            </div>
+            <div class="col">
+                <div class="mb-3">
+                    <label cLabel>Sold to</label>
+                    <app-text-input type="text" formControlName="soldTo" [label]='"Sold to"'></app-text-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <label cLabel>Note</label>
+                    <app-text-input type="text" formControlName="note" [label]='"Note"'></app-text-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="mb-3">
+                    <c-form-check [switch]="true">
+                        <input cFormCheckInput type="checkbox" formControlName="includeExpiredItems"/>
+                        <label cFormCheckLabel>Include Expired Items</label>
+                      </c-form-check>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-template>
