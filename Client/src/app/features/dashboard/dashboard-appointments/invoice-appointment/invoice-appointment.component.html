@@ -1,141 +1,163 @@
-<form *ngIf="invoice">
-    <div class="text-center mb-3"><h1>Dates</h1></div>
-    <div class="row">
-        <div class="col">
-            <div class="mb-3">
-                <label>Finalization Date</label>
-                <input class="form-control" disabled value="{{invoice.finalizationDate | date:'short'}}" />
+<app-prescription></app-prescription>
+<ng-container *ngIf="invoice">
+    <c-nav variant="tabs">
+        <c-nav-item>
+            <a [active]="true" [cTabContent]="tabContent" [tabPaneIdx]="0" cNavLink>
+                Services Used
+            </a>
+        </c-nav-item>
+        <c-nav-item>
+            <a [cTabContent]="tabContent" [tabPaneIdx]="1" cNavLink>
+                Custom Items
+            </a>
+        </c-nav-item>
+        <c-nav-item>
+            <a [cTabContent]="tabContent" [tabPaneIdx]="2" cNavLink>
+                Totals
+            </a>
+        </c-nav-item>
+    </c-nav>
+    <c-tab-content #tabContent="cTabContent">
+        <c-tab-pane class="p-3">
+            <div class="text-center mb-3">
+                <h1>Services</h1>
             </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Payment Method</label>
-                <input class="form-control" disabled value="{{invoice.paymentMethod}}" />
+            <div class="row" *ngFor="let service of invoice.invoiceDoctorServices">
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Service Name</label>
+                        <input class="form-control" disabled value="{{service.serviceName}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Quantity</label>
+                        <input class="form-control" disabled value="{{service.serviceQuantity}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Service Sold Price</label>
+                        <input class="form-control" disabled value="{{service.serviceSoldPrice}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Total Disposable Price</label>
+                        <input class="form-control" disabled value="{{service.totalDisposablesPrice}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Total Price</label>
+                        <input class="form-control" disabled value="{{service.totalPrice}}" />
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-
-    <div class="text-center mb-3"><h1>Services</h1></div>
-    <div class="row" *ngFor="let service of invoice.invoiceDoctorServices">
-        <div class="col">
-            <div class="mb-3">
-                <label>Service Name</label>
-                <input class="form-control" disabled value="{{service.serviceName}}" />
+        </c-tab-pane>
+        <c-tab-pane class="p-3">
+            <div class="text-center mb-3">
+                <h1>Custom Items</h1>
             </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Quantity</label>
-                <input class="form-control" disabled value="{{service.serviceQuantity}}" />
+            <div class="row" *ngFor="let item of invoice.customItems">
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Item Name</label>
+                        <input class="form-control" disabled value="{{item.name}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Units</label>
+                        <input class="form-control" disabled value="{{item.units}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Item Price</label>
+                        <input class="form-control" disabled value="{{item.price}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Item Total Price</label>
+                        <input class="form-control" disabled value="{{item.totalPrice}}" />
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Service Sold Price</label>
-                <input class="form-control" disabled value="{{service.serviceSoldPrice}}" />
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Custom Items Total Price</label>
+                        <input class="form-control" disabled value="{{invoice.customItemsTotalPrice}}" />
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Total Disposable Price</label>
-                <input class="form-control" disabled value="{{service.totalDisposablesPrice}}" />
+        </c-tab-pane>
+        <c-tab-pane class="p-3">
+            <div class="text-center mb-3">
+                <h1>Invoice Totals</h1>
             </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Total Price</label>
-                <input class="form-control" disabled value="{{service.totalPrice}}" />
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Appointment Type Price</label>
+                        <input class="form-control" disabled value="{{invoice.appointmentTypePrice}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Total Due</label>
+                        <input class="form-control" disabled value="{{invoice.totalDue}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Discount Percentage</label>
+                        <input class="form-control" disabled value="{{invoice.discountPercentage}}%" />
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="text-center mb-3"><h1>Custom Items</h1></div>
-    <div class="row" *ngFor="let item of invoice.customItems">
-        <div class="col">
-            <div class="mb-3">
-                <label>Item Name</label>
-                <input class="form-control" disabled value="{{item.name}}" />
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Total After Discount</label>
+                        <input class="form-control" disabled value="{{invoice.totalAfterDiscount}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Total Paid</label>
+                        <input class="form-control" disabled value="{{invoice.totalPaid}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Total Remaning</label>
+                        <input class="form-control" disabled value="{{invoice.totalRemaining}}" />
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Units</label>
-                <input class="form-control" disabled value="{{item.units}}" />
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Finalization Date</label>
+                        <input class="form-control" disabled value="{{invoice.finalizationDate | date:'short'}}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <label>Payment Method</label>
+                        <input class="form-control" disabled value="{{invoice.paymentMethod}}" />
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Item Price</label>
-                <input class="form-control" disabled value="{{item.price}}" />
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Item Total Price</label>
-                <input class="form-control" disabled value="{{item.totalPrice}}" />
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="mb-3">
-                <label>Custom Items Total Price</label>
-                <input class="form-control" disabled value="{{invoice.customItemsTotalPrice}}" />
-            </div>
-        </div>
-    </div>
-    <div class="text-center mb-3"><h1>Invoice Totals</h1></div>
-    <div class="row">
-        <div class="col">
-            <div class="mb-3">
-                <label>Appointment Type Price</label>
-                <input class="form-control" disabled value="{{invoice.appointmentTypePrice}}" />
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Total Due</label>
-                <input class="form-control" disabled value="{{invoice.totalDue}}" />
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Discount Percentage</label>
-                <input class="form-control" disabled value="{{invoice.discountPercentage}}%" />
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="mb-3">
-                <label>Total After Discount</label>
-                <input class="form-control" disabled value="{{invoice.totalAfterDiscount}}" />
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Total Paid</label>
-                <input class="form-control" disabled value="{{invoice.totalPaid}}" />
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Total Remaning</label>
-                <input class="form-control" disabled value="{{invoice.totalRemaining}}" />
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="mb-3">
-                <label>Finalization Date</label>
-                <input class="form-control" disabled value="{{invoice.finalizationDate | date:'short'}}" />
-            </div>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label>Payment Method</label>
-                <input class="form-control" disabled value="{{invoice.paymentMethod}}" />
-            </div>
-        </div>
-    </div>
-</form>
+        </c-tab-pane>
+    </c-tab-content>
+</ng-container>
+<div class="w-100 text-center">
+    <button type="button" class="btn btn-primary" printSectionId="prescription" ngxPrint [useExistingCss]="true"
+        [previewOnly]="true">
+        Print Invoice
+    </button>
+</div>

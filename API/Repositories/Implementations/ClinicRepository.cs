@@ -31,7 +31,7 @@ namespace API.Repositories.Implementations
             if (clinicParams.IncludeUpcomingAppointments)
             {
                 query = _context.Clinics
-                    .Include(r => r.Doctor)
+                    .Include(c => c.Doctor)
                         .ThenInclude(a => a.BookedWithAppointments
                             .Where(a => a.DateOfVisit > DateTime.Today
                                 && (clinicParams.AppointmentDateOfVisit == DateTime.MinValue
@@ -43,7 +43,7 @@ namespace API.Repositories.Implementations
             else
             {
                 query = _context.Clinics
-                    .Include(r => r.Doctor)
+                    .Include(c => c.Doctor)
                     .AsQueryable();
             }
             if(clinicParams.ClinicSpecialityId != null)

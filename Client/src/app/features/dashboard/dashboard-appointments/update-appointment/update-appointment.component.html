@@ -84,10 +84,6 @@
         <button type="submit" *ngIf="appointment?.status != 'finalized'" class="btn btn-primary">Update Appointment</button>
         <button *ngIf="appointment?.status == 'finalized'" type="button"
         class="btn btn-primary" [routerLink]="['/appointments/view-invoice', appointment?.invoiceId]">View Invoice</button>
-        <button type="button" class="btn btn-primary" printSectionId="prescription" ngxPrint [useExistingCss]="true" [previewOnly]="true">
-            <svg cIcon name="cilPrint" size="xl"></svg>
-          </button>
     </div>
 </form>
 <hr/>
-<app-prescription></app-prescription>
