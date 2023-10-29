@@ -1,4 +1,3 @@
-using API.Helpers;
 using API.Models.DTOS;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
@@ -17,26 +16,17 @@ namespace API.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<ClinicDto> CreateUpdateClinic(CreateClinicDto clinic)
+        public async Task<ClinicDto> CreateUpdateClinic(CreateUpdateClinicDto clinic)
         {
-            var newClinic = _mapper.Map<Clinic>(clinic);
-            // catch if there is no duplicate records with same doctor id
-            if (newClinic.DoctorId.HasValue)
-            {
-                var existingClinic = await _clinicRepository.GetClinicByDoctorId(newClinic.DoctorId.Value);
-                if (existingClinic != null && existingClinic.Id != newClinic.Id)
-                {
-                    throw new Exception("A clinic with the same doctor already exists!");
-                }
-            }
-            var oldRoom = await _clinicRepository.GetClinicById(clinic.Id);
-
-            if (oldRoom == null)
-                _clinicRepository.AddClinic(newClinic);
+            var existingClinic = await _clinicRepository.GetClinicById(clinic.Id);
+            if (existingClinic == null) _clinicRepository.AddClinic(_mapper.Map<Clinic>(clinic));
             else
-                _clinicRepository.UpdateClinic(newClinic);
-
-            if (await _clinicRepository.SaveAllAsync()) return _mapper.Map<ClinicDto>(newClinic);
+            {
+                existingClinic.ClinicDoctors = _mapper.Map<ICollection<ClinicDoctor>>(clinic.ClinicDoctors);
+                existingClinic.ClinicNumber = clinic.ClinicNumber;
+                _clinicRepository.UpdateClinic(_mapper.Map<Clinic>(existingClinic));
+            }
+            if (await _clinicRepository.SaveAllAsync()) return _mapper.Map<ClinicDto>(existingClinic);
             throw new Exception("Failed to add/update clinic");
         }
 
@@ -44,16 +34,13 @@ namespace API.Services.Implementations
         {
             var clinic = await _clinicRepository.GetClinicById(clinicId) ?? throw new Exception("Clinic not found");
             _clinicRepository.DeleteClinic(clinic);
-            if(!await _clinicRepository.SaveAllAsync()) throw new Exception("Can not delete clinic");
+            if (!await _clinicRepository.SaveAllAsync()) throw new Exception("Can not delete clinic");
         }
 
-        public async Task<PagedList<ClinicDto>> GetAllClinicsAsync(ClinicParams clinicParams)
+        public async Task<ICollection<ClinicDto>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync()
         {
-            PagedList<Clinic> clinics = await _clinicRepository.GetAllClinicsWithUpComingAppointmentsAsync(clinicParams);
-
-            var clinicsDto = _mapper.Map<IEnumerable<ClinicDto>>(clinics);
-
-            return new PagedList<ClinicDto>(clinicsDto, clinics.TotalCount, clinics.CurrentPage, clinics.PageSize);
+            ICollection<Clinic> clinics = await _clinicRepository.GetClinicsWithFirstTwoUpcomingAppointmentsAsync();
+            return _mapper.Map<ICollection<ClinicDto>>(clinics);
         }
 
         public async Task<ClinicDto> GetClinicByIdAsync(int clinicId)

@@ -36,6 +36,9 @@ namespace API.Repositories.Implementations
             .Include(i => i.CustomItems)
             .Include(i => i.InvoiceDoctorService)
             .Include(i => i.Appointment)
+                .ThenInclude(a => a.Doctor)
+            .Include(i => i.Appointment)
+                .ThenInclude(a => a.Patient)
             .Include(i => i.InvoiceMedicines).ThenInclude(im => im.Medicine)
             .SingleOrDefaultAsync(i => i.Id == invoiceId);
         }

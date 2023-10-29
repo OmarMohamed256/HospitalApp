@@ -1,4 +1,31 @@
-<div id="prescription" class="text-center w-100 d-none">
-    <h1>Ritaj</h1>
-    <p>Some text...</p>
+<div id="prescription" class="text-end w-100 d-none">
+  <img class="img-fluid" src="assets/img/brand/logo.png" width="200" height="200" />
+  <div style="margin-top: -4rem;">
+    <h2 class="text-center">Dr. {{invoice.doctor.fullName}}</h2>
+    <div class="container text-center mt-3">
+      <div class="row row-cols-2">
+        <div class="col">
+          <h4>Name: <span class="h6">{{invoice.patient.fullName}}</span></h4>
+        </div>
+        <div class="col">
+          <h4>Date: <span class="h6">{{getCurrentDate() | date:'MM/dd/yyyy'}}</span></h4>
+        </div>
+        <div class="col">
+          <h4>Age: <span class="h6">{{invoice.patient.age}}</span></h4>
+        </div>
+        <div class="col">
+          <h4>Diagonses:</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-2" *ngFor="let invoiceMedicine of invoice.invoiceMedicines">
+    <h5>R/ {{invoiceMedicine.medicine?.name}}</h5>
+    <div class="d-flex flex-row justify-content-between">
+      <p>Dosage: {{invoiceMedicine.dosageAmount}}</p>
+      <p>Frequency: {{invoiceMedicine.frequency}}</p>
+      <p>Duration: {{invoiceMedicine.duration}}</p>
+      <p>Note: {{invoiceMedicine.note}}</p>
+    </div>
+  </div>
 </div>

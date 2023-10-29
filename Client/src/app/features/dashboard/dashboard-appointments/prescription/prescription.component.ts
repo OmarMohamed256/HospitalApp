@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Invoice } from 'src/app/models/InvoiceModels/invoice';
 
 @Component({
   selector: 'app-prescription',
@@ -6,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./prescription.component.scss']
 })
 export class PrescriptionComponent {
-
+  @Input() invoice!: Invoice;
+  getCurrentDate() {
+    return new Date();
+  }
 }

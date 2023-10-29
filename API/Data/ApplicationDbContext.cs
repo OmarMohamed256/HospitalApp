@@ -170,14 +170,16 @@ namespace Hospital.Data
                 .WithMany(s => s.InventoryItems)
                 .HasForeignKey(ii => ii.InventoryItemSpecialityId);
 
-            modelBuilder.Entity<Clinic>()
-                .HasOne(r => r.Doctor)
-                .WithOne()
-                .HasForeignKey<Clinic>(r => r.DoctorId);
-            modelBuilder.Entity<Clinic>()
-                .HasOne(r => r.Speciality)
-                .WithMany(s => s.Clinics)
-                .HasForeignKey(r => r.ClinicSpecialityId);
+            modelBuilder.Entity<ClinicDoctor>()
+                .HasKey(am => new { am.ClinicId, am.DoctorId });
+            modelBuilder.Entity<ClinicDoctor>()
+                .HasOne(am => am.Clinic)
+                .WithMany(a => a.ClinicDoctors)
+                .HasForeignKey(am => am.ClinicId);
+            modelBuilder.Entity<ClinicDoctor>()
+                .HasOne(am => am.Doctor)
+                .WithMany(m => m.ClinicDoctors)
+                .HasForeignKey(am => am.DoctorId);
 
             modelBuilder.Entity<InvoiceMedicine>()
                 .HasKey(am => new { am.InvoiceId, am.MedicineId });

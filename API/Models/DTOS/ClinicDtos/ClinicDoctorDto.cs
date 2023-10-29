@@ -1,9 +1,12 @@
+using API.Models.Entities;
+using webapi.Entities;
+
 namespace API.Models.DTOS
 {
     public class ClinicDoctorDto
     {
-        public int Id { get; set; }
-        public string FullName { get; set; }
-        public ICollection<ClinicAppointmentDto> Appointments { get; set; }
+        public int ClinicId { get; set; }
+        public int DoctorId { get; set; }
+        public AppUser? Doctor { get; set; }
     }
 }

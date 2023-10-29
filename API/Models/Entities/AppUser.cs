@@ -30,5 +30,6 @@ namespace webapi.Entities
         public virtual ICollection<DoctorService>? DoctorServices { get; set; }
         public virtual ICollection<DoctorWorkingHours>? DoctorWorkingHours { get; set; }
         public virtual ICollection<Image>? Images { get; set; }
+        public virtual ICollection<ClinicDoctor>? ClinicDoctors { get; set; }
     }
 }

@@ -6,9 +6,9 @@ namespace API.Services.Interfaces
 {
     public interface IClinicService
     {
-        Task<ClinicDto> CreateUpdateClinic(CreateClinicDto clinic);
+        Task<ClinicDto> CreateUpdateClinic(CreateUpdateClinicDto clinic);
         Task<ClinicDto> GetClinicByIdAsync(int clinicId);
-        Task<PagedList<ClinicDto>> GetAllClinicsAsync(ClinicParams clinicParams);
+        Task<ICollection<ClinicDto>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync();
         Task DeleteClinic(int clinicId);
     }
 }

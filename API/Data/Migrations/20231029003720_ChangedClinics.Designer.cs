@@ -4,6 +4,7 @@ using Hospital.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231029003720_ChangedClinics")]
+    partial class ChangedClinics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,12 @@ namespace HospitalApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("SpecialityId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SpecialityId");
 
                     b.ToTable("Clinics");
                 });
@@ -837,6 +845,13 @@ namespace HospitalApp.Data.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("API.Models.Entities.Clinic", b =>
+                {
+                    b.HasOne("HospitalApp.Models.Entities.Speciality", null)
+                        .WithMany("Clinics")
+                        .HasForeignKey("SpecialityId");
+                });
+
             modelBuilder.Entity("API.Models.Entities.ClinicDoctor", b =>
                 {
                     b.HasOne("API.Models.Entities.Clinic", "Clinic")
@@ -1200,6 +1215,8 @@ namespace HospitalApp.Data.Migrations
             modelBuilder.Entity("HospitalApp.Models.Entities.Speciality", b =>
                 {
                     b.Navigation("Appointments");
+
+                    b.Navigation("Clinics");
 
                     b.Navigation("Doctors");
 

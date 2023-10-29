@@ -1,4 +1,4 @@
-using webapi.Entities;
+using API.Models.Entities;
 
 namespace API.Models.DTOS
 {
@@ -6,8 +6,6 @@ namespace API.Models.DTOS
     {
         public int Id { get; set; }
         public string ClinicNumber { get; set; }
-        public int ClinicSpecialityId { get; set; }
-        public int? DoctorId { get; set; }
-        public ClinicDoctorDto? Doctor { get; set; }
+        public ICollection<ClinicDoctorDto>? ClinicDoctors { get; set; }
     }
 }

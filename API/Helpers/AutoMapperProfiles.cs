@@ -1,4 +1,5 @@
 using API.Models.DTOS;
+using API.Models.DTOS.ClinicDtos;
 using API.Models.DTOS.ImageDtos;
 using API.Models.DTOS.InventoryDtos;
 using API.Models.DTOS.InvoiceDtos;
@@ -19,12 +20,18 @@ namespace API.Helpers
                     RoleId = ur.Role.Id,
                     RoleName = ur.Role.Name
                 }).ToList()));
-
-            CreateMap<AppUser, ClinicDoctorDto>()
-                .ForMember(dest => dest.Appointments, opt => opt.MapFrom(src => src.BookedWithAppointments))
-                .ReverseMap();
+            CreateMap<RegisterDto, AppUser>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Username))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.Age))
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.SecurityStamp, opt => opt.Ignore());
+            CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();
 
             CreateMap<Speciality, SpecialityDto>().ReverseMap();
+
             CreateMap<Appointment, ClinicAppointmentDto>().ReverseMap();
 
             CreateMap<Service, ServiceDto>().ReverseMap();
@@ -48,43 +55,39 @@ namespace API.Helpers
                 .ForMember(dest => dest.InvoiceDoctorService, opt => opt.MapFrom(src => src.InvoiceDoctorServices))
                 .ForMember(dest => dest.CustomItems, opt => opt.MapFrom(src => src.CustomItems))
                 .ReverseMap();
-
             CreateMap<InvoiceDto, Invoice>()
                 .ForMember(dest => dest.InvoiceDoctorService, opt => opt.MapFrom(src => src.InvoiceDoctorServices))
                 .ForMember(dest => dest.CustomItems, opt => opt.MapFrom(src => src.CustomItems))
                 .ForMember(dest => dest.Appointment, opt => opt.MapFrom(src => src.Appointment))
                 .ForMember(dest => dest.InvoiceMedicines, opt => opt.MapFrom(src => src.InvoiceMedicines))
+                .ForPath(dest => dest.Appointment.Doctor, opt => opt.MapFrom(src => src.Doctor))
+                .ForPath(dest => dest.Appointment.Patient, opt => opt.MapFrom(src => src.Patient))
                 .ReverseMap();
-
-            CreateMap<DoctorServiceDto, DoctorService>().ReverseMap();
-            CreateMap<MedicineDto, Medicine>().ReverseMap();
-            CreateMap<DoctorWorkingHoursDto, DoctorWorkingHours>().ReverseMap();
             CreateMap<InventoryItemDto, InventoryItem>().ReverseMap();
             CreateMap<SupplyOrderDto, SupplyOrder>().ReverseMap();
             CreateMap<SellOrderDto, SellOrder>().ReverseMap();
             CreateMap<InvoiceMedicineDto, InvoiceMedicine>()
             .ForMember(dest => dest.Medicine, opt => opt.MapFrom(src => src.Medicine))
             .ReverseMap();
-            
-            
+            CreateMap<DoctorServiceDto, DoctorService>().ReverseMap();
+            CreateMap<MedicineDto, Medicine>().ReverseMap();
+
             CreateMap<Appointment, AppointmentDto>()
             .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
             .ForMember(dest => dest.Patient, opt => opt.MapFrom(src => src.Patient))
             .ReverseMap();
 
             CreateMap<Clinic, ClinicDto>()
-            .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
+            .ForMember(dest => dest.ClinicDoctors, opt => opt.MapFrom(src => src.ClinicDoctors))
             .ReverseMap();
-            CreateMap<Clinic, CreateClinicDto>().ReverseMap();
+            CreateMap<Clinic, CreateUpdateClinicDto>()
+            .ForMember(dest => dest.ClinicDoctors, opt => opt.MapFrom(src => src.ClinicDoctors))
+            .ReverseMap();
+            CreateMap<ClinicDoctor, ClinicDoctorDto>()
+                .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
+                .ReverseMap();
+            CreateMap<ClinicDoctor, CreateUpdateClinicDoctorDto>().ReverseMap();
             CreateMap<ImageDto, Image>().ReverseMap();
-            CreateMap<RegisterDto, AppUser>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Username))
-                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
-                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.Age))
-                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
-                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
-                .ForMember(dest => dest.SecurityStamp, opt => opt.Ignore()); // Assuming SecurityStamp should be ignored during mapping.
         }
 
     }
