@@ -24,7 +24,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options
-    .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    .UseNpgsql(builder.Configuration.GetConnectionString("RendezVousConnection")
+    )
     .EnableSensitiveDataLogging());
 builder.Services.AddIdentityCore<AppUser>(options =>
 {

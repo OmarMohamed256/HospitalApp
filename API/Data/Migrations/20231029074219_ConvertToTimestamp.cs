@@ -5,7 +5,7 @@
 namespace HospitalApp.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedDoctorWorkingHoursTable : Migration
+    public partial class ConvertToTimestamp : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

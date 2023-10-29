@@ -2,7 +2,6 @@
 
 using Hospital.Data;
 using HospitalApp.Constants;
-using HospitalApp.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webapi.Entities;
@@ -30,10 +29,10 @@ namespace webapi.Data
             // Seed Roles
             var roles = new List<AppRole>
             {
-                new AppRole{Name=Roles.Patient},
-                new AppRole{Name=Roles.Admin},
-                new AppRole{Name=Roles.Doctor},
-                new AppRole{Name=Roles.Receptionist}
+                new() {Name=Roles.Patient},
+                new() {Name=Roles.Admin},
+                new() {Name=Roles.Doctor},
+                new() {Name=Roles.Receptionist}
             };
 
             foreach (var role in roles)

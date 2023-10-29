@@ -3,6 +3,7 @@ using HospitalApp.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using webapi.Entities;
 
 namespace Hospital.Data
@@ -36,7 +37,8 @@ namespace Hospital.Data
         {
             base.OnModelCreating(modelBuilder);
             ConfigureDecimalProperties(modelBuilder);
-
+            DateTimeToPostgresSql(modelBuilder);
+            
             modelBuilder.Entity<AppUser>()
                 .HasMany(ur => ur.UserRoles)
                 .WithOne(u => u.User)
@@ -191,11 +193,18 @@ namespace Hospital.Data
                 .HasOne(am => am.Medicine)
                 .WithMany(m => m.InvoiceMedicines)
                 .HasForeignKey(am => am.MedicineId);
-                
+
             modelBuilder.Entity<Image>()
                 .HasOne(i => i.User)
                 .WithMany(u => u.Images)
                 .HasForeignKey(i => i.UserId);
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                // Use the static method ToSnakeCase defined below
+                var tableName = ToSnakeCase(entityType.GetTableName());
+                modelBuilder.Entity(entityType.ClrType).ToTable(tableName);
+            }
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -229,5 +238,25 @@ namespace Hospital.Data
                 }
             }
         }
+        private static void DateTimeToPostgresSql(ModelBuilder modelBuilder)
+        {
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        property.SetValueConverter(new ValueConverter<DateTime, DateTime>(
+                            v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                            v => DateTime.SpecifyKind(v, DateTimeKind.Utc)));
+                    }
+                }
+            }
+        }
+        private static string ToSnakeCase(string str)
+        {
+            return string.Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString())).ToLower();
+        }
     }
+
 }

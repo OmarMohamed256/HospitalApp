@@ -1,5 +1,4 @@
 using API.Helpers;
-using API.Models.Entities;
 using API.Repositories.Interfaces;
 using Hospital.Data;
 using HospitalApp.Models.Entities;
@@ -39,7 +38,7 @@ namespace API.Repositories.Implementations
                 query = query.Where(u => u.AppointmentSpecialityId == appointmentParams.SpecialityId);
 
             if (appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
-                query = query.Where(a => EF.Functions.DateDiffDay(a.DateOfVisit, appointmentParams.AppointmentDateOfVisit) == 0);
+                query = query.Where(a => a.DateOfVisit.Date == appointmentParams.AppointmentDateOfVisit);
 
             if (!string.IsNullOrEmpty(appointmentParams.Type)) query = query.Where(u => u.Type == appointmentParams.Type);
 
@@ -67,7 +66,7 @@ namespace API.Repositories.Implementations
                 query = query.Where(u => u.AppointmentSpecialityId == appointmentParams.SpecialityId);
 
             if (appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
-                query = query.Where(a => EF.Functions.DateDiffDay(a.DateOfVisit, appointmentParams.AppointmentDateOfVisit) == 0);
+                query = query.Where(a => a.DateOfVisit.Date == appointmentParams.AppointmentDateOfVisit);
 
             if (!string.IsNullOrEmpty(appointmentParams.Type)) query = query.Where(u => u.Type == appointmentParams.Type);
 
@@ -163,7 +162,7 @@ namespace API.Repositories.Implementations
                 query = query.Where(u => u.AppointmentSpecialityId == appointmentParams.SpecialityId);
 
             if (appointmentParams.AppointmentDateOfVisit != DateTime.MinValue)
-                query = query.Where(a => EF.Functions.DateDiffDay(a.DateOfVisit, appointmentParams.AppointmentDateOfVisit) == 0);
+                query = query.Where(a => a.DateOfVisit.Date == appointmentParams.AppointmentDateOfVisit);
 
             if (!string.IsNullOrEmpty(appointmentParams.Type)) query = query.Where(u => u.Type == appointmentParams.Type);
 
