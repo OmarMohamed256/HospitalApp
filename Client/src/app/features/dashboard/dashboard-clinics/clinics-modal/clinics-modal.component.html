@@ -11,7 +11,7 @@
     <button [cModalToggle]="clinicModal.id" cButton color="secondary">
       Close
     </button>
-    <button cButton (click)="createUpdateClinic()" color="primary">Save changes</button>
+    <button [disabled]="!createUpdateClinicForm.valid" cButton (click)="createUpdateClinic()" color="primary">Save changes</button>
   </c-modal-footer>
 </c-modal>
 
@@ -24,27 +24,15 @@
           <app-text-input icon="cilUser" formControlName="clinicNumber" [label]='"Clinic Number"'></app-text-input>
         </div>
       </div>
-      <div class="col">
-        <div class="mb-3">
-          <label cLabel>Speciality</label>
-          <select name="clinicSpecialityId" aria-label="clinicSpecialityId" cSelect formControlName="clinicSpecialityId" (change)="resetDoctorList()">
-            <option [value]="0" disabled selected>Select speciality</option>
-            <option *ngFor="let service of specialityList" [value]="service.id">
-              {{service.name}}
-            </option>
-          </select>
+        <div class="col">
+          <div class="mb-3">
+            <label cLabel>Doctors</label>
+            <ng-select [items]="doctorList" (search)="searchDoctors($event)" [virtualScroll]="true" [compareWith]="compareFn"
+            [bindLabel]="'fullName'" [bindValue]="'id'"[multiple]="true" [(ngModel)]="selectedDoctor" [ngModelOptions]="{standalone: true}"
+            (change)="onDoctorSelect($event)">
+          </ng-select>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col" *ngIf="createUpdateClinicForm.get('clinicSpecialityId')?.value != ''">
-        <div class="mb-3">
-          <label cLabel>Doctor</label>
-          <ng-select [items]="doctorList" (search)="searchDoctors($event)" [virtualScroll]="true"
-          [bindLabel]="'fullName'" [bindValue]="'id'"[multiple]="false" formControlName="doctorId">
-        </ng-select>
-        </div>
-      </div>
     </div>
   </form>
 </ng-template>

@@ -1,7 +1,7 @@
-import { ClinicAppointment } from "./clinicAppointments";
+import { DoctorInClinic } from "./doctorInClinic";
 
 export interface ClinicDoctor {
-    id:               number;
-    fullName:       string;
-    appointments?: ClinicAppointment[];
+    doctorId:       number;
+    clinicId:       number;
+    doctor?:        DoctorInClinic;
 }

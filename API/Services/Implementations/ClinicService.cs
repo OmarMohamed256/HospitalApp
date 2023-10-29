@@ -1,3 +1,4 @@
+using API.Helpers;
 using API.Models.DTOS;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
@@ -37,16 +38,22 @@ namespace API.Services.Implementations
             if (!await _clinicRepository.SaveAllAsync()) throw new Exception("Can not delete clinic");
         }
 
-        public async Task<ICollection<ClinicDto>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync()
+        public async Task<PagedList<ClinicDto>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync(ClinicParams clinicParams)
         {
-            ICollection<Clinic> clinics = await _clinicRepository.GetClinicsWithFirstTwoUpcomingAppointmentsAsync();
-            return _mapper.Map<ICollection<ClinicDto>>(clinics);
+            PagedList<Clinic> clinics = await _clinicRepository.GetClinicsWithFirstTwoUpcomingAppointmentsAsync(clinicParams);
+            var clinicsDto = _mapper.Map<IEnumerable<ClinicDto>>(clinics);
+            return new PagedList<ClinicDto>(clinicsDto, clinics.TotalCount, clinics.CurrentPage, clinics.PageSize);
         }
-
+        public async Task<PagedList<ClinicDto>> GetClinics(ClinicParams clinicParams)
+        {
+            PagedList<Clinic> clinics = await _clinicRepository.GetClinics(clinicParams);
+            var clinicsDto = _mapper.Map<IEnumerable<ClinicDto>>(clinics);
+            return new PagedList<ClinicDto>(clinicsDto, clinics.TotalCount, clinics.CurrentPage, clinics.PageSize);        }
         public async Task<ClinicDto> GetClinicByIdAsync(int clinicId)
         {
             var clinic = await _clinicRepository.GetClinicById(clinicId) ?? throw new Exception("Clinic not found");
             return _mapper.Map<ClinicDto>(clinic);
         }
+
     }
 }

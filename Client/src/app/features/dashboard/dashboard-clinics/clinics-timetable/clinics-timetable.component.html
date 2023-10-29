@@ -1,8 +1,5 @@
 <c-navbar colorScheme="dark" expand="lg" class="bg-dark mb-3">
   <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
-
-    <input type="date" class="form-control" (change)="filterByDate($event)">
-    <button cButton color="light" (click)="resetFilters()">Reset Filters</button>
   </div>
 </c-navbar>
 
@@ -10,8 +7,7 @@
   <c-col [sm]="4" *ngFor="let clinic of clinics">
     <c-card class="mb-4 scroll">
       <h4 class="card-header text-center">Clinic #: {{clinic.clinicNumber}}</h4>
-      <h6 class="card-header text-center">Doctor Name: {{clinic.doctor?.fullName}}</h6>
-      <c-card-body class="text-center">
+      <!-- <c-card-body class="text-center">
         <ng-container *ngFor="let appointment of clinic.doctor?.appointments">
           <c-alert [color]="getColor(appointment.status)" class="d-flex flex-row justify-content-between">
             <p>Code: {{appointment.id}}</p>
@@ -19,7 +15,7 @@
             <p>{{appointment.status | uppercase}}</p>
           </c-alert>
         </ng-container>
-      </c-card-body>
+      </c-card-body> -->
     </c-card>
   </c-col>
 

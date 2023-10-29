@@ -8,6 +8,7 @@ import { Clinic } from 'src/app/models/ClinicModels/clinic';
 import { ClinicParams } from 'src/app/models/Params/clinicParams';
 import { ClinicService } from 'src/app/core/services/clinic.service';
 import { ClinicsModalComponent } from './clinics-modal/clinics-modal.component';
+import { ClinicDoctor } from 'src/app/models/ClinicModels/clinicDoctor';
 
 @Component({
   selector: 'app-dashboard-clinics',
@@ -19,8 +20,6 @@ export class DashboardClinicsComponent {
   clinicParams: ClinicParams = {
     pageNumber: 1,
     pageSize: 15,
-    includeUpcomingAppointments: false,
-    clinicSpecialityId: null
   }
   modalVisibility: boolean = false;
   specialityList: Speciality[] = [];
@@ -28,73 +27,71 @@ export class DashboardClinicsComponent {
   @ViewChild(ClinicsModalComponent) clinicsModal!: ClinicsModalComponent;
   activePane = 0;
 
-  constructor(private clinicService: ClinicService, private specialityService: SpecialityService, private toastr: ToastrService) {
+  constructor(private clinicService: ClinicService, private toastr: ToastrService) {
   }
+  
   ngOnInit(): void {
     this.getClinics();
-    this.getSpecialities();
   }
+
   getClinics() {
     this.clinicService.getClinics(this.clinicParams).subscribe(response => {
       this.clinics = response.result;
       this.pagination = response.pagination
     })
   }
+
   toggleModal() {
     this.modalVisibility = !this.modalVisibility
   }
-  getSpecialities() {
-    this.specialityService.getSpecialities().subscribe(response => {
-      this.specialityList = response;
-    })
-  }
+
   onTabChange($event: number) {
     this.activePane = $event;
   }
-  resetFiltersAndGetClinics() {
-    this.resetFilters();
-    this.getClinics();
-  }
 
-  resetFilters() {
-    this.clinicParams = this.clinicService.resetParams();
-  }
-  getSpecialityNameById(id: number): string {
-    const speciality = this.specialityList.find(item => item.id === id);
-    return speciality ? speciality.name : '';
-  }
   pageChanged(event: number) {
     this.clinicParams.pageNumber = event;
     this.getClinics();
   }
 
   clinicAddedUpdated(clinic: Clinic) {
-    this.resetFiltersAndGetClinics();
+    this.getClinics();
+  }
+
+  clearFormAndShowModal() {
+    this.clinicsModal.intializeForm();
+    this.clinicsModal.selectedDoctor = {};
+    this.clinicsModal.doctorList = [];
+    this.toggleModal();
   }
 
   setClinicAndShowModal(clinic: Clinic) {
-    this.mapClinicDoctorToUserData(clinic);
     this.mapClinicTocreateUpdateClinicForm(clinic);
     this.toggleModal();
   }
 
-  mapClinicDoctorToUserData(clinic: Clinic) {
-    const newUserData: Partial<UserData> = {
-      id: clinic.doctor?.id.toString(),
-      fullName: clinic.doctor?.fullName,
-    };
-    // Check if doctorList already contains the doctor
-    if (!this.clinicsModal.doctorList.find(doctor => doctor.id === newUserData.id)) {
-      this.clinicsModal.doctorList = [newUserData];
+  mapClinicTocreateUpdateClinicForm(clinic: Clinic) {
+    this.clinicsModal.createUpdateClinicForm.get("id")?.setValue(clinic.id);
+    this.clinicsModal.createUpdateClinicForm.get("clinicNumber")?.setValue(clinic.clinicNumber);
+    if(clinic.clinicDoctors != null) {
+      this.initializeClinicDoctors(clinic.clinicDoctors);
+      this.clinicsModal.doctorList = this.initDoctorListFromDoctorClinic(clinic.clinicDoctors);
+      this.clinicsModal.selectedDoctor = this.initDoctorListFromDoctorClinic(clinic.clinicDoctors);
     }
   }
 
-  mapClinicTocreateUpdateClinicForm(clinic: Clinic) {
-    this.clinicsModal.createUpdateClinicForm.get("id")?.setValue(clinic.id);
-    const doctorId = clinic.doctorId ? clinic.doctorId.toString() : "0";
-    this.clinicsModal.createUpdateClinicForm.get("doctorId")?.setValue(doctorId);
-    this.clinicsModal.createUpdateClinicForm.get("clinicNumber")?.setValue(clinic.clinicNumber);
-    this.clinicsModal.createUpdateClinicForm.get("clinicSpecialityId")?.setValue(clinic.clinicSpecialityId);
+  initializeClinicDoctors(clinicDoctors: ClinicDoctor[]) {
+    const doctorClincs = clinicDoctors.map(clinicDoctor => ({ id: clinicDoctor.doctorId, clinicId: clinicDoctor.clinicId }));
+    this.clinicsModal.updateClinicDoctor(doctorClincs);
+  }
+
+  initDoctorListFromDoctorClinic(doctorClincs: any) {
+    return doctorClincs.map((item: any) => {
+      return {
+        id: item.doctorId,
+        fullName: item.doctor.fullName
+      }
+    })
   }
   
   deleteClinic(clinicId: number, event: Event) {

@@ -1,6 +1,5 @@
 using API.Helpers;
 using API.Models.DTOS;
-using API.Models.Entities;
 
 namespace API.Services.Interfaces
 {
@@ -8,7 +7,8 @@ namespace API.Services.Interfaces
     {
         Task<ClinicDto> CreateUpdateClinic(CreateUpdateClinicDto clinic);
         Task<ClinicDto> GetClinicByIdAsync(int clinicId);
-        Task<ICollection<ClinicDto>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync();
+        Task<PagedList<ClinicDto>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync(ClinicParams clinicParams);
+        Task<PagedList<ClinicDto>> GetClinics(ClinicParams clinicParams);
         Task DeleteClinic(int clinicId);
     }
 }

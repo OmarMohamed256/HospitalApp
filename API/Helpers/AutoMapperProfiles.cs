@@ -32,8 +32,6 @@ namespace API.Helpers
 
             CreateMap<Speciality, SpecialityDto>().ReverseMap();
 
-            CreateMap<Appointment, ClinicAppointmentDto>().ReverseMap();
-
             CreateMap<Service, ServiceDto>().ReverseMap();
             CreateMap<ServiceInventoryItem, CreateServiceInventoryItemDTO>()
                 .ForMember(dest => dest.QuantityNeeded, opt => opt.MapFrom(src => src.QuantityNeeded))
@@ -87,6 +85,11 @@ namespace API.Helpers
                 .ForMember(dest => dest.Doctor, opt => opt.MapFrom(src => src.Doctor))
                 .ReverseMap();
             CreateMap<ClinicDoctor, CreateUpdateClinicDoctorDto>().ReverseMap();
+            CreateMap<AppUser, DoctorInClinicDto>()
+            .ForMember(dest => dest.BookedWithAppointments, opt => opt.MapFrom(src => src.BookedWithAppointments))
+            .ReverseMap();
+
+
             CreateMap<ImageDto, Image>().ReverseMap();
         }
 

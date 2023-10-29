@@ -23,41 +23,25 @@ namespace API.Repositories.Implementations
         {
             _context.Clinics.Remove(clinic);
         }
-
-        // public async Task<PagedList<Clinic>> GetAllClinicDoctorsWithUpComingAppointmentsAsync(ClinicParams clinicParams)
-        // {
-        //     IQueryable<Clinic> query;
-
-        //     if (clinicParams.IncludeUpcomingAppointments)
-        //     {
-        //         query = _context.Clinics
-        //             .Include(c => c.Doctor)
-        //                 .ThenInclude(a => a.BookedWithAppointments
-        //                     .Where(a => a.DateOfVisit > DateTime.Today
-        //                         && (clinicParams.AppointmentDateOfVisit == DateTime.MinValue
-        //                             || EF.Functions.DateDiffDay(a.DateOfVisit, clinicParams.AppointmentDateOfVisit) == 0))
-        //                     .OrderBy(a => a.DateOfVisit))
-        //             .AsQueryable();
-
-        //     }
-        //     else
-        //     {
-        //         query = _context.Clinics
-        //             .Include(c => c.Doctor)
-        //             .AsQueryable();
-        //     }
-        //     return await PagedList<Clinic>.CreateAsync(query, clinicParams.PageNumber, clinicParams.PageSize);
-        // }
-        public async Task<ICollection<Clinic>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync()
+        public async Task<PagedList<Clinic>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync(ClinicParams clinicParams)
         {
-            return await _context.Clinics
+            var query = _context.Clinics
                 .Include(c => c.ClinicDoctors)
                     .ThenInclude(cd => cd.Doctor)
                         .ThenInclude(d => d.BookedWithAppointments
                         .Where(appointment => appointment.DateOfVisit > DateTime.Now)
                         .OrderBy(appointment => appointment.DateOfVisit)
                         .Take(2))
-                .ToListAsync();
+                .AsQueryable();
+            return await PagedList<Clinic>.CreateAsync(query, clinicParams.PageNumber, clinicParams.PageSize);
+        }
+        public async Task<PagedList<Clinic>> GetClinics(ClinicParams clinicParams)
+        {
+            var query = _context.Clinics
+            .Include(c => c.ClinicDoctors)
+            .ThenInclude(cd => cd.Doctor)
+            .AsQueryable();
+            return await PagedList<Clinic>.CreateAsync(query, clinicParams.PageNumber, clinicParams.PageSize);
         }
 
         public async Task<Clinic> GetClinicById(int clinicId)
@@ -77,5 +61,6 @@ namespace API.Repositories.Implementations
         {
             _context.Clinics.Update(clinic);
         }
+
     }
 }

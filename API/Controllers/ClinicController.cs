@@ -16,12 +16,21 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ICollection<ClinicDto>>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync()
+        public async Task<ActionResult<ICollection<ClinicDto>>> GetClinics
+        ([FromQuery] ClinicParams clinicParams)
         {
-            var clinics = await _clinicService.GetClinicsWithFirstTwoUpcomingAppointmentsAsync();
+            var clinics = await _clinicService.GetClinics(clinicParams);
+            Response.AddPaginationHeader(clinics.CurrentPage, clinics.PageSize, clinics.TotalCount, clinics.TotalPages);
             return Ok(clinics);
         }
-
+        [HttpGet("GetClinicsWithFirstTwoUpcomingAppointments")]
+        public async Task<ActionResult<ICollection<ClinicDto>>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync
+        ([FromQuery] ClinicParams clinicParams)
+        {
+            var clinics = await _clinicService.GetClinicsWithFirstTwoUpcomingAppointmentsAsync(clinicParams);
+            Response.AddPaginationHeader(clinics.CurrentPage, clinics.PageSize, clinics.TotalCount, clinics.TotalPages);
+            return Ok(clinics);
+        }
         [HttpPost]
         public async Task<ActionResult<CreateUpdateClinicDto>> CreateClinicAsync(CreateUpdateClinicDto clinic)
         {

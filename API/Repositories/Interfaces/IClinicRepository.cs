@@ -9,8 +9,8 @@ namespace API.Repositories.Interfaces
         void UpdateClinic(Clinic clinic);
         void DeleteClinic(Clinic clinic);
         Task <Clinic> GetClinicById(int clinicId);
-        // Task <PagedList<Clinic>> GetAllClinicsWithUpComingAppointmentsAsync(ClinicParams clinicParams);
-        Task <ICollection<Clinic>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync();
+        Task <PagedList<Clinic>> GetClinicsWithFirstTwoUpcomingAppointmentsAsync(ClinicParams clinicParams);
+        Task <PagedList<Clinic>> GetClinics(ClinicParams clinicParams);
         Task<bool> SaveAllAsync();
     }
 }

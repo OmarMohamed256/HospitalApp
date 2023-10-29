@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ROLES } from 'src/app/constants/roles';
 import { ClinicService } from 'src/app/core/services/clinic.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -38,23 +38,21 @@ export class ClinicsModalComponent implements OnInit {
     this.createUpdateClinicForm = this.fb.group({
       id: [0, Validators.required],
       clinicNumber: ['', Validators.required],
-      clinicSpecialityId: [0, Validators.required],
-      doctorId: [0],
+      clinicDoctors: this.fb.array([]),
     });
   }
   modelToggeled(e: any) {
     this.visible = e;
     this.visibleChange.emit(this.visible);
   }
-  resetDoctorList() {
-    this.doctorList = [];
-    this.createUpdateClinicForm.get("doctorId")?.setValue(0);
 
+  compareFn(item1: any, item2: any): boolean {
+    return item1 && item2 ? item1.id === item2.id : item1 === item2;
   }
+
   searchDoctors(event: any) {
     if (event.term.trim().length > 2) {
       this.doctorParams.searchTerm = event.term;
-      this.doctorParams.doctorSpecialityId = this.createUpdateClinicForm.get('clinicSpecialityId')?.value;
       this.userService.getUserData(this.doctorParams).subscribe(response => {
         this.doctorList = response.result;
       });
@@ -62,12 +60,10 @@ export class ClinicsModalComponent implements OnInit {
   }
 
   createUpdateClinic() {
-    if (this.createUpdateClinicForm.valid) {
-      if (this.createUpdateClinicForm.get("id")?.value == 0) {
-        this.createClinic();
-      } else {
-        this.updateClinic();
-      }
+    if (this.createUpdateClinicForm.get("id")?.value == 0) {
+      this.createClinic();
+    } else {
+      this.updateClinic();
     }
   }
 
@@ -84,5 +80,18 @@ export class ClinicsModalComponent implements OnInit {
       this.modelToggeled(false);
     })
   }
+  onDoctorSelect(event: Event) {
+    this.updateClinicDoctor(event);
+  }
 
+  updateClinicDoctor(items: any) {
+    const selectedDoctors = this.createUpdateClinicForm.get('clinicDoctors') as FormArray;
+    selectedDoctors.clear();
+    items.forEach((item: any) => {
+      selectedDoctors.push(this.fb.group({
+        clinicId: [this.createUpdateClinicForm.get('id')?.value],
+        doctorId: [item.id],
+      }));
+    });
+  }
 }

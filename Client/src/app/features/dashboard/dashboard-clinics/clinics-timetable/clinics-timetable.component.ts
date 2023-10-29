@@ -15,8 +15,6 @@ export class ClinicsTimetableComponent {
   clinicParams: ClinicParams = {
     pageNumber: 1,
     pageSize: 6,
-    includeUpcomingAppointments: true,
-    clinicSpecialityId: null
   }
   pagination: Pagination | null = null;
 
@@ -29,26 +27,27 @@ export class ClinicsTimetableComponent {
 
     // Subscribe to the appointmentFinalized event
     this.signalr.appointmentFinalized.subscribe((response) => {
-      this.updateRoomAppointmentStatus(response.appointmentId, response.status);
+      // this.updateRoomAppointmentStatus(response.appointmentId, response.status);
     });
   }
 
-  updateRoomAppointmentStatus(appointmentId: number, status: string) {
-    for (const clinic of this.clinics) {
-      if (clinic.doctor && clinic.doctor.appointments) {
-        const appointmentToUpdate = clinic.doctor.appointments.find(appointment => appointment.id === appointmentId);
-        if (appointmentToUpdate) {
-          appointmentToUpdate.status = status;
-          return; // Assuming each appointment has a unique ID
-        }
-      }
-    }
-  }
+  // updateRoomAppointmentStatus(appointmentId: number, status: string) {
+  //   for (const clinic of this.clinics) {
+  //     if (clinic.doctor && clinic.doctor.appointments) {
+  //       const appointmentToUpdate = clinic.doctor.appointments.find(appointment => appointment.id === appointmentId);
+  //       if (appointmentToUpdate) {
+  //         appointmentToUpdate.status = status;
+  //         return; // Assuming each appointment has a unique ID
+  //       }
+  //     }
+  //   }
+  // }
 
   getClinics() {
-    this.clinicService.getClinics(this.clinicParams).subscribe(response => {
+    this.clinicService.getClinicsWithFirstTwoUpcomingAppointments(this.clinicParams).subscribe(response => {
       this.clinics = response.result;
       this.pagination = response.pagination
+      console.log(response)
     })
   }
 
@@ -59,17 +58,6 @@ export class ClinicsTimetableComponent {
   getColor(status: string) {
     if (status == 'finalized') return 'dark';
     return 'primary';
-  }
-
-  filterByDate(event: any) {
-    this.clinicParams.appointmentDateOfVisit = event.target.value;
-    this.getClinics();
-  }
-
-  resetFilters() {
-    this.clinicParams = this.clinicService.resetParams();
-    this.clinicParams.includeUpcomingAppointments = true;
-    this.getClinics();
   }
   pageChanged(event: number) {
     this.clinicParams.pageNumber = event;

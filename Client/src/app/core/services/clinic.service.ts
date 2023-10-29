@@ -14,9 +14,6 @@ export class ClinicService {
   clinicParams: ClinicParams = {
     pageNumber: 1,
     pageSize: 15,
-    includeUpcomingAppointments: false,
-    appointmentDateOfVisit: undefined,
-    clinicSpecialityId: null
   };
   clinicCache = new Map();
 
@@ -28,11 +25,6 @@ export class ClinicService {
       return of(response);
     }
     let params = getPaginationHeaders(clinicParams.pageNumber, clinicParams.pageSize);
-    params = params.append('includeUpcomingAppointments', clinicParams.includeUpcomingAppointments);
-    if(clinicParams.appointmentDateOfVisit)
-      params = params.append('appointmentDateOfVisit', clinicParams.appointmentDateOfVisit);
-    if(clinicParams.clinicSpecialityId)
-      params = params.append('clinicSpecialityId', clinicParams.clinicSpecialityId);
     return getPaginatedResult<Clinic[]>(this.baseUrl + 'clinic/', params, this.http)
       .pipe(map(response => {
         this.clinicCache.set(Object.values(clinicParams).join("-"), response);
@@ -40,21 +32,54 @@ export class ClinicService {
       }));
   }
 
-  resetParams() {
-    this.clinicParams = new ClinicParams();
-    this.clinicCache.clear();
-    return this.clinicParams;
+  getClinicsWithFirstTwoUpcomingAppointments(clinicParams: ClinicParams) {
+    var response = this.clinicCache.get(Object.values(clinicParams).join("-"));
+    if (response) {
+      return of(response);
+    }
+    let params = getPaginationHeaders(clinicParams.pageNumber, clinicParams.pageSize);
+    return getPaginatedResult<Clinic[]>(this.baseUrl + 'clinic/getClinicsWithFirstTwoUpcomingAppointments/', params, this.http)
+      .pipe(map(response => {
+        this.clinicCache.set(Object.values(clinicParams).join("-"), response);
+        return response;
+      }));
   }
 
   createClinic(clinic: Clinic) {
-    return this.http.post<Clinic>(this.baseUrl + 'clinic', clinic);
+    return this.http.post<Clinic>(this.baseUrl + 'clinic', clinic).pipe(
+      map(response => {
+        // After creating a clinic, we should invalidate the cache since we don't know the exact page where it will appear (especially if sorted).
+        this.invalidateClinicCache();
+        return response;
+      })
+    );
   }
   
   updateClinic(clinic: Clinic) {
-    return this.http.put<Clinic>(this.baseUrl + 'clinic', clinic);
+    return this.http.put<Clinic>(this.baseUrl + 'clinic', clinic).pipe(
+      map(response => {
+        // After updating a clinic, it's safe to invalidate the cache to reflect the changes (as the clinic might shift pages).
+        this.invalidateClinicCache();
+        return response;
+      })
+    );
   }
-
+  
   deleteClinic(clinicId: number) {
-    return this.http.delete(this.baseUrl + 'clinic/' + clinicId);
+    return this.http.delete(this.baseUrl + 'clinic/' + clinicId).pipe(
+      map(response => {
+        // After deleting, the clinic is removed, potentially affecting the listing order on all pages.
+        this.invalidateClinicCache();
+        return response;
+      })
+    );
   }
+  
+  // Method to invalidate the entire clinic cache.
+  private invalidateClinicCache() {
+    // Since the structure is based on pageNumber and pageSize, and any new addition, update or deletion can alter the pages,
+    // it's safest to clear the entire cache.
+    this.clinicCache.clear();
+  }
+  
 }
