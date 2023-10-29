@@ -107,5 +107,12 @@ namespace API.Services.Implementations
             var appointmentsDto = _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
             return new PagedList<AppointmentDto>(appointmentsDto, appointments.TotalCount, appointments.CurrentPage, appointments.PageSize);
         }
+
+        public async Task<ICollection<AppointmentDto>> GetFirstTwoUpcomingAppointmentsForDoctorById(int doctorId)
+        {
+            ICollection<Appointment> appointments = 
+                await _appointmentRepository.GetFirstTwoUpcomingAppointmentsForDoctorById(doctorId);
+            return _mapper.Map<ICollection<AppointmentDto>>(appointments);
+        }
     }
 }

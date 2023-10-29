@@ -1,3 +1,4 @@
+using API.Constants;
 using API.Helpers;
 using API.Repositories.Interfaces;
 using Hospital.Data;
@@ -88,7 +89,7 @@ namespace API.Repositories.Implementations
         {
             var upcomingDates = await _context.Appointments
                 .AsNoTracking()
-                .Where(a => a.DoctorId == doctorId && a.DateOfVisit >= DateTime.Now)
+                .Where(a => a.DoctorId == doctorId && a.DateOfVisit >= DateTime.UtcNow)
                 .Select(a => a.DateOfVisit) // Selecting only DateOfVisit
                 .ToListAsync();
             return upcomingDates;
@@ -178,6 +179,15 @@ namespace API.Repositories.Implementations
             };
 
             return await PagedList<Appointment>.CreateAsync(query, appointmentParams.PageNumber, appointmentParams.PageSize);
+        }
+
+        public async Task<ICollection<Appointment>> GetFirstTwoUpcomingAppointmentsForDoctorById(int doctorId)
+        {
+            return await _context.Appointments
+                .Where(a => a.DoctorId == doctorId && a.DateOfVisit > DateTime.UtcNow && a.Status != AppointmentStatus.Invoiced)
+                .OrderBy(a => a.DateOfVisit)
+                .Take(2)
+                .ToListAsync();
         }
     }
 }

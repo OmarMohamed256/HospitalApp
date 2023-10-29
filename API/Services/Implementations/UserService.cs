@@ -94,7 +94,7 @@ namespace API.Services.Implementations
                     UserId = imageUploadDto.UserId,
                     Category = imageUploadDto.Category,
                     ImageDate = imageUploadDto.ImageDate,
-                    DateCreated = DateTime.Now,
+                    DateCreated = DateTime.UtcNow,
                     Organ = imageUploadDto.Organ,
                     Type = imageUploadDto.Type,
                 };

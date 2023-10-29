@@ -106,6 +106,10 @@ export class AppointmentService {
     return this.http.get<Date[]>(this.baseUrl + 'appointment/getUpcomingDoctorAppointmentDates/' + doctorId);
   }
 
+  getFirstTwoUpcomingAppointmentsForDoctorById(doctorId: number) {
+    return this.http.get<Appointment[]>(this.baseUrl + 'appointment/getFirstTwoUpcomingAppointmentsForDoctorById/' + doctorId);
+  }
+
   createAppointment(appointment: Appointment) {
     return this.http.post<Appointment>(this.baseUrl + 'appointment', appointment)
   }

@@ -95,7 +95,7 @@ namespace API.Services.Implementations
                 invoice.PaymentMethod = invoiceDto.PaymentMethod;
                 invoice.TotalPaid = invoiceDto.TotalPaid;
                 invoice.TotalDue = appointmentTypePrice;
-                invoice.FinalizationDate = DateTime.Now;
+                invoice.FinalizationDate = DateTime.UtcNow;
                 invoice.InvoiceMedicines = _mapper.Map<ICollection<InvoiceMedicine>>(invoiceDto.InvoiceMedicines);
                 // 2- Create invoice custom items 
                 if (invoiceDto.CustomItems != null && invoiceDto.CustomItems.Any())
@@ -181,7 +181,7 @@ namespace API.Services.Implementations
                 PaymentMethod = "cash",
                 TotalPaid = 0,
                 TotalDue = appointmentTypePrice,
-                FinalizationDate = DateTime.Now,
+                FinalizationDate = DateTime.UtcNow,
                 AppointmentTypePrice = appointmentTypePrice,
                 InvoiceDoctorService = new List<InvoiceDoctorService>(),
                 InvoiceMedicines = _mapper.Map<ICollection<InvoiceMedicine>>(invoiceDto.InvoiceMedicines),

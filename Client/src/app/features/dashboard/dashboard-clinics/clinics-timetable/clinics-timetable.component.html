@@ -1,24 +1,20 @@
-<c-navbar colorScheme="dark" expand="lg" class="bg-dark mb-3">
-  <div navbar class="d-flex flex-column gap-2 flex-lg-row justify-content-between w-100 px-5">
-  </div>
-</c-navbar>
-
 <c-row>
   <c-col [sm]="4" *ngFor="let clinic of clinics">
     <c-card class="mb-4 scroll">
       <h4 class="card-header text-center">Clinic #: {{clinic.clinicNumber}}</h4>
-      <!-- <c-card-body class="text-center">
-        <ng-container *ngFor="let appointment of clinic.doctor?.appointments">
-          <c-alert [color]="getColor(appointment.status)" class="d-flex flex-row justify-content-between">
-            <p>Code: {{appointment.id}}</p>
-            <p>{{appointment.dateOfVisit | date: 'short'}}</p>
-            <p>{{appointment.status | uppercase}}</p>
-          </c-alert>
+      <c-card-body class="text-center">
+        <ng-container *ngFor="let clinicDoctor of clinic.clinicDoctors">
+          <ng-container *ngFor="let appointment of clinicDoctor.doctor?.bookedWithAppointments">
+            <c-alert [color]="getColor(appointment.status!)" class="d-flex flex-row justify-content-between">
+              <p>Code: {{appointment.id}}</p>
+              <p>{{appointment.dateOfVisit | date: 'short'}}</p>
+              <p>{{appointment.status | uppercase}}</p>
+            </c-alert>
+          </ng-container>
         </ng-container>
-      </c-card-body> -->
+      </c-card-body>
     </c-card>
   </c-col>
-
 </c-row>
 <div class="d-flex justify-content-center" *ngIf="pagination">
   <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"

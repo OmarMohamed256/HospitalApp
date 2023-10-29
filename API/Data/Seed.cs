@@ -14,7 +14,7 @@ namespace webapi.Data
         {
             // var appointment = new Appointment{
             //     AppointmentSpecialityId = 1,
-            //     DateOfVisit = DateTime.Now.AddDays(3),
+            //     DateOfVisit = DateTime.UtcNow.AddDays(3),
             //     DoctorId = 2,
             //     PatientId = 3,
             //     Type = "revisit",

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { ClinicParams } from 'src/app/models/Params/clinicParams';
 import { environment } from 'src/environments/environment.development';
 import { HttpClient } from '@angular/common/http';
-import { map, of } from 'rxjs';
+import { BehaviorSubject, map, of } from 'rxjs';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { Clinic } from 'src/app/models/ClinicModels/clinic';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,10 @@ export class ClinicService {
     pageSize: 15,
   };
   clinicCache = new Map();
+  private appointmentStatusUpdated = new BehaviorSubject<{appointmentId: number, status: string} | null>(null);
+  appointmentStatusUpdated$ = this.appointmentStatusUpdated.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private toastr: ToastrService) { }
 
   getClinics(clinicParams: ClinicParams) {
     var response = this.clinicCache.get(Object.values(clinicParams).join("-"));
@@ -75,11 +78,21 @@ export class ClinicService {
     );
   }
   
-  // Method to invalidate the entire clinic cache.
   private invalidateClinicCache() {
-    // Since the structure is based on pageNumber and pageSize, and any new addition, update or deletion can alter the pages,
-    // it's safest to clear the entire cache.
     this.clinicCache.clear();
   }
-  
+  updateAppointmentStatus(appointmentId: number, status: string) {
+    this.clinicCache.forEach((value: any, key: string) => {
+      value.result.forEach((clinic: Clinic) => {
+        clinic.clinicDoctors?.forEach(clinicDoctor => {
+          const appointmentToUpdate = clinicDoctor.doctor?.bookedWithAppointments?.find(appointment => appointment.id === appointmentId);
+          if (appointmentToUpdate) {
+            appointmentToUpdate.status = status;
+            this.appointmentStatusUpdated.next({appointmentId, status});
+            this.toastr.success("Appointment with id: " + appointmentId + " status changed to " + status)
+          }
+        });
+      });
+    });
+  }
 }

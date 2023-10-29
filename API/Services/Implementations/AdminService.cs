@@ -150,13 +150,13 @@ namespace API.Services.Implementations
                 // lock user
                 var lockUserResult = await _userManager.SetLockoutEnabledAsync(user, true);
                 if (!lockUserResult.Succeeded) throw new Exception("Failed to lock user");
-                var lockDateResult = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddYears(200));
+                var lockDateResult = await _userManager.SetLockoutEndDateAsync(user, DateTime.UtcNow.AddYears(200));
                 if (!lockDateResult.Succeeded) throw new Exception("Failed to set lockout end date");
             }
             else
             {
                 // unlock user
-                var setLockoutEndDateResult = await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.Subtract(TimeSpan.FromMinutes(1)));
+                var setLockoutEndDateResult = await _userManager.SetLockoutEndDateAsync(user, DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
                 if (!setLockoutEndDateResult.Succeeded) throw new Exception("Failed to set lockout end date");
                 var unLockUserResult = await _userManager.SetLockoutEnabledAsync(user, false);
                 if (!unLockUserResult.Succeeded) throw new Exception("Failed to unlock user");

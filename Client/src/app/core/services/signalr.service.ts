@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment.development';
 export class SignalrService {
   private hubConnection!: signalR.HubConnection;
   baseUrl = environment.baseUrl;
-  appointmentFinalized = new EventEmitter<any>();
+  appointmentStatusChanged = new EventEmitter<any>();
 
   constructor(private toastr: ToastrService) { }
   
@@ -26,8 +26,8 @@ export class SignalrService {
   }
 
   public addAppointmentListner = () => {
-    this.hubConnection.on('SendAppointmentFinalized', (response: any) => {
-      this.appointmentFinalized.emit(response);
+    this.hubConnection.on('SendAppointmentStatusChange', (response: any) => {
+      this.appointmentStatusChanged.emit(response);
       this.showAppointmentStatusChanged(response.appointmentId, response.status)
     });
   }

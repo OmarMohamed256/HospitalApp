@@ -54,7 +54,7 @@ namespace API.Repositories.Implementations
             if (!includeExpired)
             {
                 return await _context.SupplyOrders
-                .Where(so => so.ExpiryDate >= DateTime.Now && so.InventoryItemId == inventoryItemId && so.Quantity > 0)
+                .Where(so => so.ExpiryDate >= DateTime.UtcNow && so.InventoryItemId == inventoryItemId && so.Quantity > 0)
                 .OrderBy(so => so.ExpiryDate).ToListAsync();
             }
             return await _context.SupplyOrders

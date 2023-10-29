@@ -209,7 +209,7 @@ namespace Hospital.Data
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
 
             ChangeTracker.DetectChanges();
             foreach (var item in ChangeTracker.Entries()

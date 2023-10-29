@@ -9,8 +9,8 @@ namespace API.Models.Entities
         public int UserId { get; set; }
         public virtual AppUser User { get; set; }
         public string Category { get; set; }
-        public DateTime ImageDate { get; set; } = DateTime.Now;
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime ImageDate { get; set; } = DateTime.UtcNow;
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
         public string? Type { get; set; }
         public string? Organ { get; set; }
 

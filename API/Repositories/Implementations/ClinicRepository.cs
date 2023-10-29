@@ -1,3 +1,4 @@
+using API.Constants;
 using API.Helpers;
 using API.Models.Entities;
 using API.Repositories.Interfaces;
@@ -29,7 +30,7 @@ namespace API.Repositories.Implementations
                 .Include(c => c.ClinicDoctors)
                     .ThenInclude(cd => cd.Doctor)
                         .ThenInclude(d => d.BookedWithAppointments
-                        .Where(appointment => appointment.DateOfVisit > DateTime.Now)
+                        .Where(appointment => appointment.DateOfVisit > DateTime.UtcNow && appointment.Status != AppointmentStatus.Invoiced)
                         .OrderBy(appointment => appointment.DateOfVisit)
                         .Take(2))
                 .AsQueryable();
