@@ -32,7 +32,8 @@ namespace API.Repositories.Implementations
             if (inventoryItemParams.SpecialityId != null)
                 query = query.Where(u => u.InventoryItemSpecialityId == inventoryItemParams.SpecialityId);
 
-            if (!string.IsNullOrEmpty(inventoryItemParams.SearchTerm)) query = query.Where(u => u.Name.Contains(inventoryItemParams.SearchTerm));
+            if (!string.IsNullOrEmpty(inventoryItemParams.SearchTerm)) 
+                query = query.Where(u => u.Name.ToLower().Contains(inventoryItemParams.SearchTerm.ToLower()));
             return await PagedList<InventoryItem>.CreateAsync(query, inventoryItemParams.PageNumber, inventoryItemParams.PageSize);
         }
 

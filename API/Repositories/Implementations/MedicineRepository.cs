@@ -33,7 +33,7 @@ namespace API.Repositories.Implementations
         {
             var query = _context.Medicines.AsQueryable();
             if (!string.IsNullOrEmpty(medicineParams.SearchTerm))
-                query = query.Where(m => m.Name.Contains(medicineParams.SearchTerm));
+                query = query.Where(m => m.Name.ToLower().Contains(medicineParams.SearchTerm.ToLower()));
             return await PagedList<Medicine>.CreateAsync(query, medicineParams.PageNumber, medicineParams.PageSize);
         }
 

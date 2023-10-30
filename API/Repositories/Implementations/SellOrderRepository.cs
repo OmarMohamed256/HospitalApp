@@ -39,8 +39,8 @@ namespace API.Repositories.Implementations
             var query = _context.SellOrders.AsQueryable();
 
             if (!string.IsNullOrEmpty(sellOrderParams.SearchTerm)) query = query
-                .Where(u => u.ItemName.Contains(sellOrderParams.SearchTerm) || u.Note.Contains(sellOrderParams.SearchTerm));
-
+                .Where(u => u.ItemName.ToLower().Contains(sellOrderParams.SearchTerm.ToLower()) || 
+                    u.Note.ToLower().Contains(sellOrderParams.SearchTerm.ToLower()));
             if (sellOrderParams.InventoryItemId != null)
                 query = query.Where(u => u.InventoryItemId == sellOrderParams.InventoryItemId);
 

@@ -43,7 +43,10 @@ namespace API.Repositories.Implementations
                     })
                     .AsQueryable();
 
-            if (!string.IsNullOrEmpty(userParams.SearchTerm)) query = query.Where(u => u.FullName.Contains(userParams.SearchTerm) || u.Email.Contains(userParams.SearchTerm));
+            if (!string.IsNullOrEmpty(userParams.SearchTerm)) query = 
+            query.Where(u => u.FullName.ToLower().Contains(userParams.SearchTerm.ToLower())
+            || u.Email.ToLower().Contains(userParams.SearchTerm.ToLower()));
+
             if (!string.IsNullOrEmpty(userParams.Gender)) query = query.Where(u => u.Gender == userParams.Gender);
             if (userParams.DoctorSpecialityId != null)
                 query = query.Where(u => u.DoctorSpecialityId == userParams.DoctorSpecialityId);

@@ -26,7 +26,8 @@ namespace API.Repositories.Implementations
             var query = _context.SupplyOrders.AsQueryable();
 
             if (!string.IsNullOrEmpty(supplyOrderParams.SearchTerm)) query = query
-                .Where(u => u.ItemName.Contains(supplyOrderParams.SearchTerm) || u.Note.Contains(supplyOrderParams.SearchTerm));
+                .Where(u => u.ItemName.ToLower().Contains(supplyOrderParams.SearchTerm.ToLower())
+                || u.Note.ToLower().Contains(supplyOrderParams.SearchTerm.ToLower()));
 
             if (supplyOrderParams.InventoryItemId != null)
                 query = query.Where(u => u.InventoryItemId == supplyOrderParams.InventoryItemId);

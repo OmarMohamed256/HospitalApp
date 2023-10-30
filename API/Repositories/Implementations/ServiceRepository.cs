@@ -41,7 +41,10 @@ namespace API.Repositories.Implementations
             var query = _context.Services.AsQueryable();
             if (serviceParams.SpecialityId != null)
                 query = query.Where(u => u.ServiceSpecialityId == serviceParams.SpecialityId);
-            if (!string.IsNullOrEmpty(serviceParams.SearchTerm)) query = query.Where(u => u.Name.Contains(serviceParams.SearchTerm));
+            if (!string.IsNullOrEmpty(serviceParams.SearchTerm))     
+                query.Where(u => u.Name.ToLower().Contains(serviceParams.SearchTerm.ToLower()));
+
+                //query = query.Where(u => EF.Functions.ILike(u.Name, serviceParams.SearchTerm));
 
 
             return await PagedList<Service>.CreateAsync(query, serviceParams.PageNumber, serviceParams.PageSize);
