@@ -219,7 +219,6 @@ export class AddAppointmentComponent implements OnInit  {
     const appointment = this.mapFormToAppointment();
     this.appointmentService.createAppointment(appointment).subscribe({
       next: (response) => {
-        this.appointmentService.clearCache();
         this.toastr.success("Appointment Added Successfully");
         this.router.navigateByUrl("/appointments");
       },

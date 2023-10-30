@@ -60,17 +60,12 @@ export class DashboardInventoryComponent implements OnInit {
     this.activePane = $event;
   }
 
-  resetFiltersAndGetIItems() {
-    this.resetFilters();
-    this.getInventoryItems();
-  }
-
   resetFilters() {
     this.inventoryItemParams = this.inventoryService.resetParams();
   }
 
   IItemAddedUpdated(inventoryItem: InventoryItem) {
-    this.resetFiltersAndGetIItems();
+    this.getInventoryItems();
   }
 
   setIItemAndShowModal(inventoryItem: InventoryItem) {
@@ -82,6 +77,7 @@ export class DashboardInventoryComponent implements OnInit {
     this.IInventoryModal.createUpdateInventoryItemForm.get("id")?.setValue(inventoryItem.id);
     this.IInventoryModal.createUpdateInventoryItemForm.get("name")?.setValue(inventoryItem.name);
     this.IInventoryModal.createUpdateInventoryItemForm.get("inventoryItemSpecialityId")?.setValue(inventoryItem.inventoryItemSpecialityId);
+    this.IInventoryModal.createUpdateInventoryItemForm.get('name')?.disable();
     this.IInventoryModal.createUpdateInventoryItemForm.get('inventoryItemSpecialityId')?.disable();
   }
 

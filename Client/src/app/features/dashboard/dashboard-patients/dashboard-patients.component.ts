@@ -5,6 +5,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { Pagination } from 'src/app/models/pagination';
 import { UserData } from 'src/app/models/UserModels/userData';
 import { UserParams } from 'src/app/models/Params/userParams';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-dashboard-patients',
   templateUrl: './dashboard-patients.component.html',
@@ -22,7 +23,7 @@ export class DashboardPatientsComponent implements OnInit {
     roleName: this.roleName
   });
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -57,7 +58,8 @@ export class DashboardPatientsComponent implements OnInit {
   }
 
   handleUserCreated(createdUser: UserData) {
-    this.patients?.push(createdUser);
+    this.getPatients();
+    this.toastr.success("Patient Created Successfully");
   }
 
 }

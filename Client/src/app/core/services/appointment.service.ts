@@ -111,14 +111,29 @@ export class AppointmentService {
   }
 
   createAppointment(appointment: Appointment) {
-    return this.http.post<Appointment>(this.baseUrl + 'appointment', appointment)
+    return this.http.post<Appointment>(this.baseUrl + 'appointment', appointment).pipe(
+      map(response => {
+        this.invalidateAppointmentCache();
+        return response;
+      })
+    );
   }
 
   updateAppointment(appointment: Appointment) {
-    return this.http.put<Appointment>(this.baseUrl + 'appointment', appointment)
+    return this.http.put<Appointment>(this.baseUrl + 'appointment', appointment).pipe(
+      map(response => {
+        this.invalidateAppointmentCache();
+        return response;
+      })
+    );
   }
   deleteAppointment(appointmentId: number) {
-    return this.http.delete(this.baseUrl + 'appointment/' + appointmentId)
+    return this.http.delete(this.baseUrl + 'appointment/' + appointmentId).pipe(
+      map(response => {
+        this.invalidateAppointmentCache();
+        return response;
+      })
+    );
   }
 
   getAppointmentById(appointmentId: string) {
@@ -135,7 +150,7 @@ export class AppointmentService {
     return this.http.get<Medicine[]>(this.baseUrl + 'appointment/getMedicinesByAppointmentId/' + appointmentId);
   }
 
-  clearCache() {
+  invalidateAppointmentCache() {
     this.appointmentCache.clear();
   }
 }

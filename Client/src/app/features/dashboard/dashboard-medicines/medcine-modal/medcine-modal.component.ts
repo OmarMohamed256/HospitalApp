@@ -13,12 +13,12 @@ export class MedcineModalComponent implements OnInit {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() medicineCreated = new EventEmitter<Medicine>();
   createUpdateMedicineForm!: FormGroup;
-
   constructor(private fb: FormBuilder, private medicineService: MedicineService) {
   }
   ngOnInit(): void {
     this.intializeForm();
   }
+
   createUpdateMedicine() {
     if (this.createUpdateMedicineForm.get('id')?.value == 0) {
       this.createMedicine();
@@ -51,5 +51,4 @@ export class MedcineModalComponent implements OnInit {
       name: ['', Validators.required],
     });
   }
-
 }

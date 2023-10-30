@@ -70,8 +70,6 @@ export class DashboardMedicinesComponent implements OnInit {
     event.stopPropagation();
     this.medicineService.deleteMedicine(medicineId).subscribe({
       next: (response) => {
-        this.medicineService.clearCache();
-        this.resetFilters();
       },
       error: (err) => {
         console.error(err);
@@ -81,7 +79,6 @@ export class DashboardMedicinesComponent implements OnInit {
   }
 
   medicineCreated(medicine: Medicine) {
-    this.medicineService.clearCache();
-    this.resetFilters();
+    this.getMedicines();
   }
 }

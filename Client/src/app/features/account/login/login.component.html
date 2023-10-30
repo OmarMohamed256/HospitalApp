@@ -9,9 +9,12 @@
                 <h1>Login</h1>
                 <p class="text-medium-emphasis">Sign In to your account</p>
                 
-                <app-text-input [formControl]='$any(loginForm.controls["username"])' icon="cilUser" label='Username'></app-text-input>
-                <app-text-input [formControl]='$any(loginForm.controls["password"])' icon="cilLockLocked" label='Password' type="password"></app-text-input>
-
+                <div class="mb-3">
+                  <app-text-input formControlName="username" icon="cilUser" label='Username'></app-text-input>
+                </div>
+                <div class="mb-3">
+                  <app-text-input formControlName="password" icon="cilLockLocked" label='Password' type="password"></app-text-input>
+                </div>
                 <div class="row" *ngIf="validationErrors.length > 0">
                   <ul class="text-danger">
                     <li *ngFor="let error of validationErrors">
@@ -25,16 +28,16 @@
                       Login
                     </button>
                   </c-col>
-                  <c-col class="text-right" xs="6">
+                  <!-- <c-col class="text-right" xs="6">
                     <button cButton class="px-0" color="link">
                       Forgot password?
                     </button>
-                  </c-col>
+                  </c-col> -->
                 </c-row>
               </form>
             </c-card-body>
           </c-card>
-          <c-card [ngStyle]="{'width.%': 44}" class="text-white bg-primary py-5">
+          <!-- <c-card [ngStyle]="{'width.%': 44}" class="text-white bg-primary py-5">
             <c-card-body class="text-center">
               <div>
                 <h2>Sign up</h2>
@@ -47,7 +50,7 @@
                 </button>
               </div>
             </c-card-body>
-          </c-card>
+          </c-card> -->
         </c-card-group>
       </c-col>
     </c-row>

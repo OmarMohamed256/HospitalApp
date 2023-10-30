@@ -53,10 +53,6 @@ export class SupplyOrdersComponent  implements OnInit{
   }
 
   supplyOrderAddedUpdated(supplyOrder: SupplyOrder) {
-    this.resetFiltersAndGetSupplyOrders();
-  }
-  resetFiltersAndGetSupplyOrders() {
-    this.resetFilters()
     this.getSupplyOrders()
   }
   setSupplyOrderAndShowModal(supplyOrder: SupplyOrder) {

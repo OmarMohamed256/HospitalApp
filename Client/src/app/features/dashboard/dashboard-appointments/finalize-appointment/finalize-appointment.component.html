@@ -128,7 +128,8 @@
       <div class="col">
         <div class="mb-3">
           <label cLabel>Discount</label>
-          <app-text-input type="number" formControlName="discountPercentage" (change)="changeTotalAfterDiscount($event)"
+          <app-text-input type="number" formControlName="discountPercentage" 
+          (change)="changeTotalAfterDiscount(this.createInvoiceForm.get('discountPercentage')?.value)"
             [label]="'Discount'"></app-text-input>
         </div>
       </div>
@@ -168,7 +169,7 @@
     </div>
     <div class="row mb-3 d-flex justify-content-center">
       <div class="col-6 text-center">
-        <button cButton color="primary" type="submit" [disabled]="!createInvoiceForm.valid">Create Invoice</button>
+        <button cButton color="primary" type="submit" [disabled]="!createInvoiceForm.valid">Finalize Invoice</button>
       </div>
     </div>
   </ng-container>

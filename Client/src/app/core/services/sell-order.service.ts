@@ -41,16 +41,29 @@ export class SellOrderService {
       }));
   }
   createSellOrder(sellOrder: SellOrder) {
-    return this.http.post<SellOrder>(this.baseUrl + 'sellOrder/', sellOrder)
+    return this.http.post<SellOrder>(this.baseUrl + 'sellOrder/', sellOrder).pipe(
+      map(response => {
+        this.invalidateSellOrderCache();
+        return response;
+      })
+    );
   }
   
   updateSellOrder(sellOrder: SellOrder) {
-    return this.http.put<SellOrder>(this.baseUrl + 'sellOrder/', sellOrder)
+    return this.http.put<SellOrder>(this.baseUrl + 'sellOrder/', sellOrder).pipe(
+      map(response => {
+        this.invalidateSellOrderCache();
+        return response;
+      })
+    );
+  }
+
+  invalidateSellOrderCache() {
+    this.sellOrderCache.clear();
   }
   
   resetParams() {
     this.sellOrderParams = new OrderParams();
-    this.sellOrderCache.clear();
     return this.sellOrderParams;
   }
 }

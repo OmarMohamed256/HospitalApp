@@ -71,7 +71,7 @@ export class DashboardDoctorsComponent implements OnInit {
   }
 
   handleUserCreated(createdUser: UserData) {
-    this.doctors?.push(createdUser);
+    this.getDoctors();
     this.toastr.success("Doctor Created Successfully");
   }
 

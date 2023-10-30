@@ -35,20 +35,37 @@ export class MedicineService {
       }))
   }
   createMedicine(medicine: Medicine) {
-    return this.http.post<Medicine>(this.baseUrl + 'medicine', medicine)
+    return this.http.post<Medicine>(this.baseUrl + 'medicine', medicine).pipe(
+      map(response => {
+        this.invalidateMedicineCache();
+        return response;
+      })
+    );
   }
 
   updateMedicine(medicine: Medicine) {
-    return this.http.put<Medicine>(this.baseUrl + 'medicine', medicine)
+    return this.http.put<Medicine>(this.baseUrl + 'medicine', medicine).pipe(
+      map(response => {
+        this.invalidateMedicineCache();
+        return response;
+      })
+    );
   }
+  
   deleteMedicine(medicineId: number) {
-    return this.http.delete(this.baseUrl + 'medicine/' + medicineId)
+    return this.http.delete(this.baseUrl + 'medicine/' + medicineId).pipe(
+      map(response => {
+        this.invalidateMedicineCache();
+        return response;
+      })
+    );
+  }
+
+  private invalidateMedicineCache() {
+    this.medicineCache.clear();
   }
   resetParams() {
     this.medicineParams = new MedicineParams();
     return this.medicineParams;
-  }
-  clearCache() {
-    this.medicineCache.clear();
   }
 }

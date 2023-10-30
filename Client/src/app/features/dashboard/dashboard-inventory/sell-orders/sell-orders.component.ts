@@ -47,10 +47,6 @@ export class SellOrdersComponent implements OnInit{
     this.getSellOrders();
   }
   sellOrderAddedUpdated(sellOrder: SellOrder) {
-    this.resetFiltersAndGetSellOrders();
-  }
-  resetFiltersAndGetSellOrders() {
-    this.resetFilters()
     this.getSellOrders()
   }
   initFormAndToggleModel() {
@@ -63,7 +59,6 @@ export class SellOrdersComponent implements OnInit{
   }
 
   setSellOrderAndShowModal(sellOrder: SellOrder) {
-    console.log(sellOrder)
     this.mapInventoryItemToList(sellOrder);
     this.mapSellOrderTocreateUpdateSellOrderForm(sellOrder);
     this.toggleModal();

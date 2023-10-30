@@ -57,6 +57,7 @@ export class DashboardAppointmentsComponent implements OnInit {
     const speciality = this.specialityList.find(item => item.id === id);
     return speciality ? speciality.name : '';
   }
+
   toggleOrder(orderBy: string) {
     if (this.appointmentParams.orderBy === orderBy) {
       this.appointmentParams.order = (this.appointmentParams.order === 'asc') ? 'desc' : 'asc';
@@ -67,6 +68,7 @@ export class DashboardAppointmentsComponent implements OnInit {
 
     this.getAppointments(); // Assuming you have a function to fetch appointments
   }
+  
   resetFilters() {
     this.appointmentParams = this.appointmentService.resetParams();
     this.getAppointments();

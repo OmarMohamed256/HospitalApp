@@ -42,16 +42,29 @@ export class SupplyOrderService {
   }
 
   createSupplyOrder(supplyOrder: SupplyOrder) {
-    return this.http.post<SupplyOrder>(this.baseUrl + 'supplyOrder/', supplyOrder)
+    return this.http.post<SupplyOrder>(this.baseUrl + 'supplyOrder/', supplyOrder).pipe(
+      map(response => {
+        this.invalidateSupplyOrderCache();
+        return response;
+      })
+    );
   }
   
   updateSupplyOrder(supplyOrder: SupplyOrder) {
-    return this.http.put<SupplyOrder>(this.baseUrl + 'supplyOrder/', supplyOrder)
+    return this.http.put<SupplyOrder>(this.baseUrl + 'supplyOrder/', supplyOrder).pipe(
+      map(response => {
+        this.invalidateSupplyOrderCache();
+        return response;
+      })
+    );
+  }
+
+  private invalidateSupplyOrderCache() {
+    this.supplyOrderCache.clear();
   }
   
   resetParams() {
     this.supplyOrderParams = new OrderParams();
-    this.supplyOrderCache.clear();
     return this.supplyOrderParams;
   }
 }

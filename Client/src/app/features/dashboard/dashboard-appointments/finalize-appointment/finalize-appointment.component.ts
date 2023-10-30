@@ -44,6 +44,7 @@ export class FinalizeAppointmentComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.invoice = data['invoice'];
+      console.log(this.invoice)
       this.appointment = this.invoice?.appointment;
       this.getDoctorServicesByDoctorId();
       this.initializeForm();
@@ -248,82 +249,6 @@ export class FinalizeAppointmentComponent implements OnInit {
     });
   }
 
-  calculateTotals() {
-    this.resetTotals();
-    const selectedServicesFormArray = this.createInvoiceForm.get('invoiceSelectedServices') as FormArray;
-    const selectedCustomItemsFormArray = this.createInvoiceForm.get('customItems') as FormArray;
-    if (selectedServicesFormArray.length == 0 && selectedCustomItemsFormArray.length == 0) {
-      this.validationErrors.push("Please Add Services Or Items To Appointment Before Calculating Totals")
-    }
-    else {
-      this.appendTypePriceToTotal();
-      if (selectedServicesFormArray.length > 0) this.calculateServiceTotals(selectedServicesFormArray);
-      if (selectedCustomItemsFormArray.length > 0) this.calculateCustomItemsTotals(selectedCustomItemsFormArray);
-    }
-  }
-
-  appendTypePriceToTotal() {
-    var price = this.invoice?.appointmentTypePrice;
-    var total = this.createInvoiceForm.get('totalPrice')?.value + price;
-    this.setTotalPrice(total);
-  }
-
-  resetTotals() {
-    this.setTotalPrice(0);
-    this.createInvoiceForm.get('discountPercentage')?.setValue(0);
-    this.createInvoiceForm.get('totalPaid')?.setValue(0);
-  }
-
-  calculateServiceTotals(selectedServicesFormArray: FormArray) {
-    // Calculate the total servicetotalPrice
-    const totalServicetotalPrice = selectedServicesFormArray.controls.reduce((total, control) => {
-      const servicetotalPrice = control.get('servicetotalPrice')?.value;
-      return total + servicetotalPrice;
-    }, 0);
-
-    // Update the totalPrice field
-    var total = this.createInvoiceForm.get('totalPrice')?.value + totalServicetotalPrice;
-    this.setTotalPrice(total);
-  }
-
-  calculateCustomItemsTotals(customItemsFormArray: FormArray) {
-    // Calculate the total customItemstotalPrice
-    const totalCustomItemstotalPrice = customItemsFormArray.controls.reduce((total, control) => {
-      const price = control.get('price')?.value;
-      const units = control.get('units')?.value;
-
-      return total + (price * units);
-    }, 0);
-
-    // Update the totalPrice field
-    var total = this.createInvoiceForm.get('totalPrice')?.value + totalCustomItemstotalPrice;
-    this.setTotalPrice(total);
-  }
-
-  changeTotalAfterDiscount(event: any) {
-    const discountValue = event.target.value;
-    this.setTotalAfterDiscount(discountValue);
-    this.setRemaningTotal(this.createInvoiceForm.get('totalPaid')?.value)
-  }
-
-  setTotalAfterDiscount(discountValue: number) {
-    this.createInvoiceForm.get('totalAfterDiscount')?.setValue(this.createInvoiceForm.get('totalPrice')?.value * (1 - (discountValue / 100)));
-  }
-
-  changeTotalRemaning(event: any) {
-    this.setRemaningTotal(event.target.value);
-  }
-
-  setRemaningTotal(totalPaid: number) {
-    this.createInvoiceForm.get('totalRemaning')?.setValue(this.createInvoiceForm.get('totalAfterDiscount')?.value - totalPaid)
-  }
-
-  setTotalPrice(price: number) {
-    this.createInvoiceForm.get('totalPrice')?.setValue(price);
-    this.createInvoiceForm.get('totalAfterDiscount')?.setValue(price);
-    this.createInvoiceForm.get('totalRemaning')?.setValue(price);
-  }
-
   mapInvoiceFormToCreateInvoice() {
     const createInvoice: CreateInvoice = {
       id: this.invoice?.id,
@@ -368,5 +293,75 @@ export class FinalizeAppointmentComponent implements OnInit {
     return doctorServices;
   }
 
+  // totals calculation
+  resetTotals() {
+    this.setTotalPrice(0);
+    this.createInvoiceForm.get('discountPercentage')?.setValue(this.invoice?.discountPercentage);
+    this.createInvoiceForm.get('totalPaid')?.setValue(this.invoice?.totalPaid);
+  }
+  calculateTotals() {
+    this.resetTotals();
+    const selectedServicesFormArray = this.createInvoiceForm.get('invoiceSelectedServices') as FormArray;
+    const selectedCustomItemsFormArray = this.createInvoiceForm.get('customItems') as FormArray;
+    this.appendTypePriceToTotal();
+    if (selectedServicesFormArray.length > 0) this.calculateServiceTotals(selectedServicesFormArray);
+    if (selectedCustomItemsFormArray.length > 0) this.calculateCustomItemsTotals(selectedCustomItemsFormArray);
+    this.changeTotalAfterDiscount(this.invoice?.discountPercentage!);
+  }
+
+  appendTypePriceToTotal() {
+    var price = this.invoice?.appointmentTypePrice;
+    var total = this.createInvoiceForm.get('totalPrice')?.value + price;
+    this.setTotalPrice(total);
+  }
+
+  calculateServiceTotals(selectedServicesFormArray: FormArray) {
+    // Calculate the total servicetotalPrice
+    const totalServicetotalPrice = selectedServicesFormArray.controls.reduce((total, control) => {
+      const servicetotalPrice = control.get('servicetotalPrice')?.value;
+      return total + servicetotalPrice;
+    }, 0);
+
+    // Update the totalPrice field
+    var total = this.createInvoiceForm.get('totalPrice')?.value + totalServicetotalPrice;
+    this.setTotalPrice(total);
+  }
+
+  calculateCustomItemsTotals(customItemsFormArray: FormArray) {
+    // Calculate the total customItemstotalPrice
+    const totalCustomItemstotalPrice = customItemsFormArray.controls.reduce((total, control) => {
+      const price = control.get('price')?.value;
+      const units = control.get('units')?.value;
+
+      return total + (price * units);
+    }, 0);
+
+    // Update the totalPrice field
+    var total = this.createInvoiceForm.get('totalPrice')?.value + totalCustomItemstotalPrice;
+    this.setTotalPrice(total);
+  }
+
+  changeTotalAfterDiscount(discountValue: number) {
+    this.setTotalAfterDiscount(discountValue);
+    this.setRemaningTotal(this.createInvoiceForm.get('totalPaid')?.value)
+  }
+
+  setTotalAfterDiscount(discountValue: number) {
+    this.createInvoiceForm.get('totalAfterDiscount')?.setValue(this.createInvoiceForm.get('totalPrice')?.value * (1 - (discountValue / 100)));
+  }
+
+  changeTotalRemaning(event: any) {
+    this.setRemaningTotal(event.target.value);
+  }
+
+  setRemaningTotal(totalPaid: number) {
+    this.createInvoiceForm.get('totalRemaning')?.setValue(this.createInvoiceForm.get('totalAfterDiscount')?.value - totalPaid)
+  }
+
+  setTotalPrice(price: number) {
+    this.createInvoiceForm.get('totalPrice')?.setValue(price);
+    this.createInvoiceForm.get('totalAfterDiscount')?.setValue(price);
+    this.createInvoiceForm.get('totalRemaning')?.setValue(price);
+  }
 
 }

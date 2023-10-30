@@ -53,7 +53,7 @@ export class DashboardUsersComponent implements OnInit {
   }
 
   handleUserCreated(createdUser: UserData) {
-    this.users?.push(createdUser);
+    this.getUsers();
   }
 
   toggleLockout(userId: string , event: Event) {

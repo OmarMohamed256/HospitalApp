@@ -89,4 +89,7 @@ export class UserService {
   getUserImages(userId: string) {
     return this.http.get<Image[]>(this.baseUrl + 'user/userImages/' + userId);
   }
+  invalidateUsersCache() {
+    this.memberCache.clear();
+  }
 }
