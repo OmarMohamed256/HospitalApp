@@ -2,10 +2,13 @@ using API.Extenstions;
 using API.Helpers;
 using API.Models.DTOS.InventoryDtos;
 using API.Services.Interfaces;
+using HospitalApp.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize(Policy = Polices.RequireAdminRole)]
     public class SellOrderController : BaseApiController
     {
         private readonly ISellOrderService _sellOrderService;

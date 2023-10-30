@@ -25,6 +25,7 @@ namespace API.Controllers
             return BadRequest("Failed to update user");
         }
         [HttpGet]
+        [Authorize(Policy = Polices.RequireReceptionistRole)]
         [Route("all")]
         public async Task<ActionResult<PagedList<UserInfoDto>>> GetUsers([FromQuery] UserParams userParams)
         {

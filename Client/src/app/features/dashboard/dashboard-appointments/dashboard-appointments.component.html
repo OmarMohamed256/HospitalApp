@@ -58,9 +58,23 @@
       <td>{{appointment.dateCreated | date:'short'}}</td>
       <td>{{appointment.dateOfVisit | date:'short'}}</td>
       <td class="pt-1">
-        <button cButton color="success" class="btn-m" (click)="navigateToAppointment(appointment, $event)">
-          {{ appointment.status === 'Finalized' ? 'View Invoice' : 'Finalize' }}
-        </button>        
+        <button *ngIf="isReceptionist()" cButton color="success" class="btn-m" (click)="navigateToAppointment(appointment, $event)">
+          {{ 
+            appointment.status === 'Invoiced' ? 'View Invoice' 
+            : appointment.status === 'Booked' ? 'Medical Operations' 
+            : appointment.status === 'Finalized' ? 'Invoice' 
+            : '' 
+          }}
+          
+        </button>
+        <button *ngIf="isDoctor()" cButton color="success" class="btn-m" (click)="navigateToAppointment(appointment, $event)">
+          {{ 
+            appointment.status === 'Invoiced' ? 'View Invoice' 
+            : appointment.status === 'Booked' ? 'Medical Operations'
+            : appointment.status === 'Finalized' ? 'Medical Operations' 
+            : '' 
+          }}
+        </button>       
       </td>
     </tr>
   </tbody>

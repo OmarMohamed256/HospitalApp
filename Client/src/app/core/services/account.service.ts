@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { ReplaySubject, map } from 'rxjs';
 import { User } from 'src/app/models/UserModels/user';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AccountService {
   private currentUserSource = new ReplaySubject<User>(1);
   currentUser$ = this.currentUserSource.asObservable();
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(model: any) {
     return this.http.post(this.baseUrl + 'authentication/login', model).pipe(
@@ -38,5 +39,10 @@ export class AccountService {
 
   getDecodedToken(token: string) {
     return JSON.parse(window.atob(token?.split('.')[1]));
+  }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 }

@@ -21,10 +21,10 @@
   </div>
   <div class="mt-2" *ngFor="let invoiceMedicine of invoice.invoiceMedicines">
     <h5>R/ {{invoiceMedicine.medicine?.name}}</h5>
-    <div class="d-flex flex-row justify-content-between">
-      <p>Dosage: {{invoiceMedicine.dosageAmount}}</p>
-      <p>Frequency: {{invoiceMedicine.frequency}}</p>
-      <p>Duration: {{invoiceMedicine.duration}}</p>
+    <div class="d-flex flex-row justify-content-between" style="direction: rtl;">
+      <p>الجرعة: {{invoiceMedicine.dosageAmount}}</p>
+      <p>كام مرة فى اليوم: {{invoiceMedicine.frequency}}</p>
+      <p>لمدة: {{invoiceMedicine.duration}}</p>
       <p>Note: {{invoiceMedicine.note}}</p>
     </div>
   </div>

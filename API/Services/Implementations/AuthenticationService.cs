@@ -38,6 +38,7 @@ namespace API.Services.Implementations
 
             var userDto = new UserDto
             {
+                Id = user.Id,
                 Username = user.UserName,
                 Token = await _tokenService.CreateToken(user)
             };
@@ -69,6 +70,7 @@ namespace API.Services.Implementations
 
             return new UserDto
             {
+                Id = user.Id,
                 Username = user.UserName,
                 Token = await _tokenService.CreateToken(user)
             };

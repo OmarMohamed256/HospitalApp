@@ -99,8 +99,6 @@ export class MedicalOperationsComponent {
     });
   }
   
-  
-
   getDoctorServicesByDoctorId() {
     this.doctorServiceService.getDoctorServiceByDocorId(this.appointment!.doctorId.toString()).subscribe(response => {
       this.doctor_services = response;
@@ -209,7 +207,8 @@ export class MedicalOperationsComponent {
   createInvoice() {
     var invoice = this.mapInvoiceFormToCreateInvoice();
     this.invoiceService.createInvoice(invoice).subscribe(response => {
-      console.log(response);
+      // route to view invoice
+      this.router.navigate(['appointments/view-invoice/' + response.id])
     })
   }
 

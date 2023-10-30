@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { take } from 'rxjs';
 import { PaymentList } from 'src/app/constants/paymentMethods';
+import { ROLES } from 'src/app/constants/roles';
+import { AccountService } from 'src/app/core/services/account.service';
 import { DoctorServiceService } from 'src/app/core/services/doctor-service.service';
 import { InvoiceService } from 'src/app/core/services/invoice.service';
 import { MedicineService } from 'src/app/core/services/medicine.service';
@@ -14,6 +17,7 @@ import { Invoice } from 'src/app/models/InvoiceModels/invoice';
 import { Medicine } from 'src/app/models/medicine';
 import { MedicineParams } from 'src/app/models/Params/medicineParams';
 import { Service } from 'src/app/models/service';
+import { User } from 'src/app/models/UserModels/user';
 
 @Component({
   selector: 'app-finalize-appointment',
@@ -35,21 +39,26 @@ export class FinalizeAppointmentComponent implements OnInit {
     pageNumber: 1,
     pageSize: 5,
   };
+  currentUser?: User;
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute,
     private doctorServiceService: DoctorServiceService, private serviceService: ServiceService,
-    private invoiceService: InvoiceService, private router: Router, private medicineService: MedicineService) {
+    private invoiceService: InvoiceService, private router: Router, private medicineService: MedicineService,
+    private accountService: AccountService) {
   }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.invoice = data['invoice'];
-      console.log(this.invoice)
+      this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.currentUser = user);
       this.appointment = this.invoice?.appointment;
       this.getDoctorServicesByDoctorId();
       this.initializeForm();
       this.intializeMedicineList();
     })
+  }
+  isDoctor(){
+    return this.currentUser?.roles.includes(ROLES.DOCTOR);
   }
 
   compareFn(item1: any, item2: any): boolean {
@@ -96,7 +105,6 @@ export class FinalizeAppointmentComponent implements OnInit {
   }
   
   addNewMedicineItems(medicines: Medicine[]) {
-    console.log(medicines)
     const selectedMedicineItemsFormArray = this.createInvoiceForm.get('invoiceMedicines') as FormArray;
     medicines.forEach((medicine: any) => {
       const existingMedicine = selectedMedicineItemsFormArray.controls.find(control =>
@@ -271,11 +279,7 @@ export class FinalizeAppointmentComponent implements OnInit {
   }
 
   sendToInvoiceView(response: Invoice) {
-    const queryParams: any = { invoice: JSON.stringify(response) };
-    const navigationExtras: NavigationExtras = {
-      queryParams
-    };
-    this.router.navigate(['appointments/view-invoice/' + response.id], navigationExtras);
+    this.router.navigate(['appointments/view-invoice/' + response.id]);
   }
 
   mapCreateDoctorService() {

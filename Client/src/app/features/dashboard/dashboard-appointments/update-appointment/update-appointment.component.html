@@ -81,8 +81,12 @@
         </ul>
     </div>
     <div class="d-flex flex-row w-100 align-items-center justify-content-around">
-        <button type="submit" *ngIf="appointment?.status != 'Finalized'" class="btn btn-primary">Update Appointment</button>
-        <button *ngIf="appointment?.status == 'Finalized'" type="button"
+        <button type="submit" *ngIf="appointment?.status == 'Booked'" class="btn btn-primary">Update Appointment</button>
+        <button type="button" *ngIf="appointment?.status == 'Booked'" class="btn btn-primary"
+        [routerLink]="['/appointments/medical-operations', appointment?.id]">Enter Medical Operations</button>
+        <button type="button" *ngIf="appointment?.status == 'Finalized'" class="btn btn-primary"
+        [routerLink]="['/appointments/finalize', appointment?.invoiceId]">Enter Medical Operations</button>
+        <button *ngIf="appointment?.status == 'Finalized' || appointment?.status == 'Invoiced'" type="button"
         class="btn btn-primary" [routerLink]="['/appointments/view-invoice', appointment?.invoiceId]">View Invoice</button>
     </div>
 </form>

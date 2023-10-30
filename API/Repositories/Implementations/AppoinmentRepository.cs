@@ -156,6 +156,7 @@ namespace API.Repositories.Implementations
         {
             var query = _context.Appointments
             .Include(a => a.Patient)
+            .Include(a => a.Doctor)
             .Where(p => p.DoctorId == doctorId)
             .AsQueryable();
 

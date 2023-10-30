@@ -100,7 +100,7 @@
       </div>
     </div>
   </div>
-  <div class="row mb-3 d-flex justify-content-center">
+  <div class="row mb-3 d-flex justify-content-center" *ngIf="!isDoctor()">
     <div class="col-6 text-center">
       <button cButton color="dark" (click)="calculateTotals()"
         *ngIf="$any(createInvoiceForm.controls['customItems']).controls.length > 0 || $any(createInvoiceForm.controls['invoiceSelectedServices']).controls.length > 0">Caclulate/Refresh
@@ -167,12 +167,12 @@
         </div>
       </div>
     </div>
-    <div class="row mb-3 d-flex justify-content-center">
-      <div class="col-6 text-center">
-        <button cButton color="primary" type="submit" [disabled]="!createInvoiceForm.valid">Finalize Invoice</button>
-      </div>
-    </div>
   </ng-container>
+  <div class="row mb-3 d-flex justify-content-center">
+    <div class="col-6 text-center">
+      <button cButton color="primary" type="submit" [disabled]="!createInvoiceForm.valid">Update</button>
+    </div>
+  </div>
   <div class="row" *ngIf="validationErrors.length > 0">
     <ul class="text-danger">
       <li *ngFor="let error of validationErrors">

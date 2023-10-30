@@ -1,7 +1,9 @@
 using API.Models.DTOS;
 using API.Services.Interfaces;
 using API.SignalR;
+using HospitalApp.Constants;
 using HospitalApp.SignalR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
@@ -24,6 +26,7 @@ namespace API.Controllers
             return Ok(specialites);
         }
         [HttpPost]
+        [Authorize(Policy = Polices.RequireAdminRole)]
         public async Task<ActionResult<SpecialityDto>> AddSpecialityAsync(SpecialityDto specialityDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -31,6 +34,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = Polices.RequireAdminRole)]
         public async Task<ActionResult<SpecialityDto>> UpdateSpecialityAsync(SpecialityDto specialityDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);

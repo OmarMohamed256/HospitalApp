@@ -37,9 +37,6 @@ const routes: Routes = [
     path: 'finalize/:invoiceId',
     component: FinalizeAppointmentComponent,
     resolve: { invoice: InvoiceDetailedResolver },
-    data: {
-      title: `Finalize Appointment`
-    }
   },
   {
     path: 'medical-operations/:id',

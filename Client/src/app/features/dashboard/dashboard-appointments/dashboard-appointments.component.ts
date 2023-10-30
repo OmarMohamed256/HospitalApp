@@ -7,6 +7,10 @@ import { AppointmentParams } from 'src/app/models/Params/appointmentParams';
 import { Pagination } from 'src/app/models/pagination';
 import { Speciality } from 'src/app/models/speciality';
 import { Router } from '@angular/router';
+import { AccountService } from 'src/app/core/services/account.service';
+import { User } from 'src/app/models/UserModels/user';
+import { take } from 'rxjs';
+import { ROLES } from 'src/app/constants/roles';
 
 @Component({
   selector: 'app-dashboard-appointments',
@@ -26,21 +30,31 @@ export class DashboardAppointmentsComponent implements OnInit {
   pagination: Pagination | null = null;
   specialityList: Speciality[] = [];
   typeList = AppointmentTypeList;
+  currentUser?: User;
 
   constructor(private appointmentService: AppointmentService,
-    private specialityService: SpecialityService, private router: Router) {
+    private specialityService: SpecialityService, private router: Router, private accountService: AccountService) {
   }
 
   ngOnInit(): void {
+    this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.currentUser = user);
     this.getAppointments();
     this.getSpecialities();
   }
 
   getAppointments() {
-    this.appointmentService.getAppointments(this.appointmentParams).subscribe(response => {
-      this.appointments = response.result;
-      this.pagination = response.pagination;
-    })
+    if(this.currentUser?.roles.includes(ROLES.DOCTOR)) {
+      this.appointmentService.getAppointmentsByDoctorId(this.appointmentParams, this.currentUser.id.toString()).subscribe(response => {
+        this.appointments = response.result;
+        this.pagination = response.pagination;
+        console.log(response)
+      })
+    } else {
+      this.appointmentService.getAppointments(this.appointmentParams).subscribe(response => {
+        this.appointments = response.result;
+        this.pagination = response.pagination;
+      })
+    }
   }
 
   pageChanged(event: number) {
@@ -76,11 +90,20 @@ export class DashboardAppointmentsComponent implements OnInit {
 
   navigateToAppointment(appointment: Appointment, event: Event) {
     event.stopPropagation();
-    if (appointment.status === 'Finalized') {
+    if (appointment.status === 'Invoiced') {
       this.router.navigate(['appointments/view-invoice', appointment.invoiceId]);
-    } else {
+    } else if(appointment.status === 'Booked') {
       this.router.navigate(['appointments/medical-operations', appointment.id]);
+    } else if (appointment.status === 'Finalized') {
+      this.router.navigate(['appointments/finalize', appointment.invoiceId]);
     }
+  }
+
+  isDoctor(){
+    return this.currentUser?.roles.includes(ROLES.DOCTOR);
+  }
+  isReceptionist(){
+    return this.currentUser?.roles.some(role => role === ROLES.ADMIN || role === ROLES.RECEPTIONIST);
   }
 
 }

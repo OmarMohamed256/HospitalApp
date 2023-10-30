@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Models.DTOS;
 using API.Services.Interfaces;
+using HospitalApp.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -18,12 +16,14 @@ namespace API.Controllers
         }
 
         [HttpGet("services-by-doctor/{doctorId}", Name = "GetServicesByDoctorId")]
+        [Authorize(Policy = Polices.RequireDoctorRole)]
         public async Task<ActionResult<IEnumerable<DoctorServiceDto>>> GetServicesByDoctorIdAsync(int doctorId)
         {
             var services = await _doctorServiceService.GetDoctorServiceWithServiceByDoctorId(doctorId);
             return Ok(services);
         }
         [HttpPut]
+        [Authorize(Policy = Polices.RequireReceptionistRole)]
         public async Task<ActionResult<DoctorServiceUpdateDto>> UpdateDoctorServiceDto(DoctorServiceUpdateDto doctorServiceUpdateDto)
         {
             if (doctorServiceUpdateDto.DoctorPercentage + doctorServiceUpdateDto.HospitalPercentage > 100)

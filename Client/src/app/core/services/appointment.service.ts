@@ -12,7 +12,10 @@ import { Medicine } from 'src/app/models/medicine';
 })
 export class AppointmentService {
   baseUrl = environment.apiUrl;
-  appointmentCache = new Map();
+  appointmentsCache = new Map();
+  appointmentByPatientIdCache: Map<string, any> = new Map();
+  appointmentByDoctorIdCache: Map<string, any> = new Map();
+  
   currentUserId: string = '';
   appointmentParams: AppointmentParams = {
     pageNumber: 1,
@@ -27,10 +30,10 @@ export class AppointmentService {
 
   getAppointmentsByPatientId(appointmentParams: AppointmentParams, userId: string) {
     if (this.currentUserId !== userId) {
-      this.appointmentCache.clear();
+      this.appointmentByPatientIdCache.clear();
       this.currentUserId = userId;
     }
-    var response = this.appointmentCache.get(Object.values(appointmentParams).join("-"));
+    var response = this.appointmentByPatientIdCache.get(Object.values(appointmentParams).join("-"));
 
     if (response) {
       return of(response);
@@ -46,17 +49,17 @@ export class AppointmentService {
 
     return getPaginatedResult<Appointment[]>(this.baseUrl + 'appointment/getPatientAppointmentsById/' + userId, params, this.http)
       .pipe(map(response => {
-        this.appointmentCache.set(Object.values(appointmentParams).join("-"), response);
+        this.appointmentByPatientIdCache.set(Object.values(appointmentParams).join("-"), response);
         return response;
       }))
   }
 
   getAppointmentsByDoctorId(appointmentParams: AppointmentParams, userId: string) {
     if (this.currentUserId !== userId) {
-      this.appointmentCache.clear();
+      this.appointmentByDoctorIdCache.clear();
       this.currentUserId = userId;
     }
-    var response = this.appointmentCache.get(Object.values(appointmentParams).join("-"));
+    var response = this.appointmentByDoctorIdCache.get(Object.values(appointmentParams).join("-"));
 
     if (response) {
       return of(response);
@@ -72,13 +75,13 @@ export class AppointmentService {
 
     return getPaginatedResult<Appointment[]>(this.baseUrl + 'appointment/getDoctorAppointmentsById/' + userId, params, this.http)
       .pipe(map(response => {
-        this.appointmentCache.set(Object.values(appointmentParams).join("-"), response);
+        this.appointmentByDoctorIdCache.set(Object.values(appointmentParams).join("-"), response);
         return response;
       }))
   }
-
+  
   getAppointments(appointmentParams: AppointmentParams) {
-    var response = this.appointmentCache.get(Object.values(appointmentParams).join("-"));
+    var response = this.appointmentsCache.get(Object.values(appointmentParams).join("-"));
 
     if (response) {
       return of(response);
@@ -94,14 +97,19 @@ export class AppointmentService {
 
     return getPaginatedResult<Appointment[]>(this.baseUrl + 'appointment/all/', params, this.http)
     .pipe(map(response => {
-      this.appointmentCache.set(Object.values(appointmentParams).join("-"), response);
+      this.appointmentsCache.set(Object.values(appointmentParams).join("-"), response);
       return response;
     }))
   }
+  invalidateAppointmentCache() {
+    this.appointmentByPatientIdCache.clear();
+    this.appointmentByDoctorIdCache.clear();
+    this.appointmentsCache.clear();  }
   resetParams() {
     this.appointmentParams = new AppointmentParams();
     return this.appointmentParams;
   }
+
   getDoctorUpcomingAppointmentsDates(doctorId: string) {
     return this.http.get<Date[]>(this.baseUrl + 'appointment/getUpcomingDoctorAppointmentDates/' + doctorId);
   }
@@ -127,6 +135,7 @@ export class AppointmentService {
       })
     );
   }
+
   deleteAppointment(appointmentId: number) {
     return this.http.delete(this.baseUrl + 'appointment/' + appointmentId).pipe(
       map(response => {
@@ -137,7 +146,7 @@ export class AppointmentService {
   }
 
   getAppointmentById(appointmentId: string) {
-    const appointment = [... this.appointmentCache.values()]
+    const appointment = [... this.appointmentsCache.values()]
     .reduce((arr, elem) => arr.concat(elem.result), [])
     .find((appointment: Appointment) => appointment.id?.toString() == appointmentId);
 
@@ -146,11 +155,9 @@ export class AppointmentService {
   }
   return this.http.get<Appointment>(this.baseUrl + 'appointment/getAppointmentById/' + appointmentId);
   }
+  
   getMedicinesByAppointmentId(appointmentId: string) {
     return this.http.get<Medicine[]>(this.baseUrl + 'appointment/getMedicinesByAppointmentId/' + appointmentId);
   }
 
-  invalidateAppointmentCache() {
-    this.appointmentCache.clear();
-  }
 }

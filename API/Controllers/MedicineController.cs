@@ -2,6 +2,8 @@ using API.Extenstions;
 using API.Helpers.Params;
 using API.Models.DTOS;
 using API.Services.Interfaces;
+using HospitalApp.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -22,19 +24,22 @@ namespace API.Controllers
             return Ok(medicines);
         }
         [HttpPost]
+        [Authorize(Policy = Polices.RequireReceptionistRole)]
         public async Task<ActionResult<MedicineDto>> CreateMedicineAsync(MedicineDto medicine)
         {
             var newMedicine = await _medicineService.CreateUpdateMedicine(medicine);
             return Ok(newMedicine);
         }
         [HttpPut]
+        [Authorize(Policy = Polices.RequireReceptionistRole)]
         public async Task<ActionResult<MedicineDto>> UpdateMedicineAsync(MedicineDto medicine)
         {
             var newMedicine = await _medicineService.CreateUpdateMedicine(medicine);
             return Ok(newMedicine);
         }
         [HttpDelete("{medicineId}")]
-        public async Task<ActionResult> DeleteRoomAsync(int medicineId)
+        [Authorize(Policy = Polices.RequireReceptionistRole)]
+        public async Task<ActionResult> DeleteMedicineAsync(int medicineId)
         {
             await _medicineService.DeleteMedicine(medicineId);
             return NoContent();

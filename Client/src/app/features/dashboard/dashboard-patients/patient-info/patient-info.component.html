@@ -74,43 +74,43 @@
       </div>
       <button type="submit" class="btn btn-primary">Update</button>
     </form>
+    <c-nav variant="tabs" class="mt-5">
+      <c-nav-item>
+        <a [active]="true" [cTabContent]="tabContent2" cNavLink [tabPaneIdx]="0">
+          Lab Tests
+        </a>
+      </c-nav-item>
+      <c-nav-item>
+        <a [cTabContent]="tabContent2" cNavLink [tabPaneIdx]="1">
+          Radiology
+        </a>
+      </c-nav-item>
+      <c-nav-item>
+        <a [cTabContent]="tabContent2" cNavLink [tabPaneIdx]="2">
+          Official Documents
+        </a>
+      </c-nav-item>
+    </c-nav>
+    <c-tab-content #tabContent2="cTabContent" (activeTabPaneIdxChange)="onImageChange($event)"
+      [activeTabPaneIdx]="imageActivePane">
+      <c-tab-pane class="p-3">
+        <gallery gallerize [items]="galleryImages" *ngIf="imageActivePane === 0"></gallery>
+      </c-tab-pane>
+      <c-tab-pane class="p-3">
+        <gallery gallerize [items]="galleryImages" *ngIf="imageActivePane === 1"></gallery>
+      </c-tab-pane>
+      <c-tab-pane class="p-3">
+        <gallery gallerize [items]="galleryImages" *ngIf="imageActivePane === 2"></gallery>
+      </c-tab-pane>
+    </c-tab-content>
+    <div class="w-100 text-center mt-5 mb-3">
+      <button class="btn btn-primary w-100" (click)="openModal()">Upload Image</button>
+    </div>
+    <app-file-upload-modal [(visible)]="modalVisibility" [userId]="user?.id!"
+      [category]="selectedImageCategory" (imageAdded)="galleryImageAdded($event)"></app-file-upload-modal>
   </c-tab-pane>
   <c-tab-pane class="p-3">
     <app-patient-appointments [user]="user" *ngIf="activePane === 1"></app-patient-appointments>
   </c-tab-pane>
 </c-tab-content>
-<c-nav variant="tabs" class="mt-5">
-  <c-nav-item>
-    <a [active]="true" [cTabContent]="tabContent2" cNavLink [tabPaneIdx]="0">
-      Lab Tests
-    </a>
-  </c-nav-item>
-  <c-nav-item>
-    <a [cTabContent]="tabContent2" cNavLink [tabPaneIdx]="1">
-      Radiology
-    </a>
-  </c-nav-item>
-  <c-nav-item>
-    <a [cTabContent]="tabContent2" cNavLink [tabPaneIdx]="2">
-      Official Documents
-    </a>
-  </c-nav-item>
-</c-nav>
 
-<c-tab-content #tabContent2="cTabContent" (activeTabPaneIdxChange)="onImageChange($event)"
-  [activeTabPaneIdx]="imageActivePane">
-  <c-tab-pane class="p-3">
-    <gallery gallerize [items]="galleryImages" *ngIf="imageActivePane === 0"></gallery>
-  </c-tab-pane>
-  <c-tab-pane class="p-3">
-    <gallery gallerize [items]="galleryImages" *ngIf="imageActivePane === 1"></gallery>
-  </c-tab-pane>
-  <c-tab-pane class="p-3">
-    <gallery gallerize [items]="galleryImages" *ngIf="imageActivePane === 2"></gallery>
-  </c-tab-pane>
-</c-tab-content>
-<div class="w-100 text-center mt-5 mb-3">
-  <button class="btn btn-primary w-100" (click)="openModal()">Upload Image</button>
-</div>
-<app-file-upload-modal [(visible)]="modalVisibility" [userId]="user?.id!"
-  [category]="selectedImageCategory" (imageAdded)="galleryImageAdded($event)"></app-file-upload-modal>
