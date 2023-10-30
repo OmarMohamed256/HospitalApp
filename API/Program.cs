@@ -150,6 +150,7 @@ app.UseCors(policy => policy.AllowAnyHeader()
 .AllowCredentials()
 .WithOrigins("http://localhost:4200"));
 app.UseHttpsRedirection();
+app.UseDefaultFiles();
 app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -164,4 +165,5 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 app.MapHub<AppointmentHub>("hubs/appointment");
+app.MapFallbackToController("Index", "Fallback");
 app.Run();
