@@ -27,6 +27,7 @@ export class SignalrService {
 
   public addAppointmentListner = () => {
     this.hubConnection.on('SendAppointmentStatusChange', (response: any) => {
+      console.log('SignalR event received', response);  // Log the response here
       this.appointmentStatusChanged.emit(response);
       this.showAppointmentStatusChanged(response.appointmentId, response.status)
     });

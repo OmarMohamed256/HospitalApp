@@ -59,7 +59,7 @@
       <td>{{appointment.dateOfVisit | date:'short'}}</td>
       <td class="pt-1">
         <button cButton color="success" class="btn-m" (click)="navigateToAppointment(appointment, $event)">
-          {{ appointment.status === 'finalized' ? 'View Invoice' : 'Finalize' }}
+          {{ appointment.status === 'Finalized' ? 'View Invoice' : 'Finalize' }}
         </button>        
       </td>
     </tr>

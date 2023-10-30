@@ -74,7 +74,7 @@ export class DashboardAppointmentsComponent implements OnInit {
 
   navigateToAppointment(appointment: Appointment, event: Event) {
     event.stopPropagation();
-    if (appointment.status === 'finalized') {
+    if (appointment.status === 'Finalized') {
       this.router.navigate(['appointments/view-invoice', appointment.invoiceId]);
     } else {
       this.router.navigate(['appointments/medical-operations', appointment.id]);

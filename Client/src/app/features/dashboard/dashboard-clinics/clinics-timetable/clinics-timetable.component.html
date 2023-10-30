@@ -2,19 +2,37 @@
   <c-col [sm]="4" *ngFor="let clinic of clinics">
     <c-card class="mb-4 scroll">
       <h4 class="card-header text-center">Clinic #: {{clinic.clinicNumber}}</h4>
-      <c-card-body class="text-center">
-        <ng-container *ngFor="let clinicDoctor of clinic.clinicDoctors">
-          <ng-container *ngFor="let appointment of clinicDoctor.doctor?.bookedWithAppointments">
-            <c-alert [color]="getColor(appointment.status!)" class="d-flex flex-row justify-content-between">
-              <p>Code: {{appointment.id}}</p>
-              <p>{{appointment.dateOfVisit | date: 'short'}}</p>
-              <p>{{appointment.status | uppercase}}</p>
+      <c-card-body class="text-center" *ngIf="clinic.upcomingAppointments">
+        <!-- Display current appointment -->
+        <ng-container *ngIf="clinic.upcomingAppointments.length > 0; else noAppointments">
+          <c-alert [color]="getColor(clinic.upcomingAppointments[0].status!)">
+            <h5>Current Appointment</h5>
+            <div class="d-flex flex-row justify-content-between">
+              <p>Code: {{clinic.upcomingAppointments[0].id}}</p>
+              <p>{{clinic.upcomingAppointments[0].dateOfVisit | date: 'short'}}</p>
+              <p>{{clinic.upcomingAppointments[0].status | uppercase}}</p>
+            </div>
+          </c-alert>
+          <ng-container *ngIf="clinic.upcomingAppointments.length > 1">
+            <c-alert [color]="getColor(clinic.upcomingAppointments[1].status!)">
+              <h5>Upcoming Appointment</h5>
+              <div class="d-flex flex-row justify-content-between">
+                <p>Code: {{clinic.upcomingAppointments[1].id}}</p>
+                <p>{{clinic.upcomingAppointments[1].dateOfVisit | date: 'short'}}</p>
+                <p>{{clinic.upcomingAppointments[1].status | uppercase}}</p>
+              </div>
             </c-alert>
           </ng-container>
         </ng-container>
+
+        <!-- Placeholder content if there are no appointments -->
+        <ng-template #noAppointments>
+          <p>No current appointments.</p>
+        </ng-template>
       </c-card-body>
     </c-card>
   </c-col>
+
 </c-row>
 <div class="d-flex justify-content-center" *ngIf="pagination">
   <app-pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.itemsPerPage"

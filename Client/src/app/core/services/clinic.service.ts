@@ -6,6 +6,7 @@ import { BehaviorSubject, map, of } from 'rxjs';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { Clinic } from 'src/app/models/ClinicModels/clinic';
 import { ToastrService } from 'ngx-toastr';
+import { AppointmentService } from './appointment.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +18,12 @@ export class ClinicService {
     pageSize: 15,
   };
   clinicCache = new Map();
-  private appointmentStatusUpdated = new BehaviorSubject<{appointmentId: number, status: string} | null>(null);
+  clinicWithAppointmentsCache = new Map();
+
+  private appointmentStatusUpdated = new BehaviorSubject<{ appointmentId: number, status: string } | null>(null);
   appointmentStatusUpdated$ = this.appointmentStatusUpdated.asObservable();
 
-  constructor(private http: HttpClient, private toastr: ToastrService) { }
+  constructor(private http: HttpClient, private toastr: ToastrService, private appoinmentService: AppointmentService) { }
 
   getClinics(clinicParams: ClinicParams) {
     var response = this.clinicCache.get(Object.values(clinicParams).join("-"));
@@ -36,14 +39,14 @@ export class ClinicService {
   }
 
   getClinicsWithFirstTwoUpcomingAppointments(clinicParams: ClinicParams) {
-    var response = this.clinicCache.get(Object.values(clinicParams).join("-"));
+    var response = this.clinicWithAppointmentsCache.get(Object.values(clinicParams).join("-"));
     if (response) {
       return of(response);
     }
     let params = getPaginationHeaders(clinicParams.pageNumber, clinicParams.pageSize);
     return getPaginatedResult<Clinic[]>(this.baseUrl + 'clinic/getClinicsWithFirstTwoUpcomingAppointments/', params, this.http)
       .pipe(map(response => {
-        this.clinicCache.set(Object.values(clinicParams).join("-"), response);
+        this.clinicWithAppointmentsCache.set(Object.values(clinicParams).join("-"), response);
         return response;
       }));
   }
@@ -57,7 +60,7 @@ export class ClinicService {
       })
     );
   }
-  
+
   updateClinic(clinic: Clinic) {
     return this.http.put<Clinic>(this.baseUrl + 'clinic', clinic).pipe(
       map(response => {
@@ -67,7 +70,7 @@ export class ClinicService {
       })
     );
   }
-  
+
   deleteClinic(clinicId: number) {
     return this.http.delete(this.baseUrl + 'clinic/' + clinicId).pipe(
       map(response => {
@@ -77,22 +80,27 @@ export class ClinicService {
       })
     );
   }
-  
+
   private invalidateClinicCache() {
     this.clinicCache.clear();
+    this.clinicWithAppointmentsCache.clear();
   }
-  updateAppointmentStatus(appointmentId: number, status: string) {
-    this.clinicCache.forEach((value: any, key: string) => {
-      value.result.forEach((clinic: Clinic) => {
-        clinic.clinicDoctors?.forEach(clinicDoctor => {
-          const appointmentToUpdate = clinicDoctor.doctor?.bookedWithAppointments?.find(appointment => appointment.id === appointmentId);
-          if (appointmentToUpdate) {
-            appointmentToUpdate.status = status;
-            this.appointmentStatusUpdated.next({appointmentId, status});
-            this.toastr.success("Appointment with id: " + appointmentId + " status changed to " + status)
-          }
+  updateDoctorBookedWithAppointmentsByDoctorId(doctorId: number, appointmentId: number, appointmentStatus: string) {
+    // Call the service to get the updated appointments list for the specified doctor.
+    this.appoinmentService.getFirstTwoUpcomingAppointmentsForDoctorById(doctorId).subscribe(appointments => {
+      // If successful, go through the cache and update the appointments for the matching doctor.
+      this.clinicWithAppointmentsCache.forEach((value: any, key: string) => {
+        value.result.forEach((clinic: Clinic) => {
+          clinic.clinicDoctors?.forEach(clinicDoctor => {
+            if (clinicDoctor.doctor?.id === doctorId) {
+              // Update the bookedWithAppointments array with the new data.
+              clinicDoctor.doctor.bookedWithAppointments = appointments;
+              this.appointmentStatusUpdated.next({appointmentId: appointmentId, status: appointmentStatus });
+            }
+          });
         });
       });
     });
   }
+
 }
