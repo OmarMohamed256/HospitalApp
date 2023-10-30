@@ -1,31 +1,34 @@
-<div id="prescription" class="text-end w-100 d-none">
+<div id="prescription" class="text-end w-100">
   <img class="img-fluid" src="assets/img/brand/logo.png" width="200" height="200" />
   <div style="margin-top: -4rem;">
-    <h2 class="text-center">Dr. {{invoice.doctor.fullName}}</h2>
-    <div class="container text-center mt-3">
+    <h1 class="text-center">Retaj Hospital</h1>
+    <h2 class="text-center text-decoration-underline mt-3">Dr. {{invoice.doctor.fullName}}</h2>
+    <hr/>
+    <div class="container text-start mt-5">
       <div class="row row-cols-2">
         <div class="col">
-          <h4>Name: <span class="h6">{{invoice.patient.fullName}}</span></h4>
+          <h4>Name: <span class="h6" style="border-bottom: 1px dotted;">{{invoice.patient.fullName}}</span></h4>
         </div>
         <div class="col">
-          <h4>Date: <span class="h6">{{getCurrentDate() | date:'MM/dd/yyyy'}}</span></h4>
+          <h4>Date: <span class="h6" style="border-bottom: 1px dotted;">{{getCurrentDate() | date:'MM/dd/yyyy'}}</span></h4>
         </div>
         <div class="col">
-          <h4>Age: <span class="h6">{{invoice.patient.age}}</span></h4>
+          <h4>Age: <span class="h6" style="border-bottom: 1px dotted;">{{invoice.patient.age}}</span></h4>
         </div>
         <div class="col">
-          <h4>Diagonses:</h4>
+          <h4>Diagonses: <span class="h6" style="border-bottom: 1px dotted;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></h4>
         </div>
       </div>
     </div>
   </div>
-  <div class="mt-2" *ngFor="let invoiceMedicine of invoice.invoiceMedicines">
+  <hr/>
+  <div class="mt-5" *ngFor="let invoiceMedicine of invoice.invoiceMedicines">
     <h5>R/ {{invoiceMedicine.medicine?.name}}</h5>
-    <div class="d-flex flex-row justify-content-between" style="direction: rtl;">
-      <p>الجرعة: {{invoiceMedicine.dosageAmount}}</p>
-      <p>كام مرة فى اليوم: {{invoiceMedicine.frequency}}</p>
-      <p>لمدة: {{invoiceMedicine.duration}}</p>
-      <p>Note: {{invoiceMedicine.note}}</p>
+    <div class="d-flex flex-row-reverse justify-content-between" style="direction: rtl;">
+      <p style="border-bottom: 1px dotted;">الجرعة: {{invoiceMedicine.dosageAmount}}</p>
+      <p style="border-bottom: 1px dotted;">كام مرة فى اليوم: {{invoiceMedicine.frequency}}</p>
+      <p style="border-bottom: 1px dotted;">لمدة: {{invoiceMedicine.duration}}</p>
+      <p style="border-bottom: 1px dotted;">ملحوظة: {{invoiceMedicine.note}}</p>
     </div>
   </div>
 </div>
