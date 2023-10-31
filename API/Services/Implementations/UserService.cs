@@ -79,7 +79,7 @@ namespace API.Services.Implementations
         {
             try
             {
-                string baseUrl = "http://localhost:5170/";
+                string baseUrl = Urls.BaseUrl;
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + imageUploadDto.UserId + "_" + imageUploadDto.Category
                 + "_" + imageUploadDto.File.FileName;
 

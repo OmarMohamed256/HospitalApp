@@ -56,7 +56,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(opt =>
 {
     opt.AddPolicy(Polices.RequireAdminRole, policy => policy.RequireRole(Roles.Admin));
-    
+
     opt.AddPolicy(Polices.RequireReceptionistRole, policy =>
     {
         policy.RequireRole(Roles.Admin, Roles.Receptionist);
@@ -138,11 +138,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    await app.UseItToSeedSqlServerAsync();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+await app.UseItToSeedSqlServerAsync();
 app.UseRouting();
 
 app.UseCors(policy => policy.AllowAnyHeader()
@@ -152,11 +151,11 @@ app.UseCors(policy => policy.AllowAnyHeader()
 app.UseHttpsRedirection();
 app.UseDefaultFiles();
 app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
-                RequestPath = new PathString("/Images")
-            });
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Images")),
+    RequestPath = new PathString("/Images")
+});
 app.UseAuthentication();
 
 app.UseAuthorization();
